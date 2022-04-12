@@ -16,7 +16,7 @@ Milk_Instancer01 ([HDRP GitHub](https://github.com/Milk-Drinker01/Milk_Instancer
 ![Screenshot_2](https://user-images.githubusercontent.com/59656122/157997969-45608cbc-daec-4d1a-85d0-aba038485d9f.png)
 
 ### Normal Map Inverter
-normal map inverter ([GitHub](https://github.com/Milk-Drinker01/UnityNormalMapInverter) is a free tool for converting DirectX normal maps (-y) to openGL (+y) from right inside the unity editor.
+normal map inverter ([GitHub](https://github.com/Milk-Drinker01/UnityNormalMapInverter)) is a free tool for converting DirectX normal maps (-y) to openGL (+y) from right inside the unity editor.
 add image later
 
 
