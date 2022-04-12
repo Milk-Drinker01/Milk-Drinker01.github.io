@@ -4,7 +4,7 @@ This site is under construction
 ### Support or Contact
 If you are here for package support, please contact me through my [Discord](https://discord.gg/utduGay3Nu). 
 
-## Free Tools
+## **Free Tools**
 Here will be a list of some of my tools
 
 ### Normal Map Inverter
@@ -15,7 +15,7 @@ add image later
 Milk_Instancer01 ([HDRP GitHub](https://github.com/Milk-Drinker01/Milk_Instancer01), [Built-In RP Github](https://github.com/Milk-Drinker01/Milk_Instancer_Standard)) is a free Indirect instancing tool that supports per-instance occlusion culling, frustum culling, and LODS.
 add gifs here later
 
-## Projects
+## **Projects**
 Here you can see some examples of some of my projects
 
 ### Project FPS
