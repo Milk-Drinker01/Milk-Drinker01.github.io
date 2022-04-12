@@ -1,4 +1,7 @@
-## Welcome to GitHub Pages
+## Welcome to My Site
+
+If you are here for package support, please contact me through my [Discord](https://discord.gg/utduGay3Nu). 
+
 
 You can use the [editor on GitHub](https://github.com/Milk-Drinker01/Milk-Drinker01.github.io/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
 
