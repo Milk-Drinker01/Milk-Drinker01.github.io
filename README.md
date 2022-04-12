@@ -1,6 +1,11 @@
-## Welcome to My Site
+## Milk-Drinker01.github.io
 
+### Support or Contact
 If you are here for package support, please contact me through my [Discord](https://discord.gg/utduGay3Nu). 
+
+### Projects
+Here you can see some examples of some of my projects
+
 
 
 You can use the [editor on GitHub](https://github.com/Milk-Drinker01/Milk-Drinker01.github.io/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
