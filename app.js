@@ -4,11 +4,11 @@ function gohome()
 }
 function loadContactForm() 
 {
-    window.location.href = window.location.origin + "/contact/index.html";
+    window.location.href = "/contact/index.html";
 }
 function viewProjects() 
 {
-    window.location.href = window.location.origin + "/projects/index.html";
+    window.location.href = "/projects/index.html";
 }
 function loadInstancerPage() 
 {
