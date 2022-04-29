@@ -3,10 +3,10 @@ function white() {
     document.getElementById("home").style.display = "none";
     document.getElementById("white-rice").style.display = "block";
 }
-function california() {
-    document.getElementById("rice-cal-amount").value = 1;
+function loadContactForm() 
+{
     document.getElementById("home").style.display = "none";
-    document.getElementById("california-rice").style.display = "block";
+    document.getElementById("contact-form").style.display = "block";
 }
 function gohome() {
     document.getElementById("home").style.display = "block";
