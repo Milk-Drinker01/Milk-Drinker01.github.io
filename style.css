@@ -1,0 +1,64 @@
+.text {
+  flex-wrap: wrap;
+  align-content: center;
+  margin: auto;
+  padding: 10px;
+  border: 10px;
+  font-weight: 500;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mini {
+  flex-wrap: wrap;
+  align-content: center;
+  margin: auto;
+  padding: 10px;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rice {
+  font-size: 22px;
+  margin: 15px;
+  padding: 12px;
+  width: 270px;
+}
+
+.button-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main {
+  margin: auto;
+  width: 75%;
+  text-align: center
+}
+
+.return {
+  margin: auto;
+  width: 75%;
+  padding: 12px;
+  width: 100px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+input{
+  width:15%;
+}
+
+#white-rice {
+  display: none;
+}
+
+#california-rice {
+  display: none;
+}

@@ -1,9 +1,51 @@
-<!doctype html>
-<html>
-  <head>
-    <title>This is the title of the webpage!</title>
-  </head>
-  <body>
-    <p>This is an example paragraph. Anything in the <strong>body</strong> tag will appear on the page, just like this <strong>p</strong> tag and its contents.</p>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rice</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="main" id="home">
+
+    <div class="main">
+      <p class="text"> Rice recipes you will love! </p>
+      <p class="mini"> Select the type of rice you want to make to see the instructions on how to make it! </p>
+    </div>
+
+    <div class="button-box">
+      <button class="rice" onclick="white()">white rice</button> <button class="rice" onclick="california()">sprouted California rice</button>
+    </div>
+
+  </div>
+
+  <div class="main" id="white-rice">
+    <p class="mini" id="instruct-white"> Combine 1 cup of rice with 2 cups of water and 1 Tbsp olive oil. Bring to a boil, then reduce heat to the lowest setting. Cook for about 18 minutes. </p>
+
+    <div class="main">
+      <p class="mini">How much rice do you want to make?</p>
+      <input type="number" id="rice-white-amount" class="amount" onchange="updatewhite()" />
+      <button class="return" onclick="gohome()">back</button>
+    </div>
+
+  </div>
+
+    <div class="main" id="california-rice">
+      <p class="text"> For slightly al dente rice: </p>
+      <p class="mini" id="instruct-cal1"> Combine 1 1/4 cups of rice with 2 cups of water or broth and 1 Tbsp olive oil. Bring to a boil and stir once to mix. Reduce heat to low, cover with a tight-fitting lid and cook for 25 minutes. Remove from heat and let stand for 5 minutes. Fluff with a fork and serve.</p>
+
+      <p class="text"> For softer rice: </p>
+      <p class="mini" id="instruct-cal2">Increase liquid by 1/2 cup and cook time by 5 minutes.</p>
+
+      <div class="main">
+        <p class="mini">How much rice do you want to make?</p>
+        <input type="number" id="rice-cal-amount" class="amount" onchange="updatecal()" />
+        <button class="return" onclick="gohome()">back</button>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
 </html>
