@@ -8,29 +8,35 @@
 </head>
 <body>
 
+  <div class="header" id="header">
+    <button class="returnHome" onclick="gohome()">Home</button>
+    <div class="alignRight">
+      <button class="headerButton" onclick="gohome()">Home</button>
+      <button class="headerButton" onclick="loadContactForm()">Contact</button>
+    </div>
+  </div>
+  
   <div class="main" id="home">
     <div class="main">
-      <p class="text"> Rice recipes you will love! </p>
-      <p class="mini"> Select the type of rice you want to make to see the instructions on how to make it! </p>
+      <p class="text"> Welcome to My Site </p>
+      <p class="mini"> This is where I would put my tools IF I KNEW WHAT I WAS DOING </p>
     </div>
 
     <div class="button-box">
-      <button class="rice" onclick="loadInstancerPage()">Milk_Instancer</button> <button class="rice" onclick="loadContactForm()">Contact Support</button>
+      <button class="rice" onclick="loadInstancerPage()">Milk_Instancer</button>
     </div>
-  </div>
-
-  <div class="main" id="milk-instancer">
-    <p class="mini" id="instruct-white"> This is some cool text </p>
-    <div class="main">
-      <button class="return" onclick="gohome()">back</button>
-      <a target="_blank" rel="noopener noreferrer" href="https://user-images.githubusercontent.com/59656122/150681820-37e0c5b9-d7b3-4eaa-9f09-4b6b49b648e5.gif"><img src="https://user-images.githubusercontent.com/59656122/150681820-37e0c5b9-d7b3-4eaa-9f09-4b6b49b648e5.gif" alt="painting (2)" style="max-width: 100%;"></a>
-    </div>
-
   </div>
 
   <div class="main" id="contact-form">
     <p class="text"> Please Fill out this Form for support: </p>
     <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScwPC5XsmYyYKKpzWzaeLOyiuFIrbLJX9pwegrtjXucmuVWUg/viewform?embedded=true" width="640" height="709" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+  </div>
+  
+  <div class="main" id="milk-instancer">
+    <div class="main">
+      <a target="_blank" rel="noopener noreferrer" href="https://user-images.githubusercontent.com/59656122/150681820-37e0c5b9-d7b3-4eaa-9f09-4b6b49b648e5.gif"><img src="https://user-images.githubusercontent.com/59656122/150681820-37e0c5b9-d7b3-4eaa-9f09-4b6b49b648e5.gif" alt="painting (2)" style="max-width: 100%;"></a>
+    </div>
+
   </div>
 
   <script src="app.js"></script>

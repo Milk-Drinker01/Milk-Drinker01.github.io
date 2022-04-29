@@ -11,6 +11,35 @@
   align-items: center;
 }
 
+.header {
+  margin: none;
+  width: 100%;
+  text-align: left;
+}
+
+.alignRight {
+  float: right!important;
+}
+
+.returnHome{
+  font-size: 22px;
+  padding: 12px;
+  width: 270px;
+}
+
+.headerButton{
+  font-size: 17px;
+  padding: 12px;
+  width: 100px;
+  height: 50px;
+}
+
+.main {
+  margin: auto;
+  width: 75%;
+  text-align: center
+}
+
 .mini {
   flex-wrap: wrap;
   align-content: center;
@@ -33,12 +62,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.main {
-  margin: auto;
-  width: 75%;
-  text-align: center
 }
 
 .return {
