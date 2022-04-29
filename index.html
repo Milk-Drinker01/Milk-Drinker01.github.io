@@ -5,16 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Milk-Drinker01.github.io</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script> 
+    $(function(){
+      $('#header').load('header.html'); 
+    });
+  </script>
 </head>
-<body>
 
-  <div class="header" id="header">
-    <button class="returnHome" onclick="gohome()">Home</button>
-    <div class="alignRight">
-      <button class="headerButton" onclick="gohome()">Home</button>
-      <button class="headerButton" onclick="loadContactForm()">Contact</button>
-    </div>
-  </div>
+<body>
+  <div id="header"></div>
+  
   
   <div class="main" id="home">
     <div class="main">
@@ -31,7 +32,12 @@
     <p class="text"> Please Fill out this Form for support: </p>
     <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScwPC5XsmYyYKKpzWzaeLOyiuFIrbLJX9pwegrtjXucmuVWUg/viewform?embedded=true" width="640" height="709" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
   </div>
-  
+
+  <div class="main" id="projects">
+    <p class="text"> Please Fill out this Form for support: </p>
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScwPC5XsmYyYKKpzWzaeLOyiuFIrbLJX9pwegrtjXucmuVWUg/viewform?embedded=true" width="640" height="709" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+  </div>
+
   <div class="main" id="milk-instancer">
     <div class="main">
       <a target="_blank" rel="noopener noreferrer" href="https://user-images.githubusercontent.com/59656122/150681820-37e0c5b9-d7b3-4eaa-9f09-4b6b49b648e5.gif"><img src="https://user-images.githubusercontent.com/59656122/150681820-37e0c5b9-d7b3-4eaa-9f09-4b6b49b648e5.gif" alt="painting (2)" style="max-width: 100%;"></a>

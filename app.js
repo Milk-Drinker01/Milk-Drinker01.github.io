@@ -19,3 +19,7 @@ function loadInstancerPage()
     document.getElementById("home").style.display = "none";
     document.getElementById("milk-instancer").style.display = "block";
 }
+function loadSite()
+{
+    window.location.href = "\contact/index.html";
+}
