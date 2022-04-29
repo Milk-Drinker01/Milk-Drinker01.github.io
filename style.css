@@ -1,3 +1,7 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
 .text {
   flex-wrap: wrap;
   align-content: center;
@@ -12,7 +16,7 @@
 }
 
 .header {
-  margin: none;
+  margin: 0px;
   width: 100%;
   text-align: left;
   background-color: #656565;
@@ -50,13 +54,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.rice {
-  font-size: 22px;
-  margin: 15px;
-  padding: 12px;
-  width: 270px;
 }
 
 .button-box {
