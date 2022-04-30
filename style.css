@@ -18,6 +18,7 @@ body{
   display: flex;
   justify-content: center;
   align-items: center;
+  color: white;
 }
 
 .header {
@@ -65,6 +66,7 @@ body{
   display: flex;
   justify-content: center;
   align-items: center;
+  color: white;
 }
 
 .button-box {
