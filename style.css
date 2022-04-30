@@ -35,6 +35,9 @@ body{
   font-size: 22px;
   padding: 12px;
   width: 270px;
+  background-color: #656565;
+  border: none;
+  cursor: pointer;
 }
 
 .headerButton{
@@ -43,6 +46,8 @@ body{
   width: 100px;
   height: 50px;
   background-color: #656565;
+  border: none;
+  cursor: pointer;
 }
 
 .main {
