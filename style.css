@@ -32,6 +32,13 @@ body{
   display: inline-block;
 }
 
+.returnHome{
+  display: inside;
+  background-color: #656565;
+  border: none;
+  cursor: pointer;
+}
+
 .label{
   display: block;
 }
@@ -40,14 +47,7 @@ body{
   float: right!important;
 }
 
-.returnHome{
-  font-size: 22px;
-  padding: 12px;
-  display: inside;
-  background-color: #656565;
-  border: none;
-  cursor: pointer;
-}
+
 
 .headerButton{
   font-size: 17px;
