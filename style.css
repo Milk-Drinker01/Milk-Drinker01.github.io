@@ -7,19 +7,6 @@ body{
   padding: 0;
   background-color: #262626;
 }
-.text {
-  flex-wrap: wrap;
-  align-content: center;
-  margin: auto;
-  padding: 10px;
-  border: 10px;
-  font-weight: 500;
-  font-size: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-}
 
 .header {
   display: inline-block;
@@ -69,7 +56,35 @@ body{
   text-align: center;
 }
 
-.mini {
+.Label {
+  flex-wrap: wrap;
+  align-content: center;
+  margin: auto;
+  padding: 10px;
+  border: 10px;
+  font-weight: 500;
+  font-size: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.subLabel {
+  flex-wrap: wrap;
+  align-content: center;
+  margin: auto;
+  padding-bottom: 5px;
+  border: 10px;
+  font-weight: 500;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.para {
   flex-wrap: wrap;
   align-content: center;
   margin: auto;
@@ -79,6 +94,7 @@ body{
   justify-content: center;
   align-items: center;
   color: white;
+  width: 50%;
 }
 
 .button-box {
