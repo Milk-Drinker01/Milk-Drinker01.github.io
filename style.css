@@ -43,7 +43,7 @@ body{
 .returnHome{
   font-size: 22px;
   padding: 12px;
-  width: 150px;
+  display: inside;
   background-color: #656565;
   border: none;
   cursor: pointer;
