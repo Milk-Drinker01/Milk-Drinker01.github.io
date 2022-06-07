@@ -28,6 +28,14 @@ body{
   background-color: #656565;
 }
 
+.overlay{
+  display: inline-block;
+}
+
+.label{
+  display: block;
+}
+
 .alignRight {
   float: right!important;
 }
