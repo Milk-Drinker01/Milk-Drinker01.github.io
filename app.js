@@ -10,6 +10,10 @@ function viewProjects()
 {
     window.location.href = "/projects/index.html";
 }
+function viewTools() 
+{
+    window.location.href = "/tools/index.html";
+}
 function openGitHub() 
 {
     window.location.href = "https://github.com/Milk-Drinker01";
