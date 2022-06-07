@@ -1,11 +1,11 @@
 * {
   margin: 0px;
   padding: 0px;
-  background-color: #262626;
 }
 body{
   margin: 0;
   padding: 0;
+  background-color: #262626;
 }
 .text {
   flex-wrap: wrap;
@@ -22,46 +22,41 @@ body{
 }
 
 .header {
+  display: inline-block;
   margin: 0px;
   width: 100%;
+  height: 50px;
   text-align: left;
   background-color: #656565;
 }
 
 .overlay{
-  margin: auto;
-  vertical-align: middle
-}
-
-.centerImageHelper{
-  display: inline-block;
+  display: inline-flex;
   height: 100%;
-  vertical-align: middle;
+  width: 75px;
+  align-items: center;
+  border-color: transparent;
 }
 
 .returnHome{
-  background-color: #656565;
+  display: inline-block;
+  margin: auto;
   border: none;
   cursor: pointer;
-  vertical-align: middle;
-}
-
-.label{
-  display: block;
+  width: 45px;
+  height: 45px;
 }
 
 .alignRight {
   float: right!important;
+  height: 100%;
 }
-
-
 
 .headerButton{
   font-size: 17px;
   padding: 12px;
   width: auto;
-  height: 50px;
-  background-color: #656565;
+  height: 100%;
   border: none;
   cursor: pointer;
   text-align: left
@@ -69,8 +64,9 @@ body{
 
 .main {
   margin: auto;
-  width: 75%;
-  text-align: center
+  width: 100%;
+  height: 100%;
+  text-align: center;
 }
 
 .mini {
