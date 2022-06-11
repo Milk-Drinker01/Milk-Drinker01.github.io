@@ -28,10 +28,18 @@ body{
   bottom: 0px; 
 }
 
-.overlay{
+.headerButtonOverlay{
   display: inline-flex;
   height: 100%;
   width: 75px;
+  align-items: center;
+  border-color: transparent;
+}
+
+.footerButtonOverlay{
+  display: inline-flex;
+  height: 100%;
+  width: 45px;
   align-items: center;
   border-color: transparent;
 }
@@ -84,7 +92,7 @@ body{
   width: 75%;
   height: 400px;
   text-align: center;
-  margin-top: 35px;
+  margin-top: 20px;
   align-items: center;
 }
 
