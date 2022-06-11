@@ -73,7 +73,7 @@ body{
   display: flex;
   flex-flow: column;
   overflow: auto;
-  height: calc(100% - 85px);
+  height: calc(100% - 86px);
   position: absolute; 
 }
 
