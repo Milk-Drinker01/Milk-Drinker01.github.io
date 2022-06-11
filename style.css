@@ -21,7 +21,7 @@ body{
   display: inline-block;
   margin: 0px;
   width: 100%;
-  height: 50px;
+  height: 35px;
   text-align: left;
   background-color: #656565;
   position: absolute; 
@@ -45,6 +45,15 @@ body{
   height: 45px;
 }
 
+.footerButton{
+  display: inline-block;
+  margin: auto;
+  border: none;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+}
+
 .alignRight {
   float: right!important;
   height: 100%;
@@ -60,7 +69,16 @@ body{
   text-align: left
 }
 
+.contentArea{
+  display: flex;
+  flex-flow: column;
+  overflow: auto;
+  height: 100%;
+  position: absolute; 
+}
+
 .homeSegment {
+  flex: 1 1 auto;
   background-color: #656565;
   margin: auto;
   width: 75%;
