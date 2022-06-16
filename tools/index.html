@@ -20,7 +20,41 @@
   <div id="header"></div>
   
   <div class="main">
-    <p class="Label"> Coming soon </p>
+    <div class="contentArea">
+      <div class="homeSegment">
+        <div class="homeInfo">
+          <p class="Label"> Milk_Instancer </p>
+          <p class="subLabel"> Indirect rendering using DrawMeshInstancedIndirect </p>
+          <p class="para"> When the terrain details for SRP "feature" unity gave us in 2021.2 was garbage (i mean seriously, if your model is exported from blender it gets painted on sideways), I knew my only options were to turn to the asset store, or to do it myself. Milk_Instancer supports every render pipeline, has wind shader examples, and Shadergraph/ Amplify Shader Editor nodes to make your own shaders work with it. Features include prefab painting, frustum culling, occlusion culling (hdrp only for now), and more. </p>      
+        </div>
+    
+        <div class="homeInfo">
+          <img src="../img/milk-instancer.png" alt="milk-instancer" class="fitImage">
+        </div>
+      </div>
+    
+      <div class="homeSegment">
+        <div class="homeInfo">
+          <img src="../img/CoRSkinning.png" alt="CoRSkinning" class="fitImage">
+        </div>
+        <div class="homeInfo">
+          <p class="Label"> CoR Skinning </p>
+          <p class="subLabel"> An alternative skinning algorithm to preserve mesh volume </p>
+          <p class="para"> Standard Linear Blend Skinning (LBS) is a tried and true algorithm for mesh skinning, that many engines, including unity and unreal engine, use. However, there are some drawbacks to this method. In extreme cases, the algorithm can lead to whats called "candy wrapper" artifacts, which causes the mesh to lose volume while skinning. Optimized Center Of Rotation (CoR) aims to fix this issue by precumputing better centers of rotation. </p>      
+        </div>
+      </div>
+    
+      <div class="homeSegment">
+        <div class="homeInfo">
+          <p class="Label"> Unity Normal Map Inverter </p>
+          <p class="subLabel"> Convert DirectX normal maps to OpenGL within the unity editor </p>
+          <p class="para"> Its suprising to me how many people dont understand the difference between DirectX and OpenGL normal maps when working with unity. While both formats contain the same information, The G channel in OpenGL normal maps are inverted compared to DirectX. Unity happens to use OpenGL normal maps. This tool will allow you to convert your DirectX normal maps to OpenGL from directly within the unity editor. </p>      
+        </div>
+        <div class="homeInfo">
+          <img src="../img/normal_inverter.png" alt="normal-inverter" class="fitImage">
+        </div>
+      </div>
+    </div>
   </div>
 
   <div id="footer"></div>
