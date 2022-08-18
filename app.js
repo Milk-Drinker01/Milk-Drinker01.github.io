@@ -10,6 +10,10 @@ function viewProjects()
 {
     window.location.href = "/projects/index.html";
 }
+function viewDemos() 
+{
+    window.location.href = "/demos/index.html";
+}
 function viewTools() 
 {
     window.location.href = "/tools/index.html";

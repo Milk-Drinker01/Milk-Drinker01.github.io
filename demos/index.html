@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Milk-Drinker01.github.io</title>
+  <link rel="stylesheet" href="../style.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script> 
+    $(function(){
+      $('#header').load('../header.html'); 
+    });
+    $(function(){
+      $('#footer').load('../footer.html'); 
+    });
+  </script>
+</head>
+<body>
+
+  <div id="header"></div>
+  
+  <div class="main">
+    <div class="contentArea">
+      <div class="homeSegment">
+        <div class="homeInfo">
+          <p class="Label"> Pixel-Perfect Fog Of War </p>
+          <p class="subLabel"> Indirect rendering using DrawMeshInstancedIndirect </p>
+          <a href="../demos/downloads/fowDemo.zip" download="fowDemo">
+            <img src="../img/home.svg" alt="return to the main page" class="returnHome">
+          </a>
+          
+        </div>
+    
+        <div class="homeInfo">
+          <img src="../img/FOW.png" alt="Fog Of War" class="fitImage">
+        </div>
+      </div>
+    
+      <div class="homeSegment">
+        <div class="homeInfo">
+          <img src="../img/CoRSkinning.png" alt="CoRSkinning" class="fitImage">
+        </div>
+        <div class="homeInfo">
+          <p class="Label"> CoR Skinning </p>
+          <p class="subLabel"> An alternative skinning algorithm to preserve mesh volume </p>
+          <p class="para"> Standard Linear Blend Skinning (LBS) is a tried and true algorithm for mesh skinning, that many engines, including unity and unreal engine, use. However, there are some drawbacks to this method. In extreme cases, the algorithm can lead to whats called "candy wrapper" artifacts, which causes the mesh to lose volume while skinning. Optimized Center Of Rotation (CoR) aims to fix this issue by precumputing better centers of rotation. </p>      
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="footer"></div>
+  <script src="../app.js"></script>
+</body>
+</html>
