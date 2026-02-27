@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>BRG Instanced Renderer Config | BRG Instanced Renderer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="BRG Instanced Renderer Config | BRG Instanced Renderer ">
+      <meta name="description" content="Documentation for BRG Instanced Renderer.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="BRG Instanced Renderer">
+            BRG Instanced Renderer
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="brg-instanced-renderer-config">BRG Instanced Renderer Config</h1>
+
+<hr>
+<p>The global configuration asset for BRG Instanced Renderer. This ScriptableObject controls culling behavior, memory allocation, shadow settings, LOD crossfade, and debug options.</p>
+<p>By default, the config asset is located at <code>Assets/BRG Instanced Renderer/BRGIRConfig.asset</code> and is automatically registered in <strong>Edit &gt; Project Settings &gt; Player &gt; Preloaded Assets</strong>.</p>
+<p>To select the active config in the Project window, use the menu <strong>Tools &gt; BRG Instanced Renderer &gt; Select Config</strong>.</p>
+<h2 id="culling">Culling</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use BRG Occlusion Culling</strong></td>
+<td>bool</td>
+<td>true</td>
+<td>Enables per-chunk occlusion testing against Unity's baked occlusion data. Chunks fully hidden behind occluders are skipped.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pooling">Pooling</h2>
+<p>These settings control memory allocation for instance storage. Adjusting these affects GPU memory usage and culling granularity.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pool Size</strong></td>
+<td>int</td>
+<td>64</td>
+<td>Number of instance slots per memory pool. Valid values: 64, 128, or 256. Smaller values waste less memory on partially-filled pools. Larger values reduce the number of pools to manage.</td>
+</tr>
+<tr>
+<td><strong>Max Pools Per Chunk</strong></td>
+<td>int</td>
+<td>32</td>
+<td>Maximum number of pools each chunk can hold. Higher values allow more instances per chunk, meaning fewer chunks to cull but less granular culling.</td>
+</tr>
+<tr>
+<td><strong>Initial Chunk Count</strong></td>
+<td>int</td>
+<td>256</td>
+<td>Starting number of chunk slots. Grows automatically as needed.</td>
+</tr>
+<tr>
+<td><strong>Initial Pool Count</strong></td>
+<td>int</td>
+<td>1024</td>
+<td>Starting number of pool slots. Grows automatically as needed.</td>
+</tr>
+<tr>
+<td><strong>Enable Auto Compaction</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>When enabled, GPU buffers are periodically shrunk when waste exceeds 50%. <strong>Can cause frame hitches during compaction, If possible, please use <a href="../api/core-methods.html#compactbuffers">manual compaction</a> instead!</strong></td>
+</tr>
+</tbody>
+</table>
+<div class="TIP">
+<h5>Tip</h5>
+<p>If you know your scene's approximate instance count, set the initial chunk and pool counts high enough to avoid runtime growth. Alternatively, use <strong>Gathered Allocations</strong> (below) to record peak values automatically.</p>
+</div>
+<h2 id="light-probes">Light Probes</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Support Legacy Light Probes</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Samples SphericalHarmonicsL2 per instance. Adds 128 bytes per instance to the GPU buffer (~65% total per-instance memory increase). <strong>Only needed if your project uses legacy light probes instead of APV.</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="per-instance-color">Per-Instance Color</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Enable Per-Instance Color</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Enables storing a color per-instance. This color can be read using the included BRGIR_Color ShaderGraph subgraph. <strong>Adds 4 bytes of GPU buffer memory per instance.</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="shadows">Shadows</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Max Shadow Crossfade Cascade</strong></td>
+<td>int</td>
+<td>4</td>
+<td>Number of shadow cascades (starting from cascade 1) that use dithered crossfade. Smooths the seam between cascades. Set to 0 to disable. Can be overridden per-prototype via <a href="brg-prototype-extra-data.md">BRG Prototype Extra Data</a>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="lod-crossfade">LOD Crossfade</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Debug Disable Crossfade</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Disables all crossfade (stateless and animated), forcing instant LOD transitions.</td>
+</tr>
+<tr>
+<td><strong>Default Animated Crossfade Duration</strong></td>
+<td>float</td>
+<td>0.5s</td>
+<td>Time in seconds for animated LOD crossfade transitions. Applies to all prototypes unless overridden per-prefab. Can be overridden per-prototype via <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a>.</td>
+</tr>
+<tr>
+<td><strong>Skip Intermediate LODs</strong></td>
+<td>bool</td>
+<td>true</td>
+<td>When an instance needs to transition multiple LOD levels (e.g., LOD0 to LOD3), skip intermediate levels and jump directly to the target. Reduces the number of fade transitions.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="debug">Debug</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Enable Debug Logging</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Outputs verbose logging to the console for all major operations.</td>
+</tr>
+<tr>
+<td><strong>Debug Bypass Chunk Culling</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Processes all instances regardless of chunk-level culling results. Useful for verifying that chunk culling is working correctly.</td>
+</tr>
+<tr>
+<td><strong>Debug Disable Culling</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Skips GPU culling entirely and reuses the previous frame's visibility. Useful for isolating culling cost in the profiler.</td>
+</tr>
+<tr>
+<td><strong>Debug Disable Rendering</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Runs GPU culling as normal but skips the actual BRG rendering. Useful for isolating rendering cost.</td>
+</tr>
+<tr>
+<td><strong>Debug Visualize Culling In Scene View</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Freezes culling to the Game camera's frustum so you can orbit in the Scene View and see what is being culled.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="gathered-allocations">Gathered Allocations</h2>
+<p>The system can record peak allocation values during runtime and use them as initial sizes on the next run, eliminating runtime buffer growth.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Record Allocations</strong></td>
+<td>bool</td>
+<td>Record peak allocation sizes during play mode and use them as initial allocation sizes.</td>
+</tr>
+<tr>
+<td><strong>Gathered Max Chunks</strong></td>
+<td>int</td>
+<td>Peak chunk count from previous sessions.</td>
+</tr>
+<tr>
+<td><strong>Gathered Max Pools</strong></td>
+<td>int</td>
+<td>Peak pool count from previous sessions.</td>
+</tr>
+<tr>
+<td><strong>Gathered Max Instances</strong></td>
+<td>int</td>
+<td>Peak instance count from previous sessions.</td>
+</tr>
+</tbody>
+</table>
+<p>Peak values are recorded automatically during play mode.</p>
+<table>
+<thead>
+<tr>
+<th>Button</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Copy to Initial Sizes</strong></td>
+<td>Copies the gathered peak values to the Initial Chunk Count and Initial Pool Count fields in the Pooling section. A <strong>Pool Padding</strong> slider (1.0–1.25) adds headroom above the recorded peaks.</td>
+</tr>
+<tr>
+<td><strong>Clear Gathered Data</strong></td>
+<td>Resets all gathered values to zero.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="inspector-controls">Inspector Controls</h2>
+<p>The config inspector also shows:</p>
+<table>
+<thead>
+<tr>
+<th>Button</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Set This As Active</strong></td>
+<td>Registers this config in Preloaded Assets, replacing any existing config.</td>
+</tr>
+<tr>
+<td><strong>Open System Window</strong></td>
+<td>Opens the <a href="../editor-tools/system-window.html">System Window</a> for live statistics.</td>
+</tr>
+</tbody>
+</table>
+<p>The inspector validates that exactly one config is registered in Preloaded Assets and shows a warning if duplicates are found.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

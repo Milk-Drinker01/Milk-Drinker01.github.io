@@ -89,71 +89,80 @@
 
 <hr>
 <h2 id="what-is-brg-instanced-renderer">What is BRG Instanced Renderer?</h2>
-<p>BRG Instanced Renderer is the fastest GPU instancing solution for Unity. Render massive amounts of instances with minimal draw calls, and stream millions of instances with zero hitching. BRG Instanced Renderer also runs in the editor outside of play mode, for rapid iteration times.</p>
-<p>The renderer works with zero modifications to your shaders, using the Batch Renderer Group variants that Unity automatically creates for all SRP shaders.</p>
-<h2 id="key-features">Key Features</h2>
-<h3 id="ultimate-performance">Ultimate Performance</h3>
-<p>Built on Unity's Batch Renderer Group API, everything runs on the GPU via compute shaders.</p>
+<p>BRG Instanced Renderer is the best way to optimize rendering in your project. Render massive amounts of instances with minimal draw calls, and stream millions of instances to the system with zero hitching. BRG Instanced Renderer also runs in the editor outside of play mode, for rapid editor speed and iteration times.</p>
+<p>On top of exceptional performance, you can expect a true &quot;works right out of the box&quot; setup, as the renderer will work with zero modifications to your shaders, due to using the Batch Renderer Group variants that Unity automatically creates for all SRP shaders.</p>
+<h2 id="ultimate-performance">Ultimate Performance</h2>
+<p>Thanks to the latest Batch Renderer Group API, BRG Instanced Renderer is the fastest GPU instancer on the market. Everything is designed to run on the GPU via compute shaders.</p>
 <ul>
-<li>Innovative instance pooling and chunk system for hierarchical culling</li>
-<li>Hitchless streaming of instances</li>
+<li>Innovative instance pooling and chunk system
+<ul>
+<li>Allows for hierarchical culling</li>
+<li>Allows for hitchless streaming of instances</li>
+</ul>
+</li>
+<li>Culling on 3 levels:
+<ul>
+<li>Hierarchical occlusion culling</li>
+<li>Hierarchical frustum culling</li>
+<li>Per-instance frustum and distance culling</li>
+</ul>
+</li>
+<li>Compute shader shadow cascade culling</li>
+<li>Compute shader LOD selection</li>
+<li>Custom-built terrain detail spawning system allows for spawning and streaming millions of instances with zero frame hitches, using C# Jobs and Burst Compiler</li>
 <li>Zero hotpath garbage</li>
-</ul>
-<h3 id="multi-level-culling">Multi-Level Culling</h3>
-<p>Five types of GPU-accelerated culling work together to minimize draw calls:</p>
+<li>Optional features to optimize shadow rendering:
 <ul>
-<li>Hierarchical frustum culling (chunk-level, then per-instance)</li>
-<li>Hierarchical occlusion culling via Unity's baked occlusion data</li>
-<li>Per-instance distance culling</li>
-<li>Screen-size culling with configurable fade modes</li>
-<li>Dynamic density culling to thin out distant instances</li>
-</ul>
-<h3 id="shadow-optimization">Shadow Optimization</h3>
-<p>Fine-grained per-prefab shadow control:</p>
-<ul>
-<li>Clamp the maximum shadow cascade per-prefab</li>
-<li>Set a minimum shadow LOD to render shadows with fewer polygons</li>
+<li>Slider to clamp the maximum shadow cascade per-prefab, great for optimizing shadow rendering on details</li>
+<li>Option to set the minimum shadow LOD per-prefab to render shadows with fewer polygons</li>
 <li>Limit maximum shadow distance per-prefab</li>
-<li>Control which shadow cascades use crossfade dithering</li>
 </ul>
-<h3 id="lod-groups-and-mesh-lod">LOD Groups and Mesh LOD</h3>
-<p>Full LOD group support with multiple crossfade options:</p>
+</li>
+<li>Dynamic density, with 2 control modes:
 <ul>
-<li>No Crossfade, Stateless Crossfade, and Animated Crossfade modes</li>
-<li>Mesh LOD support — single mesh with internal LOD ranges (Unity 6.2+)</li>
-<li>Minimum screen-size culling with fade</li>
+<li>Screen-size based</li>
+<li>Start/end distance based</li>
+</ul>
+</li>
+</ul>
+<h2 id="we-have-the-features-you-need">We Have the Features You Need</h2>
+<p>No missing links. BRG Instanced Renderer comes packed with every feature you could possibly need.</p>
+<ul>
+<li>LOD Groups with all normal crossfade options
+<ul>
+<li>No Crossfade</li>
+<li>Normal Crossfade</li>
+<li>Animated Crossfade</li>
+</ul>
+</li>
+<li>Support for new Unity Mesh LOD with all crossfade modes</li>
+<li>Minimum screen-size culling (with fading)</li>
+<li>Per-instance rendering layers</li>
+<li>Per-instance motion vectors toggle for correct TAA and upscaling</li>
 <li>LOD Bias from Quality Settings, with optional per-camera multiplier</li>
-<li>Option to skip intermediate LODs for faster transitions</li>
+<li>User-interactable API for your existing streaming and loading setups</li>
+<li>Both APV and legacy light probes are supported</li>
 </ul>
-<h3 id="rendering-features">Rendering Features</h3>
+<h2 id="unmatched-simplicity">Unmatched Simplicity</h2>
+<p>BRG Instanced Renderer is designed to be as simple as possible to use.</p>
 <ul>
-<li>Per-prototype rendering layers</li>
-<li>Per-prototype motion vectors toggle for correct TAA and upscaling</li>
-<li>Per-instance color tinting</li>
-<li>Both APV and legacy light probe support</li>
-<li>Runtime density scaling API</li>
-</ul>
-<h3 id="terrain-detail-system">Terrain Detail System</h3>
-<p>Custom-built terrain detail system using C# Jobs and Burst Compiler. Spawn and stream millions of grass and detail instances around the camera with zero frame hitches. Trees are extracted and uploaded once at startup.</p>
-<h3 id="shader-compatibility">Shader Compatibility</h3>
-<p>Requires zero modification to your existing shaders:</p>
+<li><strong>For Terrain:</strong> Add a single component to your terrain's GameObject. That's it.</li>
+<li>Terrain updates are insanely fast. Paint trees and details with zero lag. (Your artists will thank us!)</li>
+<li>Requires zero modification to your existing shaders, due to utilizing Batch Renderer Group variants
 <ul>
-<li>All default URP/HDRP shaders</li>
-<li>All Shader Graph shaders</li>
-<li>All Amplify Shader Editor shaders</li>
-<li>All proper SRP-compatible shaders</li>
+<li>All default shaders are compatible</li>
+<li>All Shader Graph shaders are compatible</li>
+<li>All Amplify Shader Editor shaders are compatible</li>
+<li>Any shader that is compatible with GPU Resident Drawer</li>
 </ul>
-<h2 id="requirements">Requirements</h2>
-<ul>
-<li><strong>Unity Version:</strong> Unity 6+</li>
-<li><strong>Render Pipeline:</strong> URP or HDRP</li>
-<li><strong>Graphics API:</strong> Any compute-capable graphics API (DX11, DX12, Vulkan, Metal)</li>
+</li>
 </ul>
-<h3 id="tested-gpus">Tested GPUs</h3>
+<h2 id="guaranteed-to-work">Guaranteed to Work</h2>
+<p>Other assets fail with some GPU/graphics API combinations. BRG Instanced Renderer has been extensively tested, confirmed working, and tuned for all major GPU vendors, across all graphics APIs. (Compute-capable graphics API and device required.)</p>
 <table>
 <thead>
 <tr>
-<th>GPU Vendor</th>
+<th>Hardware</th>
 <th>Tested APIs</th>
 </tr>
 </thead>
@@ -170,8 +179,20 @@
 <td>Intel ARC</td>
 <td>DX11, DX12, Vulkan</td>
 </tr>
+<tr>
+<td>Apple (Silicon and Intel)</td>
+<td>Metal</td>
+</tr>
 </tbody>
 </table>
+<h2 id="5-star-rated-developer-and-support">5-Star Rated Developer and Support</h2>
+<p>Our team has been delivering 5-star assets for 4 years, with our reviews emphasizing exceptional support speed and quality. Contact us through our Discord for any bug reports or feature requests. We use BRG Instanced Renderer in our own shipped product, which makes fixing all reported bugs our top priority.</p>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li><strong>Unity Version:</strong> Unity 6+</li>
+<li><strong>Render Pipeline:</strong> URP or HDRP</li>
+<li><strong>Graphics API:</strong> Any compute-capable graphics API (DX11, DX12, Vulkan, Metal)</li>
+</ul>
 
 </article>
 

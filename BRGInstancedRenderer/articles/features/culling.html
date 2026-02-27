@@ -93,7 +93,7 @@
 <h4 id="frustum-culling">Frustum Culling</h4>
 <p>Instances outside the camera's field of view are excluded. Tested at both the chunk level and per-instance level for maximum efficiency.</p>
 <h4 id="occlusion-culling">Occlusion Culling</h4>
-<p>Chunks fully hidden behind occluders are skipped using Unity's baked occlusion data. Enable via <strong>Use BRG Occlusion Culling</strong> on the <a href="../components/brg-instanced-renderer-config.html">Config</a>.</p>
+<p>Chunks fully hidden behind occluders are skipped using Unity's baked occlusion data. Enable via <strong>Use BRG Occlusion Culling</strong> on the <a href="../getting-started/brg-instanced-renderer-config.html">Config</a>.</p>
 <h4 id="distance-culling">Distance Culling</h4>
 <p>Instances beyond a configurable distance are not rendered. Set per-group via <a href="../components/brg-instance-group.html">BRG Instance Group</a> or per-terrain via <a href="../components/brg-terrain-registerer.html">BRG Terrain Registerer</a>.</p>
 <h4 id="screen-size-culling">Screen-Size Culling</h4>
@@ -102,7 +102,7 @@
 <p>Gradually thins out instances at distance using a deterministic hash — no flickering. See <a href="dynamic-density.html">Dynamic Density</a> for details.</p>
 <p>Shadow rendering has its own dedicated culling pass, with per-cascade frustum testing and per-prototype cascade limits. See <a href="shadow-optimization.html">Shadow Optimization</a> for details.</p>
 <blockquote>
-<p>For culling settings, see <a href="../components/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a> and <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a>.</p>
+<p>For culling settings, see <a href="../getting-started/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a> and <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a>.</p>
 </blockquote>
 
 </article>

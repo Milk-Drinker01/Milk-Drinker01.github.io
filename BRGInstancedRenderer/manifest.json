@@ -72,16 +72,6 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "articles/components/brg-instanced-renderer-config.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/components/brg-instanced-renderer-config.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
       "source_relative_path": "articles/components/brg-prototype-extra-data.md",
       "output": {
         ".html": {
@@ -232,6 +222,16 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/getting-started/brg-instanced-renderer-config.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting-started/brg-instanced-renderer-config.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/getting-started/index.md",
       "output": {
         ".html": {
@@ -309,6 +309,16 @@
       "output": {
         "resource": {
           "relative_path": "favicon.ico"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/batch-render-group-variants.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/batch-render-group-variants.png"
         }
       },
       "version": ""

@@ -90,7 +90,7 @@
 <hr>
 <p>BRG Instanced Renderer provides several debug tools to help diagnose rendering, culling, and performance issues.</p>
 <h2 id="debug-flags">Debug Flags</h2>
-<p>All debug flags are on the <a href="../components/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a> asset.</p>
+<p>All debug flags are on the <a href="../getting-started/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a> asset.</p>
 <h3 id="enable-debug-logging">Enable Debug Logging</h3>
 <p>Outputs verbose console messages for all major operations: prototype registration, chunk allocation, pool resizing, culling dispatches, and more. Useful for understanding what the system is doing step by step.</p>
 <h3 id="debug-bypass-chunk-culling">Debug Bypass Chunk Culling</h3>
@@ -146,7 +146,7 @@
 <h2 id="common-issues">Common Issues</h2>
 <h3 id="instances-not-appearing">Instances not appearing</h3>
 <ol>
-<li>Verify the <a href="../components/brg-instanced-renderer-config.html">Config</a> asset is in <strong>Preloaded Assets</strong> (Edit &gt; Project Settings &gt; Player)</li>
+<li>Verify the <a href="../getting-started/brg-instanced-renderer-config.html">Config</a> asset is in <strong>Preloaded Assets</strong> (Edit &gt; Project Settings &gt; Player)</li>
 <li>Check that only one Config exists in Preloaded Assets</li>
 <li>Ensure the prefab has a valid <strong>Mesh Renderer</strong> and <strong>Mesh Filter</strong> (or <strong>LOD Group</strong>)</li>
 <li>If using <a href="../components/brg-instance-group.html">BRG Instance Group</a>, confirm it shows as converted in the inspector</li>
@@ -169,7 +169,7 @@
 <ul>
 <li>Verify <strong>Max Shadow Cascade</strong> is appropriate per-prototype</li>
 <li>Check that <strong>Min Shadow LOD</strong> isn't set too high (causing low-poly shadow silhouettes)</li>
-<li>If shadow cascade seams are visible, increase <strong>Max Shadow Crossfade Cascade</strong> on the <a href="../components/brg-instanced-renderer-config.html">Config</a> or per-prototype</li>
+<li>If shadow cascade seams are visible, increase <strong>Max Shadow Crossfade Cascade</strong> on the <a href="../getting-started/brg-instanced-renderer-config.html">Config</a> or per-prototype</li>
 </ul>
 <h3 id="performance-issues">Performance issues</h3>
 <ul>

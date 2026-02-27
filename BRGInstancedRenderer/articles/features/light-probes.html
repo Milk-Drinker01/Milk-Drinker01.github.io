@@ -92,14 +92,14 @@
 <h4 id="adaptive-probe-volumes-apv">Adaptive Probe Volumes (APV)</h4>
 <p>Unity's modern probe system (Unity 6+). Probe data is stored in a volumetric grid and sampled per-instance on the GPU. Automatically covers the entire scene without manual probe placement. This is the recommended mode for new projects.</p>
 <h4 id="legacy-light-probes">Legacy Light Probes</h4>
-<p>Traditional Light Probe Group support for existing scenes. Per-instance SH coefficients are sampled and uploaded to the GPU. Enable via <strong>Support Legacy Light Probes</strong> on the <a href="../components/brg-instanced-renderer-config.html">Config</a>.</p>
+<p>Traditional Light Probe Group support for existing scenes. Per-instance SH coefficients are sampled and uploaded to the GPU. Enable via <strong>Support Legacy Light Probes</strong> on the <a href="../getting-started/brg-instanced-renderer-config.html">Config</a>.</p>
 <div class="NOTE">
 <h5>Note</h5>
 <p>Legacy light probes add 128 bytes per instance to the GPU buffer (~65% total per-instance memory increase). Only enable if your project uses Light Probe Groups instead of APV.</p>
 </div>
 <p>Terrain detail instances (grass, small rocks, etc.) also receive light probe data automatically based on their position.</p>
 <blockquote>
-<p>For light probe settings, see <a href="../components/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a>.</p>
+<p>For light probe settings, see <a href="../getting-started/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a>.</p>
 </blockquote>
 
 </article>

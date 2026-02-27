@@ -92,9 +92,20 @@
 <ol>
 <li>Open <strong>Window &gt; Package Manager</strong>.</li>
 <li>Find <strong>BRG Instanced Renderer</strong> under <strong>My Assets</strong>.</li>
-<li>Click <strong>Import</strong>.</li>
+<li>Click <strong>Download &amp; Import</strong>.</li>
 </ol>
-<p>No additional project settings or shader modifications are required. BRG Instanced Renderer works right out of the box with all SRP shaders.</p>
+<h2 id="shader-stripping">Shader Stripping</h2>
+<p>After importing, you must ensure Unity does not strip the Batch Renderer Group shader variants that the system relies on:</p>
+<ol>
+<li>Open <strong>Edit &gt; Project Settings &gt; Graphics</strong>.</li>
+<li>Scroll to the <strong>Shader Stripping</strong> section.</li>
+<li>Set <strong>Batch Renderer Group Variants</strong> to <strong>Keep All</strong>.</li>
+</ol>
+<p><img src="../../images/batch-render-group-variants.png" alt="Batch Renderer Group Variants setting"></p>
+<div class="IMPORTANT">
+<h5>Important</h5>
+<p>If this is left on the default setting, Unity will strip the required shader variants and instances will not render in a player build!</p>
+</div>
 <h2 id="verify-the-config-asset">Verify the Config Asset</h2>
 <p>After import, a config asset is created automatically at <code>Assets/BRG Instanced Renderer/BRGIRConfig.asset</code>. This asset must be registered in your project's <strong>Preloaded Assets</strong> to work at runtime.</p>
 <p>To verify:</p>
