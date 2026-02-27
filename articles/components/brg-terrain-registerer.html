@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>BRG Terrain Registerer | BRG Instanced Renderer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="BRG Terrain Registerer | BRG Instanced Renderer ">
+      <meta name="description" content="Documentation for BRG Instanced Renderer.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="BRG Instanced Renderer">
+            BRG Instanced Renderer
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="brg-terrain-registerer">BRG Terrain Registerer</h1>
+
+<hr>
+<p>Registers a Unity Terrain's trees and details for GPU-instanced rendering through BRG Instanced Renderer. Trees are extracted once at startup. Details stream dynamically around the camera using C# Jobs and Burst Compiler.</p>
+<p>For a step-by-step setup guide, see <a href="../getting-started/terrain.html">Getting Started: Terrain</a>.</p>
+<h2 id="settings">Settings</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Disable Built-In Rendering</strong></td>
+<td>bool</td>
+<td>true</td>
+<td>Disables the terrain's native <code>drawTreesAndFoliage</code>, so BRG Instanced Renderer takes over all tree and detail rendering.</td>
+</tr>
+<tr>
+<td><strong>Enable Debug Logging</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Outputs detailed logging for tree extraction, detail streaming, and patch loading (Development builds only).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="trees">Trees</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cull Distance</strong></td>
+<td>float</td>
+<td>—</td>
+<td>Read-only. Shows the terrain's <strong>Tree Distance</strong> setting. Adjust this in Unity's Terrain settings.</td>
+</tr>
+<tr>
+<td><strong>Create Instance Handles</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Store per-instance handles for trees, enabling per-instance operations like <code>InstanceLink.SetColor</code>. Increases memory usage. Required for <code>GetTreeInstanceLinks()</code>.</td>
+</tr>
+<tr>
+<td><strong>Chunk Size</strong></td>
+<td>float</td>
+<td>256m</td>
+<td>World-space size of each spatial chunk for trees. Smaller values give better culling precision but more overhead.</td>
+</tr>
+<tr>
+<td><strong>Show Chunk Gizmos</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Draw wireframe boxes in the Scene View for each tree chunk, color-coded by fill percentage.</td>
+</tr>
+<tr>
+<td><strong>Show Instance Spheres</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Draw bounding spheres for each tree instance. Slow with many trees.</td>
+</tr>
+<tr>
+<td><strong>Skip BRG Upload</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Debug: skip GPU upload for trees.</td>
+</tr>
+</tbody>
+</table>
+<p>The inspector also shows a status line with tree prototype count, total instance count, and chunk count when registered.</p>
+<h2 id="details">Details</h2>
+<h3 id="streaming">Streaming</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Preserve Prototype Layers</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>When enabled, detail instances keep their prefab's layer. When disabled, details use the terrain GameObject's layer (matches Unity's tree behavior).</td>
+</tr>
+<tr>
+<td><strong>Cull Distance</strong></td>
+<td>float</td>
+<td>—</td>
+<td>Read-only. Shows the terrain's <strong>Detail Object Distance</strong> setting. Adjust this in Unity's Terrain settings.</td>
+</tr>
+<tr>
+<td><strong>Detail Chunk Size</strong></td>
+<td>float</td>
+<td>32m</td>
+<td>World-space size of detail streaming cells. Determines how finely details are streamed in and out around the camera. Snapped to terrain patch boundaries.</td>
+</tr>
+</tbody>
+</table>
+<p>The inspector shows computed read-only fields for <strong>Actual Chunk Size</strong> (snapped to patch boundaries) and <strong>Patch Size</strong> when a terrain is assigned.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Streaming</strong></td>
+<td>bool</td>
+<td>true</td>
+<td>When enabled, patches are loaded and unloaded based on camera distance. When disabled, all patches are loaded at startup.</td>
+</tr>
+<tr>
+<td><strong>Max Patch Extracts Per Frame</strong></td>
+<td>int</td>
+<td>4</td>
+<td>Maximum patches to extract data for per frame. Lower values give smoother loading but slower pop-in.</td>
+</tr>
+<tr>
+<td><strong>Max Patch Unloads Per Frame</strong></td>
+<td>int</td>
+<td>8</td>
+<td>Maximum patches to unload per frame when the camera moves away.</td>
+</tr>
+<tr>
+<td><strong>Max Concurrent Extraction Jobs</strong></td>
+<td>int</td>
+<td>32</td>
+<td>Maximum extraction jobs that can be in flight simultaneously.</td>
+</tr>
+<tr>
+<td><strong>Complete Jobs Same Frame</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Force extraction jobs to complete on the same frame they are scheduled. Eliminates pop-in at the cost of a per-patch main thread stall.</td>
+</tr>
+<tr>
+<td><strong>Skip Extract Throttle On Start</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Bypass the per-frame extract limit on the first frame so all in-range patches load immediately. Causes a one-time hitch but no pop-in.</td>
+</tr>
+<tr>
+<td><strong>Update Interval</strong></td>
+<td>float</td>
+<td>0.1s</td>
+<td>How often to check for patch changes in seconds. 0 = every frame. Editor only.</td>
+</tr>
+<tr>
+<td><strong>Unload Hysteresis</strong></td>
+<td>float</td>
+<td>10m</td>
+<td>Extra distance beyond the detail render distance to keep patches loaded, preventing rapid load/unload cycles at the boundary.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="transform-generation">Transform Generation</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Unity Transforms</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Use Unity's <code>ComputeDetailInstanceTransforms</code> API instead of the custom extraction algorithm. Slower and allocates GC, but produces a 1:1 match with Unity's built-in detail rendering.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="animated-crossfade">Animated Crossfade</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Snap Crossfade On Start</strong></td>
+<td>bool</td>
+<td>true</td>
+<td>Snap animated crossfade to the target LOD for patches already in range when the component initializes. Prevents a mass fade-in on scene load.</td>
+</tr>
+<tr>
+<td><strong>Snap Crossfade On Load</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Snap animated crossfade for patches streamed in during gameplay. When off, newly loaded details crossfade in smoothly. When on, they appear at their correct LOD immediately.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="debug">Debug</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Show Chunk Gizmos</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Draw wireframe boxes in the Scene View for each detail chunk, color-coded by fill percentage.</td>
+</tr>
+<tr>
+<td><strong>Show Instance Spheres</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Draw bounding spheres for each detail instance. Very slow — requires refresh to populate.</td>
+</tr>
+<tr>
+<td><strong>Skip BRG Upload</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Debug: skip GPU upload for details.</td>
+</tr>
+</tbody>
+</table>
+<p>The inspector also shows a status line with detail prototype count, patch grid size, loaded instance/patch/chunk counts, and pending patches.</p>
+<h2 id="detail-prefab-overrides-editor-only">Detail Prefab Overrides (Editor Only)</h2>
+<p>The inspector provides a <strong>Detail Prefab Overrides</strong> section where you can substitute terrain detail prototypes with LOD Group prefabs. Click <strong>Refresh Detail List</strong> to populate the list from the terrain's detail settings.</p>
+<p>Texture-based details show a warning prompting you to assign an override prefab for BRG rendering.</p>
+<h2 id="inspector-actions">Inspector Actions</h2>
+<table>
+<thead>
+<tr>
+<th>Button</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Refresh All</strong></td>
+<td>Reloads all tree and detail data from the terrain. Call after modifying terrain data outside the paint tools.</td>
+</tr>
+<tr>
+<td><strong>Clear Caches</strong></td>
+<td>Clears cached extraction data and performs a full reload.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="public-methods">Public Methods</h2>
+<h3 id="gettreeinstancelinks">GetTreeInstanceLinks</h3>
+<pre><code class="lang-csharp">public InstanceLink[] GetTreeInstanceLinks()
+</code></pre>
+<p>Returns <code>InstanceLink</code> handles for all registered tree instances. Requires <strong>Create Instance Handles</strong> to be enabled on the Trees section. Use these handles to modify individual trees at runtime (e.g., set per-tree color).</p>
+<h3 id="clearextractioncache">ClearExtractionCache</h3>
+<pre><code class="lang-csharp">public static void ClearExtractionCache(Terrain terrain)
+public static void ClearAllExtractionCaches()
+</code></pre>
+<p>Clear cached tree and detail extraction data for a specific terrain or all terrains. The component caches extraction data to avoid redundant work across enable/disable cycles. Call these when terrain data has changed externally and you need a clean re-extraction.</p>
+<h2 id="how-trees-work">How Trees Work</h2>
+<p>Tree instances are read from the terrain data when the component initializes. They are:</p>
+<ol>
+<li>Spatially batched into chunks for hierarchical culling</li>
+<li>Uploaded to the GPU as permanent instances</li>
+<li>Matched to the prefab assigned in the terrain's tree prototype settings</li>
+</ol>
+<p>In the editor, tree changes made with Unity's terrain paint tools are detected automatically. The registerer performs an incremental update without needing a manual refresh.</p>
+<h2 id="how-details-work">How Details Work</h2>
+<p>Terrain details (grass, flowers, small vegetation) are streamed based on camera proximity:</p>
+<ul>
+<li>The terrain is divided into a grid based on <strong>Detail Chunk Size</strong></li>
+<li>Patches near the camera are loaded using Burst-compiled extraction jobs</li>
+<li>Patches are unloaded as the camera moves away</li>
+<li>Extraction runs on worker threads to avoid frame hitches</li>
+</ul>
+<p>This allows millions of detail instances without loading the entire terrain upfront. See <a href="../features/terrain-detail-spawning.html">Terrain Detail Spawning</a> for more on the custom extraction algorithm.</p>
+<h2 id="editor-behavior">Editor Behavior</h2>
+<ul>
+<li>Tree and detail changes from Unity's terrain paint tools are detected and updated automatically</li>
+<li>The component works outside of play mode for editor preview</li>
+<li>Individual terrain trees can be selected and edited directly in the Scene View using the terrain tree selector tool</li>
+</ul>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>One BRG Terrain Registerer per Terrain GameObject.</li>
+<li>The component caches extraction data per terrain. Cached data survives enable/disable cycles to avoid redundant extraction.</li>
+<li>Per-prefab settings (shadows, density, crossfade) are controlled via <a href="brg-prototype-extra-data.html">BRG Prototype Extra Data</a> on the tree/detail prefabs.</li>
+<li>Use <strong>Clear Caches</strong> if you modify terrain data through scripts, as the automatic detection only covers the paint tools.</li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

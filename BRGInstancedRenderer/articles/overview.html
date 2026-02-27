@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Overview | BRG Instanced Renderer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Overview | BRG Instanced Renderer ">
+      <meta name="description" content="Documentation for BRG Instanced Renderer.">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.png" alt="BRG Instanced Renderer">
+            BRG Instanced Renderer
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="overview">Overview</h1>
+
+<hr>
+<h2 id="what-is-brg-instanced-renderer">What is BRG Instanced Renderer?</h2>
+<p>BRG Instanced Renderer is the fastest GPU instancing solution for Unity. Render massive amounts of instances with minimal draw calls, and stream millions of instances with zero hitching. BRG Instanced Renderer also runs in the editor outside of play mode, for rapid iteration times.</p>
+<p>The renderer works with zero modifications to your shaders, using the Batch Renderer Group variants that Unity automatically creates for all SRP shaders.</p>
+<h2 id="key-features">Key Features</h2>
+<h3 id="ultimate-performance">Ultimate Performance</h3>
+<p>Built on Unity's Batch Renderer Group API, everything runs on the GPU via compute shaders.</p>
+<ul>
+<li>Innovative instance pooling and chunk system for hierarchical culling</li>
+<li>Hitchless streaming of instances</li>
+<li>Zero hotpath garbage</li>
+</ul>
+<h3 id="multi-level-culling">Multi-Level Culling</h3>
+<p>Five types of GPU-accelerated culling work together to minimize draw calls:</p>
+<ul>
+<li>Hierarchical frustum culling (chunk-level, then per-instance)</li>
+<li>Hierarchical occlusion culling via Unity's baked occlusion data</li>
+<li>Per-instance distance culling</li>
+<li>Screen-size culling with configurable fade modes</li>
+<li>Dynamic density culling to thin out distant instances</li>
+</ul>
+<h3 id="shadow-optimization">Shadow Optimization</h3>
+<p>Fine-grained per-prefab shadow control:</p>
+<ul>
+<li>Clamp the maximum shadow cascade per-prefab</li>
+<li>Set a minimum shadow LOD to render shadows with fewer polygons</li>
+<li>Limit maximum shadow distance per-prefab</li>
+<li>Control which shadow cascades use crossfade dithering</li>
+</ul>
+<h3 id="lod-groups-and-mesh-lod">LOD Groups and Mesh LOD</h3>
+<p>Full LOD group support with multiple crossfade options:</p>
+<ul>
+<li>No Crossfade, Stateless Crossfade, and Animated Crossfade modes</li>
+<li>Mesh LOD support — single mesh with internal LOD ranges (Unity 6.2+)</li>
+<li>Minimum screen-size culling with fade</li>
+<li>LOD Bias from Quality Settings, with optional per-camera multiplier</li>
+<li>Option to skip intermediate LODs for faster transitions</li>
+</ul>
+<h3 id="rendering-features">Rendering Features</h3>
+<ul>
+<li>Per-prototype rendering layers</li>
+<li>Per-prototype motion vectors toggle for correct TAA and upscaling</li>
+<li>Per-instance color tinting</li>
+<li>Both APV and legacy light probe support</li>
+<li>Runtime density scaling API</li>
+</ul>
+<h3 id="terrain-detail-system">Terrain Detail System</h3>
+<p>Custom-built terrain detail system using C# Jobs and Burst Compiler. Spawn and stream millions of grass and detail instances around the camera with zero frame hitches. Trees are extracted and uploaded once at startup.</p>
+<h3 id="shader-compatibility">Shader Compatibility</h3>
+<p>Requires zero modification to your existing shaders:</p>
+<ul>
+<li>All default URP/HDRP shaders</li>
+<li>All Shader Graph shaders</li>
+<li>All Amplify Shader Editor shaders</li>
+<li>All proper SRP-compatible shaders</li>
+</ul>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li><strong>Unity Version:</strong> Unity 6+</li>
+<li><strong>Render Pipeline:</strong> URP or HDRP</li>
+<li><strong>Graphics API:</strong> Any compute-capable graphics API (DX11, DX12, Vulkan, Metal)</li>
+</ul>
+<h3 id="tested-gpus">Tested GPUs</h3>
+<table>
+<thead>
+<tr>
+<th>GPU Vendor</th>
+<th>Tested APIs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NVIDIA RTX/GTX</td>
+<td>DX11, DX12, Vulkan</td>
+</tr>
+<tr>
+<td>AMD</td>
+<td>DX11, DX12, Vulkan</td>
+</tr>
+<tr>
+<td>Intel ARC</td>
+<td>DX11, DX12, Vulkan</td>
+</tr>
+</tbody>
+</table>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

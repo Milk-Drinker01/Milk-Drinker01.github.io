@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Custom Registerer | BRG Instanced Renderer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Custom Registerer | BRG Instanced Renderer ">
+      <meta name="description" content="Documentation for BRG Instanced Renderer.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="BRG Instanced Renderer">
+            BRG Instanced Renderer
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="custom-registerer">Custom Registerer</h1>
+
+<hr>
+<p><code>BRGRegisterer</code> is an abstract base class for building your own instance registration components. It handles the BRG singleton lifecycle, prototype reference counting, chunk tracking with automatic cleanup, overflow management, and editor support — so your subclass only needs to focus on <em>what</em> to register and <em>where</em>.</p>
+<p>Both built-in registerers (<a href="../components/brg-instance-group.html">BRG Instance Group</a> and <a href="../components/brg-terrain-registerer.html">BRG Terrain Registerer</a>) extend this class.</p>
+<p>For a working example, see <a href="registerer-example.html">Registerer Example</a>.</p>
+<h2 id="creating-a-custom-registerer">Creating a Custom Registerer</h2>
+<p>Extend <code>BRGRegisterer</code> and implement two methods:</p>
+<pre><code class="lang-csharp">using Unity.Collections;
+using Unity.Mathematics;
+using UnityEngine;
+
+namespace BRGInstancedRenderer
+{
+    public class MyRegisterer : BRGRegisterer
+    {
+        [SerializeField] GameObject _prefab;
+
+        int _protoIndex = -1;
+        ChunkLink _chunk;
+
+        protected override void OnInitialize()
+        {
+            // 1. Register your prototype
+            _protoIndex = BaseRegisterPrototype(_prefab);
+            if (_protoIndex &lt; 0) return;
+
+            // 2. Allocate a chunk
+            _chunk = AllocChunk();
+            if (!_chunk.IsValid) return;
+
+            // 3. Build instance data
+            var instances = new NativeArray&lt;InstanceData&gt;(100, Allocator.TempJob);
+            for (int i = 0; i &lt; 100; i++)
+            {
+                instances[i] = new InstanceData
+                {
+                    position = new float3(i * 2f, 0f, 0f),
+                    rotation = quaternion.identity,
+                    scale = new float3(1f),
+                    prototypeIndex = _protoIndex,
+                    color = new Color32(255, 255, 255, 255)
+                };
+            }
+
+            // 4. Write to the chunk
+            var bounds = new Bounds(Vector3.zero, new Vector3(200f, 10f, 10f));
+            WriteChunk(_chunk, instances, bounds);
+            instances.Dispose();
+        }
+
+        protected override void OnShutdown()
+        {
+            // Clean up local state only.
+            // Do NOT free chunks or unregister prototypes - the base class does that.
+            _chunk = ChunkLink.Invalid;
+            _protoIndex = -1;
+        }
+    }
+}
+</code></pre>
+<p>The base class automatically:</p>
+<ul>
+<li>Acquires the <code>BRGInstancedRenderer</code> singleton</li>
+<li>Calls <code>OnInitialize()</code> on enable, <code>OnShutdown()</code> on disable</li>
+<li>Frees all chunks allocated via <code>AllocChunk()</code> on shutdown</li>
+<li>Unregisters all prototypes registered via <code>BaseRegisterPrototype()</code> on shutdown</li>
+<li>Handles editor lifecycle (<code>[ExecuteAlways]</code> with deferred initialization)</li>
+</ul>
+<h2 id="structs">Structs</h2>
+<h3 id="instancedata">InstanceData</h3>
+<p>Per-instance data for registration and updates.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>position</strong></td>
+<td>float3</td>
+<td>World-space position.</td>
+</tr>
+<tr>
+<td><strong>rotation</strong></td>
+<td>quaternion</td>
+<td>World-space rotation.</td>
+</tr>
+<tr>
+<td><strong>scale</strong></td>
+<td>float3</td>
+<td>Local scale.</td>
+</tr>
+<tr>
+<td><strong>prototypeIndex</strong></td>
+<td>int</td>
+<td>Global prototype index returned by <code>BaseRegisterPrototype</code>.</td>
+</tr>
+<tr>
+<td><strong>color</strong></td>
+<td>Color32</td>
+<td>Per-instance color tint. Requires <strong>Enable Per-Instance Color</strong> on the <a href="../components/brg-instanced-renderer-config.html">Config</a>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="prototypedata">PrototypeData</h3>
+<p>Explicit prototype configuration for batch registration via <code>BaseRegisterPrototypes</code>. Most users can use <code>BaseRegisterPrototype(GameObject)</code> instead, which extracts this data from the prefab automatically.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>sourcePrefab</strong></td>
+<td>GameObject</td>
+<td>Original prefab (used for identity comparison).</td>
+</tr>
+<tr>
+<td><strong>mesh</strong></td>
+<td>Mesh</td>
+<td>Base mesh (LOD 0).</td>
+</tr>
+<tr>
+<td><strong>materials</strong></td>
+<td>Material[]</td>
+<td>Materials per submesh (LOD 0).</td>
+</tr>
+<tr>
+<td><strong>lodMeshes</strong></td>
+<td>Mesh[]</td>
+<td>Additional LOD meshes (LOD 1+).</td>
+</tr>
+<tr>
+<td><strong>lodMaterials</strong></td>
+<td>Material[][]</td>
+<td>Materials per LOD level.</td>
+</tr>
+<tr>
+<td><strong>lodScreenSizes</strong></td>
+<td>float[]</td>
+<td>Screen relative heights for LOD transitions.</td>
+</tr>
+<tr>
+<td><strong>lodFadeTransitionWidths</strong></td>
+<td>float[]</td>
+<td>Crossfade width per LOD level.</td>
+</tr>
+<tr>
+<td><strong>lodCastsShadows</strong></td>
+<td>bool[]</td>
+<td>Whether each LOD casts shadows.</td>
+</tr>
+<tr>
+<td><strong>lodGroupSize</strong></td>
+<td>float</td>
+<td>Reference size for LOD calculations.</td>
+</tr>
+<tr>
+<td><strong>fadeMode</strong></td>
+<td>LODFadeMode</td>
+<td>Crossfade mode from LODGroup.</td>
+</tr>
+<tr>
+<td><strong>maxShadowCascade</strong></td>
+<td>int</td>
+<td>Max shadow cascades (default 4).</td>
+</tr>
+<tr>
+<td><strong>minShadowLOD</strong></td>
+<td>int</td>
+<td>Minimum LOD for shadow mesh (default 0).</td>
+</tr>
+<tr>
+<td><strong>maxShadowDistance</strong></td>
+<td>float</td>
+<td>Max shadow distance, 0 = global (default 0).</td>
+</tr>
+<tr>
+<td><strong>enableDensityScaling</strong></td>
+<td>bool</td>
+<td>Enable runtime density scaling.</td>
+</tr>
+<tr>
+<td><strong>enableDynamicDensity</strong></td>
+<td>bool</td>
+<td>Enable per-instance dynamic density.</td>
+</tr>
+<tr>
+<td><strong>dynamicDensityMode</strong></td>
+<td>DynamicDensityMode</td>
+<td>ScreenSize or Distance.</td>
+</tr>
+<tr>
+<td><strong>layer</strong></td>
+<td>int</td>
+<td>GameObject layer from prefab.</td>
+</tr>
+<tr>
+<td><strong>renderingLayerMask</strong></td>
+<td>uint</td>
+<td>URP/HDRP rendering layer mask.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="chunklink">ChunkLink</h3>
+<p>Handle to an allocated BRG chunk. Tracked by the base class for automatic cleanup.</p>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Id</strong></td>
+<td>int</td>
+<td>Internal chunk identifier.</td>
+</tr>
+<tr>
+<td><strong>IsValid</strong></td>
+<td>bool</td>
+<td><code>true</code> if the chunk was successfully allocated.</td>
+</tr>
+<tr>
+<td><strong>Invalid</strong></td>
+<td>static</td>
+<td>Sentinel value for an invalid chunk.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="instancelink">InstanceLink</h3>
+<p>Handle to a single instance within a chunk. Provides convenience methods for per-instance modification.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SetColor(Color32)</code></td>
+<td>Set per-instance color.</td>
+</tr>
+<tr>
+<td><code>SetPosition(float3)</code></td>
+<td>Set position only.</td>
+</tr>
+<tr>
+<td><code>SetRotation(quaternion)</code></td>
+<td>Set rotation only.</td>
+</tr>
+<tr>
+<td><code>SetScale(float3)</code></td>
+<td>Set scale only.</td>
+</tr>
+<tr>
+<td><code>MoveAndRotate(float3, quaternion)</code></td>
+<td>Set position and rotation.</td>
+</tr>
+<tr>
+<td><code>Move(float3, quaternion, float3)</code></td>
+<td>Set full TRS (position, rotation, scale).</td>
+</tr>
+<tr>
+<td><code>SampleLightProbe(float3)</code></td>
+<td>Re-sample light probes at the given position.</td>
+</tr>
+<tr>
+<td><code>Remove()</code></td>
+<td>Remove this instance from its chunk.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SlotIndex</strong></td>
+<td>int</td>
+<td>Global slot index in the instance buffer.</td>
+</tr>
+<tr>
+<td><strong>ChunkId</strong></td>
+<td>int</td>
+<td>The chunk this instance belongs to (may be an overflow chunk).</td>
+</tr>
+<tr>
+<td><strong>IsValid</strong></td>
+<td>bool</td>
+<td><code>true</code> if the instance handle is valid.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="protected-properties">Protected Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>BRGSystem</strong></td>
+<td>BRGInstancedRenderer</td>
+<td>Reference to the singleton. Set before <code>OnInitialize()</code> is called, cleared after <code>OnShutdown()</code> returns. Use it freely during those methods.</td>
+</tr>
+<tr>
+<td><strong>_registered</strong></td>
+<td>bool</td>
+<td><code>true</code> while the registerer is initialized. Check this before performing operations.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="manual-lifecycle">Manual Lifecycle</h2>
+<p>By default, <code>BRGRegisterer</code> initializes on <code>OnEnable</code> and shuts down on <code>OnDisable</code>. If you need manual control (e.g., a button-driven workflow), override <code>OnEnable</code>/<code>OnDisable</code> and call these methods directly:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>void Initialize()</code></td>
+<td>Acquire the singleton and call <code>OnInitialize()</code>. Safe to call multiple times — does nothing if already registered.</td>
+</tr>
+<tr>
+<td><code>void Shutdown()</code></td>
+<td>Call <code>OnShutdown()</code>, free all tracked chunks and prototypes, and release the singleton.</td>
+</tr>
+</tbody>
+</table>
+<p>See the <a href="registerer-example.html">Registerer Example</a> for a working example of manual lifecycle using <code>_autoRegister</code>.</p>
+<h2 id="protected-api">Protected API</h2>
+<p>These methods are available to your <code>BRGRegisterer</code> subclass.</p>
+<h3 id="prototype-registration">Prototype Registration</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>int BaseRegisterPrototype(GameObject prefab)</code></td>
+<td>Register a single prefab as a prototype. Returns the global prototype index, or -1 on failure. Tracked for automatic unregistration.</td>
+</tr>
+<tr>
+<td><code>Dictionary&lt;int,int&gt; BaseRegisterPrototypes(List&lt;PrototypeData&gt; prototypes)</code></td>
+<td>Batch-register prototypes from explicit data. Returns a local-to-global index remap dictionary. Tracked for automatic unregistration.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="chunk-management">Chunk Management</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ChunkLink AllocChunk()</code></td>
+<td>Allocate a new chunk. Tracked for automatic cleanup on shutdown.</td>
+</tr>
+<tr>
+<td><code>void WriteChunk(ChunkLink, NativeArray&lt;InstanceData&gt;, Bounds, ...)</code></td>
+<td>Write instances to a chunk. Automatically splits across overflow chunks if instance count exceeds <code>MaxInstancesPerChunk</code>.</td>
+</tr>
+<tr>
+<td><code>void ReleaseChunk(ChunkLink)</code></td>
+<td>Free a chunk and all its overflow chunks. Idempotent.</td>
+</tr>
+<tr>
+<td><code>void RecalculateChunkBounds(ChunkLink, Bounds)</code></td>
+<td>Update chunk culling bounds.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="instance-management">Instance Management</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>InstanceLink AddInstance(ChunkLink, InstanceData)</code></td>
+<td>Add a single instance. Tries the primary chunk, then overflow chunks, then allocates a new overflow if needed. Returns <code>InstanceLink.Invalid</code> on failure.</td>
+</tr>
+<tr>
+<td><code>InstanceLink[] AddInstances(ChunkLink, NativeArray&lt;InstanceData&gt;, int)</code></td>
+<td>Add multiple instances with automatic overflow. Returns an array of <code>InstanceLink</code> handles.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="queries">Queries</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>InstanceLink[] GetInstanceLinks(ChunkLink)</code></td>
+<td>Get <code>InstanceLink</code> handles for all instances in the chunk (primary + overflow). Only available for chunks written with <code>createInstanceHandles = true</code>.</td>
+</tr>
+<tr>
+<td><code>int[] GetInstanceSlots(ChunkLink)</code></td>
+<td>Get raw global slot indices for the primary chunk only.</td>
+</tr>
+<tr>
+<td><code>int GetTotalChunkInstanceCount(ChunkLink)</code></td>
+<td>Total instance count including overflow chunks.</td>
+</tr>
+<tr>
+<td><code>int GetOverflowChunkCount(ChunkLink)</code></td>
+<td>Number of overflow chunks attached to this chunk.</td>
+</tr>
+<tr>
+<td><code>void GetPerChunkInstanceCounts(ChunkLink, List&lt;int&gt;)</code></td>
+<td>Populates the list with instance counts: primary chunk at index 0, then each overflow chunk.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="callbacks">Callbacks</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>virtual void OnInstanceHandlesProvided(int chunkId)</code></td>
+<td>Called when deferred chunk writes complete for chunks with <code>createInstanceHandles = true</code>. Override to cache <code>InstanceLink</code> handles.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="writechunk-parameters">WriteChunk Parameters</h2>
+<p>The <code>WriteChunk</code> method has several optional parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>link</strong></td>
+<td>ChunkLink</td>
+<td>—</td>
+<td>The chunk to write to.</td>
+</tr>
+<tr>
+<td><strong>instances</strong></td>
+<td>NativeArray&lt;InstanceData&gt;</td>
+<td>—</td>
+<td>Instance data array.</td>
+</tr>
+<tr>
+<td><strong>bounds</strong></td>
+<td>Bounds</td>
+<td>—</td>
+<td>World-space AABB used for hierarchical culling. Should tightly enclose all instances.</td>
+</tr>
+<tr>
+<td><strong>cullDistance</strong></td>
+<td>float</td>
+<td>0</td>
+<td>Per-chunk max render distance. 0 = unlimited.</td>
+</tr>
+<tr>
+<td><strong>snapAnimatedCrossfade</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Skip the animated crossfade fade-in for these instances. Set to <code>true</code> for instances that already exist in the world (e.g. loaded from save).</td>
+</tr>
+<tr>
+<td><strong>createInstanceHandles</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Track per-instance slot indices, enabling <code>GetInstanceLinks()</code> and per-instance operations. Costs additional memory.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="overflow-chunks">Overflow Chunks</h2>
+<p>When a <code>WriteChunk</code> call contains more instances than <code>MaxInstancesPerChunk</code>, the base class automatically allocates overflow chunks and splits the data across them. This is transparent to the subclass:</p>
+<ul>
+<li><code>GetInstanceLinks()</code> returns handles from the primary chunk and all overflow chunks combined</li>
+<li><code>GetTotalChunkInstanceCount()</code> sums across all chunks</li>
+<li><code>AddInstance()</code> tries the primary chunk, then existing overflows, then allocates a new overflow</li>
+<li><code>ReleaseChunk()</code> frees the primary chunk and all its overflows</li>
+</ul>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>Always use <code>BaseRegisterPrototype</code> / <code>BaseRegisterPrototypes</code> instead of calling <code>BRGSystem.RegisterPrototype</code> directly. The base class tracks these for automatic cleanup.</li>
+<li>Always use <code>AllocChunk</code> / <code>ReleaseChunk</code> instead of calling <code>BRGSystem.AllocateChunk</code> / <code>FreeChunk</code> directly, for the same reason.</li>
+<li>Do <strong>not</strong> free chunks or unregister prototypes in <code>OnShutdown()</code>. The base class handles all BRG resource cleanup after <code>OnShutdown()</code> returns.</li>
+<li>The <code>BRGSystem</code> property is set before <code>OnInitialize()</code> and cleared after <code>OnShutdown()</code>. Use it freely during those methods.</li>
+<li><code>BRGRegisterer</code> is marked <code>[ExecuteAlways]</code>, so it works in the editor outside of play mode.</li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

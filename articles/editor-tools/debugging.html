@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Debugging | BRG Instanced Renderer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Debugging | BRG Instanced Renderer ">
+      <meta name="description" content="Documentation for BRG Instanced Renderer.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="BRG Instanced Renderer">
+            BRG Instanced Renderer
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="debugging">Debugging</h1>
+
+<hr>
+<p>BRG Instanced Renderer provides several debug tools to help diagnose rendering, culling, and performance issues.</p>
+<h2 id="debug-flags">Debug Flags</h2>
+<p>All debug flags are on the <a href="../components/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a> asset.</p>
+<h3 id="enable-debug-logging">Enable Debug Logging</h3>
+<p>Outputs verbose console messages for all major operations: prototype registration, chunk allocation, pool resizing, culling dispatches, and more. Useful for understanding what the system is doing step by step.</p>
+<h3 id="debug-bypass-chunk-culling">Debug Bypass Chunk Culling</h3>
+<p>Skips the chunk-level culling pass and processes all instances directly. Use this to verify whether a rendering issue is caused by incorrect chunk bounds or overly aggressive chunk culling.</p>
+<h3 id="debug-disable-culling">Debug Disable Culling</h3>
+<p>Skips the GPU culling pass entirely and reuses the previous frame's visibility results. This isolates the cost of culling in the profiler — if performance improves significantly with culling disabled, the culling pass may need optimization (fewer chunks, larger pool sizes).</p>
+<h3 id="debug-disable-rendering">Debug Disable Rendering</h3>
+<p>Runs the GPU culling pipeline as normal but skips the actual draw command submission. Use this to isolate rendering cost from culling cost in the profiler.</p>
+<h3 id="debug-disable-crossfade">Debug Disable Crossfade</h3>
+<p>Forces all LOD transitions to be instant, bypassing animated crossfade. Useful for verifying whether a visual artifact is related to the crossfade system.</p>
+<h3 id="debug-visualize-culling-in-scene-view">Debug Visualize Culling In Scene View</h3>
+<p>Freezes the culling frustum to the Game camera's view. You can then orbit freely in the Scene View to see exactly which instances are being culled and which are visible. Instances outside the Game camera's frustum will not be rendered, making it easy to verify frustum culling behavior.</p>
+<h2 id="profiler-markers">Profiler Markers</h2>
+<p>In Development builds, the following profiler markers are available in Unity's Profiler window:</p>
+<table>
+<thead>
+<tr>
+<th>Marker</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>BRGIR.CameraCulling</strong></td>
+<td>Time spent dispatching GPU culling for the main camera</td>
+</tr>
+<tr>
+<td><strong>BRGIR.ShadowCulling</strong></td>
+<td>Time spent dispatching GPU culling for shadow cascades</td>
+</tr>
+<tr>
+<td><strong>BRGIR.PostLateUpdate</strong></td>
+<td>Per-frame maintenance: flushing staged uploads, settling motion vectors</td>
+</tr>
+<tr>
+<td><strong>BRGIR.WriteChunk</strong></td>
+<td>Time spent writing instance data to a chunk</td>
+</tr>
+<tr>
+<td><strong>BRGIR.FreeChunk</strong></td>
+<td>Time spent releasing a chunk and its pools</td>
+</tr>
+<tr>
+<td><strong>BRGIR.ResizePoolBuffer</strong></td>
+<td>Time spent growing the pool buffer (indicates runtime growth)</td>
+</tr>
+<tr>
+<td><strong>BRGIR.AllocateChunk</strong></td>
+<td>Time spent allocating a new chunk slot</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-issues">Common Issues</h2>
+<h3 id="instances-not-appearing">Instances not appearing</h3>
+<ol>
+<li>Verify the <a href="../components/brg-instanced-renderer-config.html">Config</a> asset is in <strong>Preloaded Assets</strong> (Edit &gt; Project Settings &gt; Player)</li>
+<li>Check that only one Config exists in Preloaded Assets</li>
+<li>Ensure the prefab has a valid <strong>Mesh Renderer</strong> and <strong>Mesh Filter</strong> (or <strong>LOD Group</strong>)</li>
+<li>If using <a href="../components/brg-instance-group.html">BRG Instance Group</a>, confirm it shows as converted in the inspector</li>
+<li>Try enabling <strong>Debug Bypass Chunk Culling</strong> to rule out culling issues</li>
+</ol>
+<h3 id="instances-flickering-or-popping">Instances flickering or popping</h3>
+<ul>
+<li>Check if LOD crossfade is set to <strong>No Crossfade</strong> — switching to <strong>Crossfade</strong> or <strong>Animated Crossfade</strong> smooths transitions</li>
+<li>If using dynamic density, verify the <strong>Density Fade Width</strong> is not too small</li>
+<li>Ensure <strong>LOD Bias</strong> is reasonable (very low values cause aggressive LOD switching)</li>
+</ul>
+<h3 id="high-gpu-memory-usage">High GPU memory usage</h3>
+<ul>
+<li>Check <strong>Pool Size</strong> in the Config — smaller values (64) waste less memory on partially-filled pools</li>
+<li>Lower <strong>Max Pools Per Chunk</strong> to reduce per-chunk allocation</li>
+<li>Review the memory estimate in the <a href="system-window.html">System Window</a></li>
+<li>If <strong>Support Legacy Light Probes</strong> is enabled, consider whether it's needed — it adds ~65% per-instance buffer cost (128 bytes/instance)</li>
+</ul>
+<h3 id="shadow-artifacts">Shadow artifacts</h3>
+<ul>
+<li>Verify <strong>Max Shadow Cascade</strong> is appropriate per-prototype</li>
+<li>Check that <strong>Min Shadow LOD</strong> isn't set too high (causing low-poly shadow silhouettes)</li>
+<li>If shadow cascade seams are visible, increase <strong>Max Shadow Crossfade Cascade</strong> on the <a href="../components/brg-instanced-renderer-config.html">Config</a> or per-prototype</li>
+</ul>
+<h3 id="performance-issues">Performance issues</h3>
+<ul>
+<li>Open the <a href="system-window.html">System Window</a> to check draw command counts and utilization</li>
+<li>Use <strong>Debug Disable Culling</strong> and <strong>Debug Disable Rendering</strong> to isolate CPU vs GPU cost</li>
+<li>Check for <strong>BRGIR.ResizePoolBuffer</strong> profiler markers — frequent resizes indicate initial allocations are too small</li>
+<li>Consider enabling <strong>Gathered Allocations</strong> to auto-size initial buffers from peak values</li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

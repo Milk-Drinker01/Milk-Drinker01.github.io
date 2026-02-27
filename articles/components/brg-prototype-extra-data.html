@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>BRG Prototype Extra Data | BRG Instanced Renderer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="BRG Prototype Extra Data | BRG Instanced Renderer ">
+      <meta name="description" content="Documentation for BRG Instanced Renderer.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="BRG Instanced Renderer">
+            BRG Instanced Renderer
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="brg-prototype-extra-data">BRG Prototype Extra Data</h1>
+
+<hr>
+<p>An optional component that you add to <strong>prefab assets</strong> to customize how BRG Instanced Renderer handles shadow rendering, LOD behavior, motion vectors, and dynamic density for that specific prefab type.</p>
+<p>Any prefab registered as a prototype (via <a href="brg-instance-group.html">BRG Instance Group</a> or <a href="brg-terrain-registerer.html">Terrain Registerer</a>) will pick up these settings automatically.</p>
+<h2 id="shadow-optimizations">Shadow Optimizations</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Max Shadow Cascade</strong></td>
+<td>int (1–4)</td>
+<td>4</td>
+<td>Maximum number of shadow cascades this prototype renders into. Lower values skip distant cascades. Set to 1 for grass and small details.</td>
+</tr>
+<tr>
+<td><strong>Min Shadow LOD</strong></td>
+<td>int (0–7)</td>
+<td>0</td>
+<td>Minimum LOD level used for shadow rendering. If set to 1, shadows use the LOD1 mesh instead of LOD0, reducing shadow polygon count.</td>
+</tr>
+<tr>
+<td><strong>Override Max Shadow Distance</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Enables the per-prototype max shadow distance below.</td>
+</tr>
+<tr>
+<td><strong>Max Shadow Distance</strong></td>
+<td>float</td>
+<td>80m</td>
+<td>Cull shadows for this prototype beyond this distance. Only used when the override toggle is enabled.</td>
+</tr>
+<tr>
+<td><strong>Override Max Shadow Crossfade Cascade</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Enables the per-prototype shadow crossfade cascade override below.</td>
+</tr>
+<tr>
+<td><strong>Max Shadow Crossfade Cascade</strong></td>
+<td>int (0–4)</td>
+<td>—</td>
+<td>Number of shadow cascades using dithered crossfade for this prototype. Overrides the global value on the <a href="brg-instanced-renderer-config.html">Config</a>.</td>
+</tr>
+</tbody>
+</table>
+<p>For more details, see <a href="../features/shadow-optimization.html">Shadow Optimization</a>.</p>
+<h2 id="screen-size--lod-overrides">Screen Size / LOD Overrides</h2>
+<h3 id="animated-crossfade-duration">Animated Crossfade Duration</h3>
+<p>When a LOD Group with animated crossfading is present on the prefab:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Override Animated Crossfade Duration</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Enables a per-prototype animated crossfade duration, overriding the global default on the <a href="brg-instanced-renderer-config.html">Config</a>.</td>
+</tr>
+<tr>
+<td><strong>Animated Crossfade Duration</strong></td>
+<td>float</td>
+<td>0.5s</td>
+<td>Time in seconds for animated LOD crossfade transitions for this prototype.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="screen-size-culling">Screen Size Culling</h3>
+<p>Disabled when a LOD Group or Mesh LOD is active (use the LOD Group's culled level or Mesh LOD's min screen size instead).</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Min Screen Size</strong></td>
+<td>float (0–1)</td>
+<td>0</td>
+<td>Screen size percentage below which instances are culled. 0 means disabled.</td>
+</tr>
+<tr>
+<td><strong>Fade Mode</strong></td>
+<td>enum</td>
+<td>None</td>
+<td>How instances disappear at the cull boundary: <strong>None</strong> (instant pop), <strong>Crossfade</strong> (stateless dither), or <strong>Animated Crossfade</strong> (time-based fade).</td>
+</tr>
+<tr>
+<td><strong>Fade Width</strong></td>
+<td>float (0–1)</td>
+<td>0</td>
+<td>Width of the fade band for stateless crossfade mode.</td>
+</tr>
+</tbody>
+</table>
+<p>When Fade Mode is set to <strong>Animated Crossfade</strong>, the <strong>Override Animated Crossfade Duration</strong> field appears here instead of the LOD Group section above.</p>
+<h3 id="mesh-lod-unity-62">Mesh LOD (Unity 6.2+)</h3>
+<p>Disabled when a LOD Group is present. Requires a mesh with internal LOD ranges (<code>lodCount &gt; 1</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Mesh LOD</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Enables Mesh LOD mode.</td>
+</tr>
+<tr>
+<td><strong>Num LODs</strong></td>
+<td>int (1–8)</td>
+<td>4</td>
+<td>Number of BRG LOD levels to create from the mesh's internal LOD ranges.</td>
+</tr>
+<tr>
+<td><strong>Fade Mode</strong></td>
+<td>enum</td>
+<td>None</td>
+<td>Crossfade mode for Mesh LOD transitions: <strong>None</strong> (hard cut), <strong>Crossfade</strong> (stateless dither), or <strong>Animated Crossfade</strong> (time-based).</td>
+</tr>
+</tbody>
+</table>
+<p>When Fade Mode is set to <strong>Animated Crossfade</strong>, the <strong>Override Animated Crossfade Duration</strong> field appears here.</p>
+<p>Per BRG LOD level:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Mesh LOD Index</strong></td>
+<td>Which mesh LOD index to draw for this BRG LOD level.</td>
+</tr>
+<tr>
+<td><strong>Screen Size</strong></td>
+<td>Screen-size threshold for transitioning to this LOD. Must be monotonically decreasing.</td>
+</tr>
+<tr>
+<td><strong>Fade Width</strong></td>
+<td>Crossfade transition width (only shown with stateless Crossfade mode).</td>
+</tr>
+</tbody>
+</table>
+<p>The culled level uses the <strong>Min Screen Size</strong> property as its threshold.</p>
+<p>The inspector provides an <strong>Extract Screen Sizes from Mesh LOD Curve</strong> button that auto-populates screen-size thresholds from the mesh's native LOD selection curve. A <strong>LOD Selection Bias</strong> slider adjusts the renderer's bias for fine-tuning without modifying the mesh.</p>
+<p>For more details, see <a href="../features/lod-and-crossfade.html">LOD Groups and Mesh LOD</a>.</p>
+<h2 id="density">Density</h2>
+<h3 id="density-scaling">Density Scaling</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Enable Density Scaling</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Allows this prototype to participate in runtime global density scaling via <code>BRGInstancedRenderer.SetDensity()</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dynamic-density">Dynamic Density</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Enable Dynamic Density</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Enables GPU-side density culling for this prototype.</td>
+</tr>
+<tr>
+<td><strong>Min Fraction</strong></td>
+<td>float (0–1)</td>
+<td>0.3</td>
+<td>Minimum proportion of instances kept at maximum distance (30% by default).</td>
+</tr>
+<tr>
+<td><strong>Fade Width</strong></td>
+<td>float</td>
+<td>0.05</td>
+<td>Fade band width for smooth transitions. Only editable when the prototype has a stateless crossfade mode set (see below).</td>
+</tr>
+<tr>
+<td><strong>Dynamic Density Mode</strong></td>
+<td>enum</td>
+<td>ScreenSize</td>
+<td><strong>Screen Size</strong> — density based on screen-space size. <strong>Distance</strong> — density based on world-space distance.</td>
+</tr>
+<tr>
+<td><strong>Screen Size Mode</strong></td>
+<td>——</td>
+<td>——</td>
+<td>————————</td>
+</tr>
+<tr>
+<td><strong>Start Screen Size</strong></td>
+<td>float (0.001–1)</td>
+<td>0.1</td>
+<td>Screen size percentage above which full density is maintained. Only shown in Screen Size mode.</td>
+</tr>
+<tr>
+<td><strong>Distance Mode</strong></td>
+<td>——</td>
+<td>——</td>
+<td>————————</td>
+</tr>
+<tr>
+<td><strong>Start Distance</strong></td>
+<td>float</td>
+<td>50m</td>
+<td>Distance below which full density is maintained. Only shown in Distance mode.</td>
+</tr>
+<tr>
+<td><strong>End Distance</strong></td>
+<td>float</td>
+<td>150m</td>
+<td>Distance at which minimum density is reached. Only shown in Distance mode.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="density-fade-behavior">Density Fade Behavior</h4>
+<p>Dynamic density uses the prototype's LOD crossfade mode for fade transitions. The crossfade mode is determined by whichever LOD system is active on the prototype: <strong>LOD Group</strong>, <strong>Min Screen Size culling</strong>, or <strong>Mesh LOD</strong>.</p>
+<ul>
+<li><strong>Stateless Crossfade</strong> — the Fade Width field controls the fade band width. For screen-size mode this is a screen-size fraction; for distance mode this is a density fraction.</li>
+<li><strong>Animated Crossfade</strong> — fade transitions use the animated crossfade duration automatically. The Fade Width field shows the fade duration in seconds.</li>
+<li><strong>No crossfade mode</strong> — density-culled instances snap in and out with no fade. The inspector shows a help box recommending you set a crossfade mode via LOD Group, Min Screen Size culling, or Mesh LOD.</li>
+</ul>
+<p>For more details, see <a href="../features/dynamic-density.html">Dynamic Density</a>.</p>
+<h2 id="other-settings">Other Settings</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Force No Motion Vectors</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Disables motion vector generation for all LODs of this prototype. Saves GPU work for objects where TAA/motion blur quality doesn't matter.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>Add this component to the <strong>prefab asset</strong> in the Project window, not to scene instances.</li>
+<li>Changes are detected automatically via the inspector. When you modify settings, BRG Instanced Renderer refreshes the affected prototype.</li>
+<li>If no BRG Prototype Extra Data component is present on a prefab, default values are used.</li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

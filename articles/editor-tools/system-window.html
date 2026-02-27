@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>System Window | BRG Instanced Renderer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="System Window | BRG Instanced Renderer ">
+      <meta name="description" content="Documentation for BRG Instanced Renderer.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="BRG Instanced Renderer">
+            BRG Instanced Renderer
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="system-window">System Window</h1>
+
+<hr>
+<p>The BRG Instanced Renderer System Window provides real-time monitoring of the rendering system's state, resource usage, and performance statistics.</p>
+<p>Open it via <strong>Tools &gt; BRG Instanced Renderer &gt; System Window</strong>.</p>
+<h2 id="system-status">System Status</h2>
+<p>Shows whether the BRG Instanced Renderer singleton is active or not yet created.</p>
+<table>
+<thead>
+<tr>
+<th>Button</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Create Instance</strong></td>
+<td>Creates the singleton (shown when not active).</td>
+</tr>
+<tr>
+<td><strong>Full Refresh</strong></td>
+<td>Clears all caches and re-initializes all registerers (editor only).</td>
+</tr>
+<tr>
+<td><strong>Runtime Refresh</strong></td>
+<td>Fast re-initialization of all registerers without clearing caches.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="configuration">Configuration</h2>
+<p>Displays the current <a href="../components/brg-instanced-renderer-config.html">Config</a> asset with a <strong>Select Asset</strong> button to highlight it in the Project window. The full config inspector is shown inline for quick access.</p>
+<h2 id="runtime-statistics">Runtime Statistics</h2>
+<p>When the system is initialized (in play mode or editor preview), the window shows live statistics across several collapsible sections.</p>
+<h3 id="prototypes">Prototypes</h3>
+<p>Expandable foldout listing all registered prototypes. The header shows active, idle, and vacant prototype counts.</p>
+<p>Each prototype entry shows:</p>
+<ul>
+<li>Reference count and instance count (with high-water mark)</li>
+<li>LOD count and crossfade mode</li>
+<li>Camera and shadow bucket capacities</li>
+<li>Shadow settings (max cascade, min shadow LOD, max shadow distance)</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Button</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Purge Unused</strong></td>
+<td>Removes idle prototypes with zero references. Shown when idle prototypes exist.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="draw-commands">Draw Commands</h3>
+<ul>
+<li><strong>Batches</strong> — Total active BRG batches</li>
+<li><strong>Camera</strong> / <strong>Shadow</strong> — Draw command counts for camera and shadow passes</li>
+<li><strong>Camera Buckets</strong> / <strong>Shadow Buckets</strong> — Bucket slot counts</li>
+</ul>
+<h3 id="compute-rendered-triangles">Compute Rendered Triangles</h3>
+<p>Toggle that enables per-frame triangle counting. When enabled, shows:</p>
+<ul>
+<li><strong>Camera Triangles</strong> — Triangles rendered for the main camera pass</li>
+<li><strong>Shadow Triangles</strong> — Triangles rendered for shadow passes</li>
+<li><strong>Total Triangles</strong> — Combined total</li>
+</ul>
+<h3 id="chunk-system">Chunk System</h3>
+<ul>
+<li><strong>Instances</strong> — Total registered instances</li>
+<li><strong>Chunks</strong> — Used / total (free count, high-water mark)</li>
+<li><strong>Pools</strong> — Used / total (free count, pool size)</li>
+<li><strong>Pool Utilization</strong> — Color-coded percentage (red &lt;50%, yellow &lt;70%, green 85%+) with used vs. wasted slot breakdown</li>
+</ul>
+<h3 id="occlusion">Occlusion</h3>
+<p>Shown when BRG occlusion culling is active:</p>
+<ul>
+<li><strong>Visible</strong> — Chunks that passed the occlusion test</li>
+<li><strong>Occluded</strong> — Chunks hidden behind occluders</li>
+</ul>
+<h3 id="per-view-buffers">Per-View Buffers</h3>
+<ul>
+<li><strong>Camera Sets</strong> — Active camera view buffer sets</li>
+<li><strong>Shadow Sets</strong> — Active shadow view buffer sets</li>
+<li><strong>Fade Views</strong> — Active animated crossfade view states</li>
+</ul>
+<h3 id="crossfade">Crossfade</h3>
+<p>Shows the animated crossfade system status:</p>
+<ul>
+<li>Whether animated crossfade is ON or OFF</li>
+<li>Number of prototypes using it, active views, fade states, and duration</li>
+<li>Whether <strong>Skip Intermediate LODs</strong> is enabled</li>
+</ul>
+<h3 id="debug-warnings">Debug Warnings</h3>
+<p>When any debug flags are active on the <a href="../components/brg-instanced-renderer-config.html">Config</a>, warning banners appear:</p>
+<ul>
+<li>&quot;DEBUG: Chunk culling BYPASSED&quot;</li>
+<li>&quot;DEBUG: Culling DISABLED (reusing stale results)&quot;</li>
+<li>&quot;DEBUG: Rendering DISABLED (culling still runs)&quot;</li>
+</ul>
+<h3 id="gpu-memory">GPU Memory</h3>
+<p>Expandable foldout showing total allocated GPU memory (color-coded: green &lt;64MB, orange &lt;128MB, yellow &lt;256MB, red &gt;256MB).</p>
+<p>When expanded, shows per-category breakdown:</p>
+<ul>
+<li><strong>Prototype Data</strong> — GPU prototype buffer</li>
+<li><strong>Instance Data</strong> — Per-instance data (color, density hash, etc.)</li>
+<li><strong>Matrix Data</strong> — Object-to-world matrices</li>
+<li><strong>Chunk Data</strong> — Chunk metadata (bounds, cull distance, etc.)</li>
+<li><strong>Pool Ref Data</strong> — Pool reference tracking</li>
+<li><strong>Camera View Buffers</strong> — Per-camera culling output</li>
+<li><strong>Shadow View Buffers</strong> — Per-shadow-view culling output</li>
+<li><strong>FadeState Buffers</strong> — Animated crossfade per-view states</li>
+<li><strong>Bucket Mapping</strong> — Draw call bucket layouts</li>
+<li><strong>Staging Buffers</strong> — Upload staging memory</li>
+</ul>
+<h2 id="use-cases">Use Cases</h2>
+<ul>
+<li><strong>Performance tuning</strong> — Monitor draw command counts and pool utilization to identify waste</li>
+<li><strong>Memory budgeting</strong> — Check GPU memory estimates when adjusting pool size or max pools per chunk</li>
+<li><strong>Debugging</strong> — Verify that instances are registering correctly and culling is behaving as expected</li>
+<li><strong>Gathered allocations</strong> — Watch peak values to inform initial allocation settings in the <a href="../components/brg-instanced-renderer-config.html">Config</a></li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

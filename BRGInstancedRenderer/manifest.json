@@ -1,0 +1,355 @@
+{
+  "source_base_path": "E:/Desktop/asset store stuff/BRGInstancedRendererDocumentation",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Resource",
+      "output": {
+        "resource": {
+          "relative_path": "index.json"
+        }
+      }
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "README.md",
+      "output": {
+        ".html": {
+          "relative_path": "README.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/api/core-methods.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/api/core-methods.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/api/custom-registerer.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/api/custom-registerer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/api/registerer-example.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/api/registerer-example.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/components/brg-camera-settings.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/components/brg-camera-settings.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/components/brg-instance-group.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/components/brg-instance-group.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/components/brg-instanced-renderer-config.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/components/brg-instanced-renderer-config.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/components/brg-prototype-extra-data.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/components/brg-prototype-extra-data.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/components/brg-terrain-registerer.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/components/brg-terrain-registerer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/components/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/components/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/editor-tools/debugging.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/editor-tools/debugging.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/editor-tools/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/editor-tools/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/editor-tools/system-window.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/editor-tools/system-window.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/culling.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/culling.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/dynamic-density.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/dynamic-density.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/light-probes.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/light-probes.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/lod-and-crossfade.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/lod-and-crossfade.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/rendering-features.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/rendering-features.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/shadow-optimization.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/shadow-optimization.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/streaming-and-performance.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/streaming-and-performance.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/terrain-detail-spawning.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/terrain-detail-spawning.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting-started/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting-started/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting-started/installation.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting-started/installation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting-started/prefab-instances.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting-started/prefab-instances.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting-started/terrain.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting-started/terrain.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/overview.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/overview.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/support.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/support.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "articles/toc.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/toc.html"
+        },
+        ".json": {
+          "relative_path": "articles/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "favicon.ico",
+      "output": {
+        "resource": {
+          "relative_path": "favicon.ico"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "logo.png",
+      "output": {
+        "resource": {
+          "relative_path": "logo.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

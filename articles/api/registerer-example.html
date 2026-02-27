@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Registerer Example | BRG Instanced Renderer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Registerer Example | BRG Instanced Renderer ">
+      <meta name="description" content="Documentation for BRG Instanced Renderer.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="BRG Instanced Renderer">
+            BRG Instanced Renderer
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="registerer-example">Registerer Example</h1>
+
+<hr>
+<p><code>BRGRegistererExample</code> is a working example of a <a href="custom-registerer.html">Custom Registerer</a> included in the <code>Examples</code> folder. It demonstrates prototype registration, chunk allocation, per-instance mutation, and the inspector-driven workflow for testing BRG features.</p>
+<h2 id="setup">Setup</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Prefab</strong></td>
+<td>GameObject</td>
+<td>—</td>
+<td>Prefab to render. Must have a MeshFilter + MeshRenderer (or LODGroup).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="chunk-settings">Chunk Settings</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Chunk Size</strong></td>
+<td>int</td>
+<td>25</td>
+<td>Physical size of the chunk in world units.</td>
+</tr>
+<tr>
+<td><strong>Chunk Padding</strong></td>
+<td>float</td>
+<td>1</td>
+<td>Extra padding added to chunk bounds.</td>
+</tr>
+<tr>
+<td><strong>Initial Instance Count</strong></td>
+<td>int</td>
+<td>256</td>
+<td>Number of instances to spawn per grid chunk.</td>
+</tr>
+<tr>
+<td><strong>Cull Distance</strong></td>
+<td>float</td>
+<td>0</td>
+<td>Max render distance for the chunk. 0 = unlimited.</td>
+</tr>
+<tr>
+<td><strong>Snap Animated Crossfade On First Frame</strong></td>
+<td>bool</td>
+<td>true</td>
+<td>Skip animated crossfade fade-in on first appearance (instances pop in instantly).</td>
+</tr>
+<tr>
+<td><strong>Create Instance Handles</strong></td>
+<td>bool</td>
+<td>true</td>
+<td>Track per-instance slot indices for runtime mutation. Costs memory — only enable if you need to move, color, or remove individual instances.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="lifecycle">Lifecycle</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Auto Register</strong></td>
+<td>bool</td>
+<td>true</td>
+<td>Automatically initialize on enable and shutdown on disable. When off, use the <strong>Initialize</strong> / <strong>Shutdown</strong> buttons in the inspector.</td>
+</tr>
+</tbody>
+</table>
+<p>When <strong>Auto Register</strong> is disabled, the inspector shows a <strong>Manual Lifecycle</strong> section with <strong>Initialize</strong> and <strong>Shutdown</strong> buttons, along with the current registration status.</p>
+<h2 id="inspector-controls">Inspector Controls</h2>
+<p>Once registered, the inspector provides runtime controls:</p>
+<h3 id="global">Global</h3>
+<table>
+<thead>
+<tr>
+<th>Button</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Create Grid Chunk</strong></td>
+<td>Allocate a new chunk and fill it with instances arranged in a grid pattern. Each new chunk is offset so they don't overlap.</td>
+</tr>
+<tr>
+<td><strong>Create Empty Chunk</strong></td>
+<td>Allocate an empty chunk with no instances. Use <strong>Add Instance</strong> to populate it one at a time.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="per-chunk">Per Chunk</h3>
+<p>Each chunk shows its ID, instance count, and a set of action buttons:</p>
+<table>
+<thead>
+<tr>
+<th>Button</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Add Instance</strong></td>
+<td>Add a single instance at a random position within the chunk bounds, with a random color.</td>
+</tr>
+<tr>
+<td><strong>Remove Random</strong></td>
+<td>Remove a random instance from the chunk.</td>
+</tr>
+<tr>
+<td><strong>Randomize Colors</strong></td>
+<td>Set all instances to random colors (requires <strong>Enable Per-Instance Color</strong> on the <a href="../components/brg-instanced-renderer-config.html">Config</a>).</td>
+</tr>
+<tr>
+<td><strong>Randomize Scales</strong></td>
+<td>Set all instances to random scales between 0.3 and 2.0.</td>
+</tr>
+<tr>
+<td><strong>Scatter Positions</strong></td>
+<td>Move all instances to random positions within the chunk bounds.</td>
+</tr>
+<tr>
+<td><strong>Delete Chunk</strong></td>
+<td>Free the chunk and all its instances.</td>
+</tr>
+</tbody>
+</table>
+<p>The per-instance buttons (Add, Remove, Colors, Scales, Scatter) require <strong>Create Instance Handles</strong> to be enabled, since they use <code>InstanceLink</code> handles to modify individual instances.</p>
+<h2 id="how-it-works">How It Works</h2>
+<p>The example demonstrates the key steps of a custom registerer:</p>
+<h3 id="oninitialize">OnInitialize</h3>
+<ol>
+<li>Registers the assigned prefab via <code>BaseRegisterPrototype()</code></li>
+<li>Creates an initial grid chunk via <code>CreateGridChunk()</code></li>
+</ol>
+<h3 id="onshutdown">OnShutdown</h3>
+<p>Clears local chunk state. The base class handles freeing chunks and unregistering prototypes.</p>
+<h3 id="oninstancehandlesprovided">OnInstanceHandlesProvided</h3>
+<p>When a chunk is written with <code>createInstanceHandles = true</code>, the slot indices may not be available immediately (deferred GPU upload). The base class calls <code>OnInstanceHandlesProvided(chunkId)</code> once the handles are ready. The example caches <code>InstanceLink</code> handles at this point for use by the per-instance buttons.</p>
+<h3 id="instance-mutation">Instance Mutation</h3>
+<p>The per-instance buttons demonstrate using <code>InstanceLink</code> methods:</p>
+<pre><code class="lang-csharp">// add an instance
+var link = AddInstance(chunkState.link, new InstanceData
+{
+    position = randomPosition,
+    rotation = quaternion.identity,
+    scale = new float3(1f),
+    prototypeIndex = _protoIndex,
+    color = new Color32(255, 128, 64, 255)
+});
+
+// modify it later
+link.SetColor(new Color32(0, 255, 0, 255));
+link.SetPosition(newPosition);
+link.SetScale(new float3(1.5f));
+
+// remove it
+link.Remove();
+</code></pre>
+<h2 id="debug">Debug</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Show Chunk Gizmos</strong></td>
+<td>bool</td>
+<td>true</td>
+<td>Draw wireframe boxes in the Scene View showing chunk bounds. Each chunk gets a unique color.</td>
+</tr>
+</tbody>
+</table>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

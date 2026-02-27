@@ -1,0 +1,12 @@
+{
+  "README.html": {
+    "href": "README.html",
+    "title": "Documentation | Milk_Drinker01",
+    "summary": "Documentation This repository hosts the documentation for BRG Instanced Renderer. Built With This documentation site is built using docfx. The documentation articles are located in articles/ and written in markdown format. Getting Started Installing docfx: dotnet tool install -g docfx Serving the docs on localhost: docfx --serve Adding New Articles Create a new .md file in articles/, and link it in articles/toc.md."
+  },
+  "index.html": {
+    "href": "index.html",
+    "title": "Milk_Drinker01 | Milk_Drinker01",
+    "summary": "Milk_Drinker01 Professional Unity tools and assets for your next project. Asset Store Assets Browse my Unity tools and assets. BRG Instanced Renderer The fastest GPU Instancing solution on the market. Render millions of instances with minimal CPU overhead using Unity's Batch Renderer Group API. Documentation → Coming Soon Ultimate Foliage Renormalizer Fix foliage normals for perfect lighting. Renormalize vegetation meshes for consistent, natural-looking shading across your scene. Documentation → Asset Store → Pixel-Perfect Fog Of War A clean, pixel-perfect fog of war system for your game. Reveal and hide areas of the map with precise, sharp boundaries. Documentation → Asset Store → Ultimate Scopes And Red Dot Shaders Realistic scope and red dot sight shaders for first-person games. Parallax reticles, lens effects, and full customization. Documentation → Asset Store → Contact Get in touch for support or questions. Discord Join the community server for support, discussion, and updates. Join Server → Email Reach out directly for business inquiries or private support. camerondus@gmail.com"
+  }
+}

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>BRG Instance Group | BRG Instanced Renderer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="BRG Instance Group | BRG Instanced Renderer ">
+      <meta name="description" content="Documentation for BRG Instanced Renderer.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="BRG Instanced Renderer">
+            BRG Instanced Renderer
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="brg-instance-group">BRG Instance Group</h1>
+
+<hr>
+<p>Converts a hierarchy of prefab instances into GPU-instanced rendering via BRG Instanced Renderer. Instances are spatially batched into chunks and serialized, so startup is instant with no runtime transform scanning.</p>
+<p>For a step-by-step setup guide, see <a href="../getting-started/prefab-instances.html">Getting Started: GameObjects</a>.</p>
+<h2 id="inspector-properties">Inspector Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Chunk Size</strong></td>
+<td>float</td>
+<td>50m</td>
+<td>World-space size of the spatial grid cells. Instances are grouped into chunks based on their position. Affects culling granularity — smaller chunks cull more precisely, larger chunks reduce overhead.</td>
+</tr>
+<tr>
+<td><strong>Cull Distance</strong></td>
+<td>float</td>
+<td>0</td>
+<td>Maximum render distance in meters. Instances in this group beyond this distance are not rendered. 0 means no distance limit.</td>
+</tr>
+<tr>
+<td><strong>Show Chunk Gizmos</strong></td>
+<td>bool</td>
+<td>true</td>
+<td>Draws wireframe bounding boxes in the Scene View for each chunk, color-coded by fill percentage.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="inspector-actions">Inspector Actions</h2>
+<table>
+<thead>
+<tr>
+<th>Button</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Convert Children to Instances</strong></td>
+<td>Scans all direct children, groups them into spatial chunks, serializes the data, and disables their Mesh Renderers and LOD Groups.</td>
+</tr>
+<tr>
+<td><strong>Revert to GameObjects</strong></td>
+<td>Re-enables original Mesh Renderers and LOD Groups, returning to standard Unity rendering.</td>
+</tr>
+<tr>
+<td><strong>Refresh</strong></td>
+<td>Rebuilds chunk data from the current state of the source objects. Use after moving, adding, or removing instances.</td>
+</tr>
+</tbody>
+</table>
+<p>You can also convert arbitrary GameObjects (not just children) via the hierarchy context menu: <strong>GameObject &gt; BRG &gt; Convert to BRG Instances</strong>. This creates a new BRG Instance Group and converts the selected objects into it.</p>
+<h2 id="status-display">Status Display</h2>
+<p>When converted, the inspector shows:</p>
+<ul>
+<li><strong>Converted:</strong> Yes/No</li>
+<li><strong>Chunk Count:</strong> Number of spatial chunks</li>
+<li><strong>Prototype Count:</strong> Number of unique prefab types</li>
+<li><strong>Instance Count:</strong> Total instances across all chunks</li>
+</ul>
+<h2 id="how-chunks-work">How Chunks Work</h2>
+<p>During conversion, instances are placed into a spatial grid based on their world position and the <strong>Chunk Size</strong> setting. If a grid cell exceeds the maximum instance capacity (determined by <a href="brg-instanced-renderer-config.html">Config</a> pool settings), it is split into multiple chunks.</p>
+<p>Each chunk stores:</p>
+<ul>
+<li>A bounding box used for hierarchical culling</li>
+<li>Instance data (position, rotation, scale, prototype index)</li>
+<li>The cull distance for distance-based culling</li>
+</ul>
+<p>Chunks are the first level of the hierarchical culling pipeline — chunks outside the camera frustum or behind occluders are skipped entirely before any per-instance work.</p>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>Source GameObjects remain in the hierarchy after conversion. Their renderers are disabled but you can still select and move them.</li>
+<li>After editing source objects, always click <strong>Refresh</strong> to update the serialized chunk data.</li>
+<li>Each source object gets a <strong>BRG Instance Link</strong> component that tracks its relationship to the group.</li>
+<li>Mixed prefab types under the same parent are fully supported. Each unique prefab becomes a separate prototype.</li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

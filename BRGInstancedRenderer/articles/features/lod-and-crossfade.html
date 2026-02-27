@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>LOD Groups and Mesh LOD | BRG Instanced Renderer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="LOD Groups and Mesh LOD | BRG Instanced Renderer ">
+      <meta name="description" content="Documentation for BRG Instanced Renderer.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="BRG Instanced Renderer">
+            BRG Instanced Renderer
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="lod-groups-and-mesh-lod">LOD Groups and Mesh LOD</h1>
+
+<hr>
+<p>BRG Instanced Renderer supports two LOD workflows — traditional <strong>LOD Groups</strong> and <strong>Mesh LOD</strong> (Unity 6.2+). Both use GPU-side LOD selection as part of the culling pass, so LOD switching has zero CPU cost.</p>
+<h4 id="lod-groups">LOD Groups</h4>
+<p>Full support for Unity's LOD Group component. LOD thresholds are read directly from your prefab's LOD Group and selected per-instance on the GPU based on screen size.</p>
+<h4 id="mesh-lod">Mesh LOD</h4>
+<p>A single mesh with multiple internal LOD ranges — no LOD Group needed. Reduces memory overhead and simplifies prefab setup. Requires Unity 6.2+. Configured via <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a>.</p>
+<h4 id="three-crossfade-modes">Three Crossfade Modes</h4>
+<ul>
+<li><strong>No Crossfade</strong> — Instant LOD switch, cheapest option.</li>
+<li><strong>Crossfade (Stateless)</strong> — Dithered blending between LODs based on distance.</li>
+<li><strong>Animated Crossfade</strong> — Smooth time-based transitions with per-instance fade state tracking.</li>
+</ul>
+<h4 id="lod-bias">LOD Bias</h4>
+<p>Respects Unity's global <code>QualitySettings.lodBias</code> automatically. Add a <a href="../components/brg-camera-settings.html">BRG Camera Settings</a> component for per-camera LOD bias multipliers.</p>
+<h4 id="min-screen-size">Min Screen Size</h4>
+<p>Instances below a configurable screen-size threshold are culled entirely, with optional fade-out using any of the three crossfade modes.</p>
+<blockquote>
+<p>For LOD settings, see <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a>, <a href="../components/brg-camera-settings.html">BRG Camera Settings</a>, and <a href="../components/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a>.</p>
+</blockquote>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
