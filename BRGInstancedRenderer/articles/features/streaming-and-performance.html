@@ -97,6 +97,8 @@
 <p>The rendering hotpath generates zero managed allocations per frame. All per-frame data uses native containers and GPU buffers, ensuring consistent frame times without GC spikes.</p>
 <h4 id="gpu-driven-pipeline">GPU-Driven Pipeline</h4>
 <p>All culling, LOD selection, and draw call generation runs on the GPU via compute shaders. CPU cost is near-zero regardless of instance count — the CPU only submits a fixed number of compute dispatches and indirect draw calls per frame.</p>
+<h4 id="runtime-density-scaling">Runtime Density Scaling</h4>
+<p>The system supports a global runtime density scale via <code>BRGInstancedRenderer.Instance.SetDensity(float)</code>, allowing you to dynamically adjust instance density at runtime (e.g., for quality settings or performance scaling). Prototypes must have <strong>Enable Density Scaling</strong> checked to participate.</p>
 <h4 id="auto-compaction">Auto-Compaction</h4>
 <p>GPU buffers can be automatically shrunk when waste exceeds 50%, reclaiming memory after large numbers of instances are removed. Configurable on the <a href="../getting-started/brg-instanced-renderer-config.html">Config</a>.</p>
 <h4 id="editor-performance">Editor Performance</h4>

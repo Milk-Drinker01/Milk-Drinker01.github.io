@@ -72,6 +72,46 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/components/brg-prototype-extra-data-density.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/components/brg-prototype-extra-data-density.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/components/brg-prototype-extra-data-lod.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/components/brg-prototype-extra-data-lod.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/components/brg-prototype-extra-data-other.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/components/brg-prototype-extra-data-other.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/components/brg-prototype-extra-data-shadow.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/components/brg-prototype-extra-data-shadow.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/components/brg-prototype-extra-data.md",
       "output": {
         ".html": {
@@ -126,6 +166,16 @@
       "output": {
         ".html": {
           "relative_path": "articles/editor-tools/system-window.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/crossfade.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/crossfade.html"
         }
       },
       "version": ""
@@ -196,6 +246,16 @@
       "output": {
         ".html": {
           "relative_path": "articles/features/shadow-optimization.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/speedtree.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/speedtree.html"
         }
       },
       "version": ""
@@ -309,6 +369,56 @@
       "output": {
         "resource": {
           "relative_path": "favicon.ico"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/Dynamic-Density-Culling.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/Dynamic-Density-Culling.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/Frustum-Culling.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/Frustum-Culling.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/LODGroup-Component.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/LODGroup-Component.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/Occlusion-Culling.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/Occlusion-Culling.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/ShaderGraph-LOD-Crossfade.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/ShaderGraph-LOD-Crossfade.png"
         }
       },
       "version": ""

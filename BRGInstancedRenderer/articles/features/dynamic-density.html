@@ -90,21 +90,19 @@
 <hr>
 <p>Dynamic density is a GPU-side feature that gradually thins out instances based on distance or screen size. Unlike distance culling which removes <em>all</em> instances beyond a threshold, dynamic density reduces the <em>proportion</em> of visible instances over a range — producing a smooth falloff that's far less noticeable.</p>
 <p>Each instance has a deterministic hash based on its position, so the same instances are always culled at the same distance. No flickering or randomness.</p>
+<p><img src="../../images/Dynamic-Density-Culling.png" alt="Dynamic Density Culling"></p>
 <h4 id="two-modes">Two Modes</h4>
 <ul>
 <li><strong>Screen Size</strong> — Density based on how large the instance appears on screen. Consistent regardless of camera FOV.</li>
 <li><strong>Distance</strong> — Density based on world-space distance. Direct control over falloff in meters.</li>
 </ul>
-<h4 id="runtime-density-scaling">Runtime Density Scaling</h4>
-<p>The system also supports a global runtime density scale via <code>BRGInstancedRenderer.Instance.SetDensity(float)</code>, allowing you to dynamically adjust instance density at runtime (e.g., for quality settings or performance scaling). Prototypes must have <strong>Enable Density Scaling</strong> checked to participate.</p>
 <h4 id="best-for">Best For</h4>
 <ul>
 <li><strong>Grass and ground cover</strong> — Thousands of instances where distant thinning is invisible</li>
-<li><strong>Dense forests</strong> — Gradually thin trees at the horizon for smoother falloff</li>
 <li><strong>Small props and debris</strong> — Reduce count at distance without a hard cutoff</li>
 </ul>
 <blockquote>
-<p>For density settings, see <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a>.</p>
+<p>For density settings, see <a href="../components/brg-prototype-extra-data-density.html">BRG Prototype Extra Data / Density</a>.</p>
 </blockquote>
 
 </article>

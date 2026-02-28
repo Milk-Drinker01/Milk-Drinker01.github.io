@@ -91,20 +91,15 @@
 <p>BRG Instanced Renderer supports two LOD workflows — traditional <strong>LOD Groups</strong> and <strong>Mesh LOD</strong> (Unity 6.2+). Both use GPU-side LOD selection as part of the culling pass, so LOD switching has zero CPU cost.</p>
 <h4 id="lod-groups">LOD Groups</h4>
 <p>Full support for Unity's LOD Group component. LOD thresholds are read directly from your prefab's LOD Group and selected per-instance on the GPU based on screen size.</p>
+<p><img src="../../images/LODGroup-Component.png" alt="LOD Group Component"></p>
 <h4 id="mesh-lod">Mesh LOD</h4>
-<p>A single mesh with multiple internal LOD ranges — no LOD Group needed. Reduces memory overhead and simplifies prefab setup. Requires Unity 6.2+. Configured via <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a>.</p>
-<h4 id="three-crossfade-modes">Three Crossfade Modes</h4>
-<ul>
-<li><strong>No Crossfade</strong> — Instant LOD switch, cheapest option.</li>
-<li><strong>Crossfade (Stateless)</strong> — Dithered blending between LODs based on distance.</li>
-<li><strong>Animated Crossfade</strong> — Smooth time-based transitions with per-instance fade state tracking.</li>
-</ul>
+<p>A single mesh with multiple internal LOD ranges — no LOD Group needed. Reduces memory overhead and simplifies prefab setup. Requires Unity 6.2+. Configured via <a href="../components/brg-prototype-extra-data-lod.html">BRG Prototype Extra Data / LOD Overrides</a>.</p>
+<h4 id="min-screen-size">Min Screen Size</h4>
+<p>Instances below a configurable screen-size threshold are culled entirely, with fade-out using any of the <a href="crossfade.html">crossfade</a> modes. This is set from either LOD Group, or <a href="../components/brg-prototype-extra-data-lod.html">BRG Prototype Extra Data</a>.</p>
 <h4 id="lod-bias">LOD Bias</h4>
 <p>Respects Unity's global <code>QualitySettings.lodBias</code> automatically. Add a <a href="../components/brg-camera-settings.html">BRG Camera Settings</a> component for per-camera LOD bias multipliers.</p>
-<h4 id="min-screen-size">Min Screen Size</h4>
-<p>Instances below a configurable screen-size threshold are culled entirely, with optional fade-out using any of the three crossfade modes.</p>
 <blockquote>
-<p>For LOD settings, see <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a>, <a href="../components/brg-camera-settings.html">BRG Camera Settings</a>, and <a href="../getting-started/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a>.</p>
+<p>For LOD settings, see <a href="../components/brg-prototype-extra-data-lod.html">BRG Prototype Extra Data / LOD Overrides</a>, <a href="../components/brg-camera-settings.html">BRG Camera Settings</a>, and <a href="../getting-started/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a>.</p>
 </blockquote>
 
 </article>

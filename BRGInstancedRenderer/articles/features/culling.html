@@ -89,21 +89,29 @@
 
 <hr>
 <p>BRG Instanced Renderer uses a multi-level GPU-driven culling pipeline to ensure only visible instances consume rendering resources. All culling runs entirely on the GPU via compute shaders, keeping CPU overhead near zero regardless of instance count.</p>
-<p>Five types of culling work together in a hierarchical pipeline:</p>
+<p>Six types of culling work together in a hierarchical pipeline:</p>
 <h4 id="frustum-culling">Frustum Culling</h4>
 <p>Instances outside the camera's field of view are excluded. Tested at both the chunk level and per-instance level for maximum efficiency.</p>
+<p><img src="../../images/Frustum-Culling.png" alt="Frustum Culling"></p>
 <h4 id="occlusion-culling">Occlusion Culling</h4>
 <p>Chunks fully hidden behind occluders are skipped using Unity's baked occlusion data. Enable via <strong>Use BRG Occlusion Culling</strong> on the <a href="../getting-started/brg-instanced-renderer-config.html">Config</a>.</p>
+<p><img src="../../images/Occlusion-Culling.png" alt="Occlusion Culling"></p>
 <h4 id="distance-culling">Distance Culling</h4>
 <p>Instances beyond a configurable distance are not rendered. Set per-group via <a href="../components/brg-instance-group.html">BRG Instance Group</a> or per-terrain via <a href="../components/brg-terrain-registerer.html">BRG Terrain Registerer</a>.</p>
 <h4 id="screen-size-culling">Screen-Size Culling</h4>
-<p>Instances too small on screen are culled automatically, with optional fade-out. Configured per-prefab via <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a>.</p>
+<p>Instances too small on screen are culled automatically, with optional fade-out. Configured per-prefab via <a href="../components/brg-prototype-extra-data-lod.html">BRG Prototype Extra Data / LOD Overrides</a>.</p>
 <h4 id="dynamic-density-culling">Dynamic Density Culling</h4>
-<p>Gradually thins out instances at distance using a deterministic hash — no flickering. See <a href="dynamic-density.html">Dynamic Density</a> for details.</p>
+<p>Gradually thins out instances at distance using a deterministic hash. It helps as both a performance optimization, as well as a way to help make detail render distance blend more naturally. See <a href="dynamic-density.html">Dynamic Density</a> for details.</p>
+<p><img src="../../images/Dynamic-Density-Culling.png" alt="Dynamic Density Culling"></p>
+<h4 id="shadow-culling">Shadow Culling</h4>
 <p>Shadow rendering has its own dedicated culling pass, with per-cascade frustum testing and per-prototype cascade limits. See <a href="shadow-optimization.html">Shadow Optimization</a> for details.</p>
 <blockquote>
-<p>For culling settings, see <a href="../getting-started/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a> and <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a>.</p>
+<p>For culling settings, see <a href="../getting-started/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a> and <a href="../components/brg-prototype-extra-data-density.html">BRG Prototype Extra Data / Density</a>.</p>
 </blockquote>
+<div class="TIP">
+<h5>Tip</h5>
+<p>Culling can be viewed in scene view by ticking <strong>Debug Visualize Culling In Scene View</strong> in your <a href="../getting-started/brg-instanced-renderer-config.html">Config</a> file!</p>
+</div>
 
 </article>
 

@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Rendering Features | BRG Instanced Renderer </title>
+      <title>Crossfade | BRG Instanced Renderer </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Rendering Features | BRG Instanced Renderer ">
+      <meta name="title" content="Crossfade | BRG Instanced Renderer ">
       <meta name="description" content="Documentation for BRG Instanced Renderer.">
       
       <link rel="icon" href="../../favicon.ico">
@@ -85,26 +85,26 @@
         </div>
 
         <article data-uid="">
-<h1 id="rendering-features">Rendering Features</h1>
+<h1 id="crossfade">Crossfade</h1>
 
 <hr>
-<p>BRG Instanced Renderer supports several per-instance rendering features that integrate directly with Unity's rendering pipeline.</p>
-<h4 id="motion-vectors">Motion Vectors</h4>
-<p>Per-instance motion vectors for accurate TAA, temporal upscaling (FSR, DLSS, STP), and motion blur. Can be force-disabled per-prefab to save GPU work on small details like grass. Configured via <a href="../components/brg-prototype-extra-data-other.html">BRG Prototype Extra Data / Other Settings</a>.</p>
-<h4 id="rendering-layers">Rendering Layers</h4>
-<p>Per-prototype rendering layer masks for selective lighting, decal filtering, and custom pass filtering. Automatically read from each prefab's MeshRenderer settings and respected during all rendering passes including shadows.</p>
-<h4 id="per-instance-color">Per-Instance Color</h4>
-<p>Optional per-instance color tinting. When enabled on the <a href="../getting-started/brg-instanced-renderer-config.html">Config</a>, each instance can have a unique color applied as a tint. Useful for vegetation color variation, team coloring, or debug visualization.</p>
-<h4 id="shader-compatibility">Shader Compatibility</h4>
-<p>Requires zero modification to your existing shaders. Works with:</p>
+<p>Crossfade is supported for LOD Groups, Mesh LOD, Screen Size Culling, and Dynamic Density Culling.</p>
+<p>All four crossfade modes are supported:</p>
 <ul>
-<li>All default URP/HDRP shaders</li>
-<li>All Shader Graph shaders</li>
-<li>All Amplify Shader Editor shaders</li>
-<li>All proper SRP-compatible shaders</li>
+<li><strong>No Crossfade</strong> — Instant LOD switch, cheapest option.</li>
+<li><strong>Crossfade (Stateless)</strong> — Dithered blending between LODs based on distance.</li>
+<li><strong>Animated Crossfade</strong> — Smooth time-based transitions with per-instance fade state tracking.</li>
+<li><strong>SpeedTree Crossfade</strong> — Percentage-based crossfade designed for SpeedTree 7/8 meshes only.</li>
 </ul>
+<div class="NOTE">
+<h5>Note</h5>
+<p>Only SpeedTree 7 and 8 (.st) should use SpeedTree Crossfade mode. SpeedTree 9 (.st9) and newer should use any of the other three modes.</p>
+</div>
+<h4 id="shader-compatibility">Shader Compatibility</h4>
+<p>To make your ShaderGraphs compatible with LOD crossfade, tick off the <strong>Supports LOD Cross Fade</strong> box in the ShaderGraph inspector.</p>
+<p><img src="../../images/ShaderGraph-LOD-Crossfade.png" alt="ShaderGraph LOD Crossfade setting"></p>
 <blockquote>
-<p>For rendering settings, see <a href="../components/brg-prototype-extra-data-other.html">BRG Prototype Extra Data / Other Settings</a> and <a href="../getting-started/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a>.</p>
+<p>For crossfade settings, see <a href="../components/brg-prototype-extra-data-lod.html">BRG Prototype Extra Data / LOD Overrides</a> and <a href="../getting-started/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a>.</p>
 </blockquote>
 
 </article>

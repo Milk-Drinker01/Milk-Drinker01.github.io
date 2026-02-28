@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Rendering Features | BRG Instanced Renderer </title>
+      <title>Shadow Optimizations | BRG Instanced Renderer </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Rendering Features | BRG Instanced Renderer ">
+      <meta name="title" content="Shadow Optimizations | BRG Instanced Renderer ">
       <meta name="description" content="Documentation for BRG Instanced Renderer.">
       
       <link rel="icon" href="../../favicon.ico">
@@ -85,27 +85,59 @@
         </div>
 
         <article data-uid="">
-<h1 id="rendering-features">Rendering Features</h1>
+<h1 id="shadow-optimizations">Shadow Optimizations</h1>
 
 <hr>
-<p>BRG Instanced Renderer supports several per-instance rendering features that integrate directly with Unity's rendering pipeline.</p>
-<h4 id="motion-vectors">Motion Vectors</h4>
-<p>Per-instance motion vectors for accurate TAA, temporal upscaling (FSR, DLSS, STP), and motion blur. Can be force-disabled per-prefab to save GPU work on small details like grass. Configured via <a href="../components/brg-prototype-extra-data-other.html">BRG Prototype Extra Data / Other Settings</a>.</p>
-<h4 id="rendering-layers">Rendering Layers</h4>
-<p>Per-prototype rendering layer masks for selective lighting, decal filtering, and custom pass filtering. Automatically read from each prefab's MeshRenderer settings and respected during all rendering passes including shadows.</p>
-<h4 id="per-instance-color">Per-Instance Color</h4>
-<p>Optional per-instance color tinting. When enabled on the <a href="../getting-started/brg-instanced-renderer-config.html">Config</a>, each instance can have a unique color applied as a tint. Useful for vegetation color variation, team coloring, or debug visualization.</p>
-<h4 id="shader-compatibility">Shader Compatibility</h4>
-<p>Requires zero modification to your existing shaders. Works with:</p>
-<ul>
-<li>All default URP/HDRP shaders</li>
-<li>All Shader Graph shaders</li>
-<li>All Amplify Shader Editor shaders</li>
-<li>All proper SRP-compatible shaders</li>
-</ul>
-<blockquote>
-<p>For rendering settings, see <a href="../components/brg-prototype-extra-data-other.html">BRG Prototype Extra Data / Other Settings</a> and <a href="../getting-started/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a>.</p>
-</blockquote>
+<p>Per-prototype shadow settings on <a href="brg-prototype-extra-data.html">BRG Prototype Extra Data</a>. These allow fine-grained control over shadow rendering cost per prefab type.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Max Shadow Cascade</strong></td>
+<td>int (1–4)</td>
+<td>4</td>
+<td>Maximum number of shadow cascades this prototype renders into. Lower values skip distant cascades. Set to 1 for grass and small details.</td>
+</tr>
+<tr>
+<td><strong>Min Shadow LOD</strong></td>
+<td>int (0–7)</td>
+<td>0</td>
+<td>Minimum LOD level used for shadow rendering. If set to 1, shadows use the LOD1 mesh instead of LOD0, reducing shadow polygon count.</td>
+</tr>
+<tr>
+<td><strong>Override Max Shadow Distance</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Enables the per-prototype max shadow distance below.</td>
+</tr>
+<tr>
+<td><strong>Max Shadow Distance</strong></td>
+<td>float</td>
+<td>80m</td>
+<td>Cull shadows for this prototype beyond this distance. Only used when the override toggle is enabled.</td>
+</tr>
+<tr>
+<td><strong>Override Max Shadow Crossfade Cascade</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Enables the per-prototype shadow crossfade cascade override below.</td>
+</tr>
+<tr>
+<td><strong>Max Shadow Crossfade Cascade</strong></td>
+<td>int (0–4)</td>
+<td>—</td>
+<td>Number of shadow cascades using dithered crossfade for this prototype. Overrides the global value on the <a href="../getting-started/brg-instanced-renderer-config.html">Config</a>.</td>
+</tr>
+</tbody>
+</table>
+<p>For more details, see <a href="../features/shadow-optimization.html">Shadow Optimization</a>.</p>
 
 </article>
 
