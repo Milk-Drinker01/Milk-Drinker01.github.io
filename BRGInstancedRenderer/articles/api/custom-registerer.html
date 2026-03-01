@@ -108,8 +108,8 @@ namespace BRGInstancedRenderer
 
         protected override void OnInitialize()
         {
-            // 1. Register your prototype
-            _protoIndex = BaseRegisterPrototype(_prefab);
+            // 1. Register your render signature
+            _protoIndex = RegisterRenderSignatureFromPrefab(_prefab);
             if (_protoIndex &lt; 0) return;
 
             // 2. Allocate a chunk
@@ -139,7 +139,7 @@ namespace BRGInstancedRenderer
         protected override void OnShutdown()
         {
             // Clean up local state only.
-            // Do NOT free chunks or unregister prototypes - the base class does that.
+            // Do NOT free chunks or unregister render signatures - the base class does that.
             _chunk = ChunkLink.Invalid;
             _protoIndex = -1;
         }
@@ -151,7 +151,7 @@ namespace BRGInstancedRenderer
 <li>Acquires the <code>BRGInstancedRenderer</code> singleton</li>
 <li>Calls <code>OnInitialize()</code> on enable, <code>OnShutdown()</code> on disable</li>
 <li>Frees all chunks allocated via <code>AllocChunk()</code> on shutdown</li>
-<li>Unregisters all prototypes registered via <code>BaseRegisterPrototype()</code> on shutdown</li>
+<li>Unregisters all render signatures registered via <code>RegisterRenderSignatureFromPrefab()</code> on shutdown</li>
 <li>Handles editor lifecycle (<code>[ExecuteAlways]</code> with deferred initialization)</li>
 </ul>
 <h2 id="structs">Structs</h2>
@@ -184,7 +184,7 @@ namespace BRGInstancedRenderer
 <tr>
 <td><strong>prototypeIndex</strong></td>
 <td>int</td>
-<td>Global prototype index returned by <code>BaseRegisterPrototype</code>.</td>
+<td>Global prototype index returned by <code>RegisterRenderSignatureFromPrefab</code> or <code>RegisterRenderSignature</code>.</td>
 </tr>
 <tr>
 <td><strong>color</strong></td>
@@ -194,7 +194,7 @@ namespace BRGInstancedRenderer
 </tbody>
 </table>
 <h3 id="prototypedata">PrototypeData</h3>
-<p>Explicit prototype configuration for batch registration via <code>BaseRegisterPrototypes</code>. Most users can use <code>BaseRegisterPrototype(GameObject)</code> instead, which extracts this data from the prefab automatically.</p>
+<p>The asset definition — meshes, materials, LODs, and other data extracted from a prefab. This is the &quot;what does it look like&quot; data. Accessed via <code>RenderSignature.asset</code>.</p>
 <table>
 <thead>
 <tr>
@@ -245,6 +245,11 @@ namespace BRGInstancedRenderer
 <td>Whether each LOD casts shadows.</td>
 </tr>
 <tr>
+<td><strong>lodMotionVectorModes</strong></td>
+<td>MotionVectorGenerationMode[]</td>
+<td>Per-LOD motion vector mode.</td>
+</tr>
+<tr>
 <td><strong>lodGroupSize</strong></td>
 <td>float</td>
 <td>Reference size for LOD calculations.</td>
@@ -255,47 +260,146 @@ namespace BRGInstancedRenderer
 <td>Crossfade mode from LODGroup.</td>
 </tr>
 <tr>
+<td><strong>percentageFadeMask</strong></td>
+<td>uint</td>
+<td>Bit N = LOD N uses percentage fade (SpeedTree).</td>
+</tr>
+<tr>
+<td><strong>speedTreeRendererID</strong></td>
+<td>int</td>
+<td>Renderer instance ID for SpeedTree wind lookup.</td>
+</tr>
+<tr>
+<td><strong>usesMeshLod</strong></td>
+<td>bool</td>
+<td>Unity 6.2+ Mesh LOD instead of separate meshes per level.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rendersignature">RenderSignature</h3>
+<p>The full registration unit — combines a <code>PrototypeData</code> asset with render behavior configuration. This is what you pass to <code>RegisterRenderSignature</code> or <code>RegisterRenderSignatures</code> when you need explicit control over render settings.</p>
+<p>The same prefab can be registered multiple times with different render settings. Deduplication uses both <code>sourcePrefab</code> and a hash of the config fields, so two <code>RenderSignature</code>s with the same prefab but different shadow settings are treated as separate prototypes.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>asset</strong></td>
+<td>PrototypeData</td>
+<td>—</td>
+<td>The mesh/material/LOD data.</td>
+</tr>
+<tr>
+<td><strong>motionVectorMode</strong></td>
+<td>MotionVectorGenerationMode</td>
+<td>—</td>
+<td>Motion vector generation mode.</td>
+</tr>
+<tr>
+<td><strong>animateCrossFading</strong></td>
+<td>bool</td>
+<td>—</td>
+<td>Whether to use animated crossfade.</td>
+</tr>
+<tr>
 <td><strong>maxShadowCascade</strong></td>
 <td>int</td>
-<td>Max shadow cascades (default 4).</td>
+<td>4</td>
+<td>Max shadow cascades.</td>
 </tr>
 <tr>
 <td><strong>minShadowLOD</strong></td>
 <td>int</td>
-<td>Minimum LOD for shadow mesh (default 0).</td>
+<td>0</td>
+<td>Minimum LOD for shadow mesh.</td>
 </tr>
 <tr>
 <td><strong>maxShadowDistance</strong></td>
 <td>float</td>
-<td>Max shadow distance, 0 = global (default 0).</td>
+<td>0</td>
+<td>Max shadow distance, 0 = global.</td>
+</tr>
+<tr>
+<td><strong>maxShadowCrossfadeCascade</strong></td>
+<td>int</td>
+<td>-99</td>
+<td>Cascade-specific crossfade control.</td>
+</tr>
+<tr>
+<td><strong>lodFadeDuration</strong></td>
+<td>float</td>
+<td>0</td>
+<td>Animated crossfade duration override.</td>
 </tr>
 <tr>
 <td><strong>enableDensityScaling</strong></td>
 <td>bool</td>
+<td>false</td>
 <td>Enable runtime density scaling.</td>
 </tr>
 <tr>
 <td><strong>enableDynamicDensity</strong></td>
 <td>bool</td>
+<td>false</td>
 <td>Enable per-instance dynamic density.</td>
 </tr>
 <tr>
 <td><strong>dynamicDensityMode</strong></td>
 <td>DynamicDensityMode</td>
+<td>ScreenSize</td>
 <td>ScreenSize or Distance.</td>
+</tr>
+<tr>
+<td><strong>densityStartScreenSize</strong></td>
+<td>float</td>
+<td>0.1</td>
+<td>Screen size where thinning begins.</td>
+</tr>
+<tr>
+<td><strong>densityStartDistance</strong></td>
+<td>float</td>
+<td>50</td>
+<td>Distance where thinning begins.</td>
+</tr>
+<tr>
+<td><strong>densityEndDistance</strong></td>
+<td>float</td>
+<td>150</td>
+<td>Distance where thinning reaches minimum.</td>
+</tr>
+<tr>
+<td><strong>densityMinFraction</strong></td>
+<td>float</td>
+<td>0.3</td>
+<td>Minimum density fraction.</td>
+</tr>
+<tr>
+<td><strong>densityFadeWidth</strong></td>
+<td>float</td>
+<td>0.05</td>
+<td>Crossfade width for density transitions.</td>
 </tr>
 <tr>
 <td><strong>layer</strong></td>
 <td>int</td>
-<td>GameObject layer from prefab.</td>
+<td>0</td>
+<td>GameObject layer.</td>
 </tr>
 <tr>
 <td><strong>renderingLayerMask</strong></td>
 <td>uint</td>
+<td>0xffffffff</td>
 <td>URP/HDRP rendering layer mask.</td>
 </tr>
 </tbody>
 </table>
+<p>Most users can simply call <code>RegisterRenderSignatureFromPrefab(GameObject)</code>, which extracts a <code>RenderSignature</code> from the prefab automatically (including any <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a> settings). You can also call <code>ExtractRenderSignature(GameObject)</code> to get a <code>RenderSignature</code> without registering it, modify it, and then pass it to <code>RegisterRenderSignature</code>.</p>
 <h3 id="chunklink">ChunkLink</h3>
 <p>Handle to an allocated BRG chunk. Tracked by the base class for automatic cleanup.</p>
 <table>
@@ -439,7 +543,7 @@ namespace BRGInstancedRenderer
 <p>See the <a href="registerer-example.html">Registerer Example</a> for a working example of manual lifecycle using <code>_autoRegister</code>.</p>
 <h2 id="protected-api">Protected API</h2>
 <p>These methods are available to your <code>BRGRegisterer</code> subclass.</p>
-<h3 id="prototype-registration">Prototype Registration</h3>
+<h3 id="render-signature-registration">Render Signature Registration</h3>
 <table>
 <thead>
 <tr>
@@ -449,12 +553,20 @@ namespace BRGInstancedRenderer
 </thead>
 <tbody>
 <tr>
-<td><code>int BaseRegisterPrototype(GameObject prefab)</code></td>
-<td>Register a single prefab as a prototype. Returns the global prototype index, or -1 on failure. Tracked for automatic unregistration.</td>
+<td><code>RenderSignature ExtractRenderSignature(GameObject prefab)</code></td>
+<td>Extract a <code>RenderSignature</code> from a prefab without registering it. Useful for modifying settings before registration.</td>
 </tr>
 <tr>
-<td><code>Dictionary&lt;int,int&gt; BaseRegisterPrototypes(List&lt;PrototypeData&gt; prototypes)</code></td>
-<td>Batch-register prototypes from explicit data. Returns a local-to-global index remap dictionary. Tracked for automatic unregistration.</td>
+<td><code>int RegisterRenderSignatureFromPrefab(GameObject prefab)</code></td>
+<td>Register a single prefab. Extracts a <code>RenderSignature</code> from the prefab automatically. Returns the global prototype index, or -1 on failure. Tracked for automatic unregistration.</td>
+</tr>
+<tr>
+<td><code>int RegisterRenderSignature(RenderSignature signature)</code></td>
+<td>Register an explicit <code>RenderSignature</code>. Returns the global prototype index, or -1 on failure. Tracked for automatic unregistration.</td>
+</tr>
+<tr>
+<td><code>Dictionary&lt;int,int&gt; RegisterRenderSignatures(List&lt;RenderSignature&gt; signatures)</code></td>
+<td>Batch-register render signatures. Returns a local-to-global index remap dictionary. Tracked for automatic unregistration.</td>
 </tr>
 </tbody>
 </table>
@@ -610,7 +722,7 @@ namespace BRGInstancedRenderer
 </ul>
 <h2 id="notes">Notes</h2>
 <ul>
-<li>Always use <code>BaseRegisterPrototype</code> / <code>BaseRegisterPrototypes</code> instead of calling <code>BRGSystem.RegisterPrototype</code> directly. The base class tracks these for automatic cleanup.</li>
+<li>Always use <code>RegisterRenderSignatureFromPrefab</code> / <code>RegisterRenderSignature</code> / <code>RegisterRenderSignatures</code> instead of calling <code>BRGSystem.RegisterPrototype</code> directly. The base class tracks these for automatic cleanup.</li>
 <li>Always use <code>AllocChunk</code> / <code>ReleaseChunk</code> instead of calling <code>BRGSystem.AllocateChunk</code> / <code>FreeChunk</code> directly, for the same reason.</li>
 <li>Do <strong>not</strong> free chunks or unregister prototypes in <code>OnShutdown()</code>. The base class handles all BRG resource cleanup after <code>OnShutdown()</code> returns.</li>
 <li>The <code>BRGSystem</code> property is set before <code>OnInitialize()</code> and cleared after <code>OnShutdown()</code>. Use it freely during those methods.</li>

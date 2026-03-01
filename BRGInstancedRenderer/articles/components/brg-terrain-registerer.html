@@ -334,9 +334,9 @@
 </tbody>
 </table>
 <p>The inspector also shows a status line with detail prototype count, patch grid size, loaded instance/patch/chunk counts, and pending patches.</p>
-<h2 id="detail-prefab-overrides-editor-only">Detail Prefab Overrides (Editor Only)</h2>
-<p>The inspector provides a <strong>Detail Prefab Overrides</strong> section where you can substitute terrain detail prototypes with LOD Group prefabs. Click <strong>Refresh Detail List</strong> to populate the list from the terrain's detail settings.</p>
-<p>Texture-based details show a warning prompting you to assign an override prefab for BRG rendering.</p>
+<h2 id="detail-prefab-overrides">Detail Prefab Overrides</h2>
+<p>To substitute a terrain detail prototype with a different prefab (e.g. an LOD Group variant with multiple LODs), add a <strong>BRG Terrain Detail Override</strong> component to the detail prototype prefab and assign the replacement prefab to the <strong>Override Prefab</strong> field.</p>
+<p>The terrain registerer resolves overrides at editor time and uses the override prefab for all rendering. The resolved prefab list is shown read-only in the inspector. Override resolution has no runtime cost.</p>
 <h2 id="inspector-actions">Inspector Actions</h2>
 <table>
 <thead>

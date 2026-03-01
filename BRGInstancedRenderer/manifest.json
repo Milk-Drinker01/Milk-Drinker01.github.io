@@ -232,6 +232,26 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/features/motion-vectors.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/motion-vectors.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/negative-scale.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/negative-scale.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/features/rendering-features.md",
       "output": {
         ".html": {
@@ -369,6 +389,26 @@
       "output": {
         "resource": {
           "relative_path": "favicon.ico"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/BRG-Instanced-Renderer-FPS.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/BRG-Instanced-Renderer-FPS.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/BRGIR-HDRP.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/BRGIR-HDRP.png"
         }
       },
       "version": ""
