@@ -89,7 +89,7 @@
 
 <hr>
 <p><code>BRGRegisterer</code> is an abstract base class for building your own instance registration components. It handles the BRG singleton lifecycle, prototype reference counting, chunk tracking with automatic cleanup, overflow management, and editor support — so your subclass only needs to focus on <em>what</em> to register and <em>where</em>.</p>
-<p>Both built-in registerers (<a href="../components/brg-instance-group.html">BRG Instance Group</a> and <a href="../components/brg-terrain-registerer.html">BRG Terrain Registerer</a>) extend this class.</p>
+<p>Both built-in registerers (<a href="../components/brg-gameobject-group.html">BRG GameObject Group</a> and <a href="../components/brg-terrain-registerer.html">BRG Terrain Registerer</a>) extend this class.</p>
 <p>For a working example, see <a href="registerer-example.html">Registerer Example</a>.</p>
 <h2 id="creating-a-custom-registerer">Creating a Custom Registerer</h2>
 <p>Extend <code>BRGRegisterer</code> and implement two methods:</p>
@@ -338,10 +338,10 @@ namespace BRGInstancedRenderer
 <td>Animated crossfade duration override.</td>
 </tr>
 <tr>
-<td><strong>enableDensityScaling</strong></td>
+<td><strong>enableGlobalDensityScaling</strong></td>
 <td>bool</td>
 <td>false</td>
-<td>Enable runtime density scaling.</td>
+<td>Enable runtime global density scaling.</td>
 </tr>
 <tr>
 <td><strong>enableDynamicDensity</strong></td>
@@ -708,7 +708,7 @@ namespace BRGInstancedRenderer
 <td><strong>createInstanceHandles</strong></td>
 <td>bool</td>
 <td>false</td>
-<td>Track per-instance slot indices, enabling <code>GetInstanceLinks()</code> and per-instance operations. Costs additional memory.</td>
+<td>When <code>true</code>, the system creates <code>InstanceLink</code> handles for every instance written to the chunk. This is required to use <code>GetInstanceLinks()</code>, <code>AddInstance()</code>, and per-instance operations like <code>Move()</code>, <code>SetColor()</code>, and <code>Remove()</code> after the chunk is written. When <code>false</code>, instances are write-once — you can overwrite the entire chunk with another <code>WriteChunk</code> call, but cannot modify or remove individual instances.</td>
 </tr>
 </tbody>
 </table>

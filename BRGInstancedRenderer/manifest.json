@@ -52,6 +52,16 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/changelog.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/changelog.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/components/brg-camera-settings.md",
       "output": {
         ".html": {
@@ -62,10 +72,10 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "articles/components/brg-instance-group.md",
+      "source_relative_path": "articles/components/brg-gameobject-group.md",
       "output": {
         ".html": {
-          "relative_path": "articles/components/brg-instance-group.html"
+          "relative_path": "articles/components/brg-gameobject-group.html"
         }
       },
       "version": ""
@@ -122,6 +132,16 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/components/brg-terrain-detail-override.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/components/brg-terrain-detail-override.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/components/brg-terrain-registerer.md",
       "output": {
         ".html": {
@@ -136,6 +156,86 @@
       "output": {
         ".html": {
           "relative_path": "articles/components/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/culling.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/culling.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/debug.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/debug.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/gathered-allocations.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/gathered-allocations.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/lod-crossfade.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/lod-crossfade.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/overview.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/overview.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/pooling.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/pooling.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/rendering.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/rendering.html"
         }
       },
       "version": ""
@@ -166,16 +266,6 @@
       "output": {
         ".html": {
           "relative_path": "articles/editor-tools/system-window.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "articles/features/crossfade.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/features/crossfade.html"
         }
       },
       "version": ""
@@ -352,6 +442,16 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/getting-started/tips.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting-started/tips.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/overview.md",
       "output": {
         ".html": {
@@ -429,6 +529,16 @@
       "output": {
         "resource": {
           "relative_path": "images/Frustum-Culling.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/Gathered-Allocations.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/Gathered-Allocations.png"
         }
       },
       "version": ""

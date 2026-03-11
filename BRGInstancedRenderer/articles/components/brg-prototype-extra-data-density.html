@@ -89,7 +89,7 @@
 
 <hr>
 <p>Per-prototype density settings on <a href="brg-prototype-extra-data.html">BRG Prototype Extra Data</a>. These control runtime density scaling and GPU-side dynamic density culling for individual prefab types.</p>
-<h2 id="density-scaling">Density Scaling</h2>
+<h2 id="global-density-scaling">Global Density Scaling</h2>
 <table>
 <thead>
 <tr>
@@ -101,10 +101,10 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>Enable Density Scaling</strong></td>
+<td><strong>Enable Global Density Scaling</strong></td>
 <td>bool</td>
 <td>false</td>
-<td>Allows this prototype to participate in runtime global density scaling via <code>BRGInstancedRenderer.SetDensity()</code>.</td>
+<td>Allows this prototype to participate in runtime global density scaling via <code>BRGRenderer.SetGlobalDensity()</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -141,7 +141,7 @@
 <td><strong>Dynamic Density Mode</strong></td>
 <td>enum</td>
 <td>ScreenSize</td>
-<td><strong>Screen Size</strong> — density based on screen-space size. <strong>Distance</strong> — density based on world-space distance.</td>
+<td><strong>Screen Size</strong> — density based on screen-space size. <br><strong>Distance</strong> — density based on world-space distance.</td>
 </tr>
 <tr>
 <td><strong>Screen Size Mode</strong></td>

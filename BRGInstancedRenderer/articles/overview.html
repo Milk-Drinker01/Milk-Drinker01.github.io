@@ -101,17 +101,26 @@
 <li>Allows for hitchless streaming of instances</li>
 </ul>
 </li>
-<li>Culling on 3 levels:
+<li>Culling on 4 levels:
 <ul>
-<li>Hierarchical occlusion culling</li>
+<li>Hierarchical occlusion culling (baked)</li>
+<li>GPU occlusion culling (real-time HZB)</li>
 <li>Hierarchical frustum culling</li>
 <li>Per-instance frustum and distance culling</li>
 </ul>
 </li>
 <li>Compute shader shadow cascade culling</li>
 <li>Compute shader LOD selection</li>
-<li>Custom-built terrain detail spawning system allows for spawning and streaming millions of instances with zero frame hitches, using C# Jobs and Burst Compiler</li>
+<li>Custom-built terrain detail spawning and streaming system
+<ul>
+<li>Stream millions of instances with zero frame hitches</li>
+<li>Most solutions just use the ComputeDetailInstanceTransforms API, which causes frame time spikes and substantial garbage collection</li>
+<li>Closely matches both &quot;Coverage&quot; and &quot;Instance Count&quot; modes</li>
+<li>Runs on an async burst job for maximum performance</li>
+</ul>
+</li>
 <li>Zero hotpath garbage</li>
+<li>Converted GameObject instances use Unity's ObjectDispatcher for native transform changes — simply move your object's transform at runtime and have it update with zero tracking overhead</li>
 <li>Optional features to optimize shadow rendering:
 <ul>
 <li>Slider to clamp the maximum shadow cascade per-prefab, great for optimizing shadow rendering on details</li>
@@ -143,12 +152,23 @@
 <li>LOD Bias from Quality Settings, with optional per-camera multiplier</li>
 <li>User-interactable API for your existing streaming and loading setups</li>
 <li>Both APV and legacy light probes are supported</li>
+<li>Optional per-instance color</li>
+<li>Render terrain details with LOD groups</li>
+<li>SpeedTree Wind supported natively — BRG Instanced Renderer is the only GPU instancer with this feature</li>
+<li>Negative instance scale handling (2 modes)
+<ul>
+<li>Proper Flip Winding</li>
+<li>Force Positive Scale</li>
+</ul>
+</li>
 </ul>
 <h2 id="unmatched-simplicity">Unmatched Simplicity</h2>
 <p>BRG Instanced Renderer is designed to be as simple as possible to use.</p>
 <ul>
 <li><strong>For Terrain:</strong> Add a single component to your terrain's GameObject. That's it.</li>
 <li>Terrain updates are insanely fast. Paint trees and details with zero lag. (Your artists will thank us!)</li>
+<li>Optionally override detail prefabs to render terrain details with LOD groups</li>
+<li><strong>For GameObjects:</strong> Select your prefab instances in the hierarchy. Right Click → Convert to Instances.</li>
 <li>Requires zero modification to your existing shaders, due to utilizing Batch Renderer Group variants
 <ul>
 <li>All default shaders are compatible</li>
@@ -170,15 +190,15 @@
 <tbody>
 <tr>
 <td>NVIDIA RTX/GTX</td>
-<td>DX11, DX12, Vulkan</td>
+<td>DX11, DX12, Vulkan, WebGPU</td>
 </tr>
 <tr>
 <td>AMD</td>
-<td>DX11, DX12, Vulkan</td>
+<td>DX11, DX12, Vulkan, WebGPU</td>
 </tr>
 <tr>
 <td>Intel ARC</td>
-<td>DX11, DX12, Vulkan</td>
+<td>DX11, DX12, Vulkan, WebGPU</td>
 </tr>
 <tr>
 <td>Apple (Silicon and Intel)</td>
@@ -186,13 +206,14 @@
 </tr>
 </tbody>
 </table>
+<p>PlayStation, Xbox, and Nintendo Switch should work but have not been tested yet. If you have access to console hardware, please reach out and let us know your results.</p>
 <h2 id="5-star-rated-developer-and-support">5-Star Rated Developer and Support</h2>
 <p>Our team has been delivering 5-star assets for 4 years, with our reviews emphasizing exceptional support speed and quality. Contact us through our Discord for any bug reports or feature requests. We use BRG Instanced Renderer in our own shipped product, which makes fixing all reported bugs our top priority.</p>
 <h2 id="requirements">Requirements</h2>
 <ul>
 <li><strong>Unity Version:</strong> Unity 6+</li>
 <li><strong>Render Pipeline:</strong> URP or HDRP</li>
-<li><strong>Graphics API:</strong> Any compute-capable graphics API (DX11, DX12, Vulkan, Metal)</li>
+<li><strong>Graphics API:</strong> Any compute-capable graphics API (DX11, DX12, Vulkan, Metal, WebGPU)</li>
 </ul>
 
 </article>

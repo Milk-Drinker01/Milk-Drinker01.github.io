@@ -88,51 +88,17 @@
 <h1 id="terrain">Terrain</h1>
 
 <hr>
-<p>The <strong>BRG Terrain Registerer</strong> component enables GPU-instanced rendering for Unity Terrain trees and details. Trees are extracted once at startup, while details stream dynamically around the camera using C# Jobs and Burst Compiler.</p>
+<p>Render Unity Terrain trees and details through BRG Instanced Renderer.</p>
 <h2 id="setup">Setup</h2>
-<h3 id="1-add-the-component">1. Add the Component</h3>
-<p>Add the <strong>BRG Terrain Registerer</strong> component to any GameObject that has a <strong>Terrain</strong> component. One registerer per terrain.</p>
-<h3 id="2-configure-settings">2. Configure Settings</h3>
-<table>
-<thead>
-<tr>
-<th>Setting</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Disable Built-In Rendering</strong></td>
-<td>Disables the terrain's native tree and detail rendering so BRG takes over (default: enabled)</td>
-</tr>
-<tr>
-<td><strong>Detail Chunk Size</strong></td>
-<td>World-space size of detail streaming cells in meters (default: 32m). Snapped to terrain patch boundaries.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="3-enter-play-mode">3. Enter Play Mode</h3>
-<p>Trees are extracted and uploaded automatically when the component initializes. Details begin streaming around the active camera.</p>
-<p>That's it — no conversion step needed. The component handles everything on its own.</p>
-<h2 id="how-trees-work">How Trees Work</h2>
-<p>Tree instances are read from the terrain data once at startup. They are spatially batched into chunks and uploaded as permanent instances. Trees use the prefab assigned in Unity's terrain tree prototype settings.</p>
-<p>If you paint or remove trees in the editor, the registerer detects the change and performs an incremental update automatically.</p>
-<h2 id="how-details-work">How Details Work</h2>
-<p>Terrain details (grass, flowers, small vegetation) are streamed in and out of GPU memory based on camera proximity. The system:</p>
 <ol>
-<li>Divides the terrain into a grid of patches based on <strong>Detail Chunk Size</strong></li>
-<li>Loads patches near the camera using Burst-compiled extraction jobs</li>
-<li>Unloads patches as the camera moves away</li>
+<li>Add the <strong>BRG Terrain Registerer</strong> component to your <strong>Terrain</strong> GameObject</li>
+<li>Configure settings — see the <a href="../components/brg-terrain-registerer.html">BRG Terrain Registerer</a> component reference</li>
+<li>Enter Play Mode</li>
 </ol>
-<p>This streaming approach allows millions of detail instances without loading everything upfront.</p>
-<h2 id="per-prefab-settings">Per-Prefab Settings</h2>
-<p>Just like prefab instances, terrain tree and detail prototypes support per-prefab customization via <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a>. Add the component to the prefab referenced by your terrain prototype to control shadow cascades, dynamic density, crossfade, and more.</p>
-<h2 id="tips">Tips</h2>
-<ul>
-<li>Detail chunk size should match the scale of your terrain. Smaller values stream more precisely but create more chunks. 32m is a good default for most terrains.</li>
-<li>For grass and small details, consider setting <strong>Max Shadow Cascade</strong> to 1 and disabling motion vectors via <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a> for significant performance gains.</li>
-<li>Tree changes made with the terrain paint tool in the editor are detected automatically. Detail changes are also detected and updated incrementally.</li>
-</ul>
+<p>That's it. Trees are extracted and uploaded automatically. Details stream in around the camera. The terrain's built-in rendering is disabled by default so BRG takes over.</p>
+<h2 id="detail-overrides">Detail Overrides</h2>
+<p>Default Unity terrain detail prototypes are single-mesh prefabs with no LOD support. To use an LOD Group variant instead, add a <a href="../components/brg-terrain-detail-override.html">BRG Terrain Detail Override</a> component to the detail prototype prefab and assign your replacement prefab to the <strong>Override Prefab</strong> field.</p>
+<p>The resolved prefab list is shown read-only in the <a href="../components/brg-terrain-registerer.html">BRG Terrain Registerer</a> inspector.</p>
 
 </article>
 

@@ -99,47 +99,6 @@
 <p>Dithered crossfading between shadow cascades smooths the visible seam where cascades meet. Controllable globally and per-prototype.</p>
 <h4 id="per-lod-shadow-casting">Per-LOD Shadow Casting</h4>
 <p>Each LOD level respects its MeshRenderer's shadow casting setting. Disable shadow casting on distant LODs to save GPU work automatically.</p>
-<table>
-<thead>
-<tr>
-<th>Object Type</th>
-<th>Recommended Cascade</th>
-<th>Shadow LOD</th>
-<th>Shadow Distance</th>
-<th>Motion Vectors</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Large trees</td>
-<td>4</td>
-<td>0</td>
-<td>—</td>
-<td>On</td>
-</tr>
-<tr>
-<td>Medium vegetation</td>
-<td>2–3</td>
-<td>1</td>
-<td>80–120m</td>
-<td>On</td>
-</tr>
-<tr>
-<td>Grass / ground cover</td>
-<td>1</td>
-<td>0</td>
-<td>30–50m</td>
-<td>Off</td>
-</tr>
-<tr>
-<td>Small props</td>
-<td>2</td>
-<td>0</td>
-<td>60–80m</td>
-<td>On</td>
-</tr>
-</tbody>
-</table>
 <blockquote>
 <p>For shadow settings, see <a href="../components/brg-prototype-extra-data-shadow.html">BRG Prototype Extra Data / Shadow Optimizations</a> and <a href="../getting-started/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a>.</p>
 </blockquote>
