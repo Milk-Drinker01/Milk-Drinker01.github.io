@@ -42,6 +42,16 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/api/direct-api.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/api/direct-api.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/api/registerer-example.md",
       "output": {
         ".html": {
@@ -306,6 +316,16 @@
       "output": {
         ".html": {
           "relative_path": "articles/features/dynamic-density.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/floating-origin.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/floating-origin.html"
         }
       },
       "version": ""

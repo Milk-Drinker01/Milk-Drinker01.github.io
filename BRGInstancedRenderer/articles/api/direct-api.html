@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Direct API | BRG Instanced Renderer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Direct API | BRG Instanced Renderer ">
+      <meta name="description" content="Documentation for BRG Instanced Renderer.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="BRG Instanced Renderer">
+            BRG Instanced Renderer
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="direct-api">Direct API</h1>
+
+<hr>
+<blockquote>
+<p>In most cases, you should use a <a href="custom-registerer.html">Custom Registerer</a> instead of calling these methods directly. <code>BRGRegisterer</code> handles singleton lifecycle, prototype reference counting, chunk tracking, overflow management, and automatic cleanup on disable. Calling the raw API means you are responsible for all of that yourself — failing to unregister prototypes or free chunks will leak GPU memory.</p>
+</blockquote>
+<p>The direct API is available on the <code>BRGRenderer</code> singleton via <code>BRGRenderer.Instance</code>. These are the same methods that <code>BRGRegisterer</code> calls internally.</p>
+<h2 id="singleton">Singleton</h2>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>static BRGRenderer Instance</code></td>
+<td>Get or create the singleton. Auto-initializes on first access.</td>
+</tr>
+<tr>
+<td><code>static bool HasInstance</code></td>
+<td>Check if the singleton exists without creating it.</td>
+</tr>
+<tr>
+<td><code>bool IsInitialized</code></td>
+<td>Whether the system is initialized and ready.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="prototype-registration">Prototype Registration</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>int RegisterRenderSignatureFromPrefab(GameObject prefab)</code></td>
+<td>Register a render signature from a prefab. Returns the prototype index, or -1 on failure. Increments the reference count if already registered.</td>
+</tr>
+<tr>
+<td><code>int RegisterRenderSignature(RenderSignature signature)</code></td>
+<td>Register a custom render signature. Deduplicates by asset identity hash + config hash. Returns the prototype index.</td>
+</tr>
+<tr>
+<td><code>bool UnregisterRenderSignature(int protoIndex)</code></td>
+<td>Decrement the reference count for a prototype. Returns <code>true</code> if the count reached zero. Zero-refcount prototypes are automatically purged after a grace period (default 30s, configurable via <a href="../configuration/pooling.html">Prototype Idle Grace Period</a>). If the prototype is re-registered before the grace period expires, it is reused without any GPU work.</td>
+</tr>
+<tr>
+<td><code>int PurgeUnusedPrototypes()</code></td>
+<td>Immediately remove all prototypes with a reference count of zero, bypassing the grace period. Returns the number purged.</td>
+</tr>
+<tr>
+<td><code>RenderSignature GetPrototype(int protoIndex)</code></td>
+<td>Get the render signature for a prototype index.</td>
+</tr>
+<tr>
+<td><code>int GetPrototypeRefCount(int protoIndex)</code></td>
+<td>Get the current reference count.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="chunk-management">Chunk Management</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>int AllocateChunk()</code></td>
+<td>Allocate a new chunk. Returns the chunk ID.</td>
+</tr>
+<tr>
+<td><code>void WriteChunk(int chunkId, NativeArray&lt;InstanceData&gt; instances, Bounds bounds, float cullDistance = 0f, bool snapAnimatedCrossfade = false, bool createInstanceHandles = false)</code></td>
+<td>Write instances to a chunk. Bounds should tightly enclose all instances. Set <code>createInstanceHandles</code> to <code>true</code> if you need per-instance modification later.</td>
+</tr>
+<tr>
+<td><code>void FreeChunk(int chunkId)</code></td>
+<td>Free a chunk and return its pools to the free list.</td>
+</tr>
+<tr>
+<td><code>void RecalculateChunkBounds(int chunkId, Bounds newBounds)</code></td>
+<td>Update chunk culling bounds. Use after removals have made the original bounds too loose.</td>
+</tr>
+<tr>
+<td><code>int GetChunkInstanceCount(int chunkId)</code></td>
+<td>Get the number of instances in a chunk.</td>
+</tr>
+<tr>
+<td><code>int[] GetChunkInstanceSlots(int chunkId)</code></td>
+<td>Get global slot indices for all instances in the chunk. Only valid if the chunk was written with <code>createInstanceHandles = true</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="instance-addition--removal">Instance Addition &amp; Removal</h2>
+<p>These methods require the chunk to have been written with <code>createInstanceHandles = true</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>int AddInstance(int chunkId, InstanceData instance)</code></td>
+<td>Add a single instance. Returns the global slot index, or -1 if the chunk is full.</td>
+</tr>
+<tr>
+<td><code>void AddInstances(int chunkId, NativeArray&lt;InstanceData&gt; instances, int count, NativeArray&lt;int&gt; outSlotIndices)</code></td>
+<td>Add multiple instances. Slot indices are written to <code>outSlotIndices</code> (-1 for any that didn't fit).</td>
+</tr>
+<tr>
+<td><code>void RemoveInstance(int chunkId, int globalSlotIndex)</code></td>
+<td>Remove an instance by slot index. Chunk bounds are not automatically recalculated.</td>
+</tr>
+<tr>
+<td><code>void SetInstanceEnabled(int chunkId, int globalSlotIndex, bool enabled)</code></td>
+<td>Enable or disable an instance. Disabled instances are invisible to culling but keep their slot and pool allocation.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="instance-modification">Instance Modification</h2>
+<p>All modification methods take a global slot index and stage the change for GPU upload.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>void SetInstancePosition(int globalSlotIndex, float3 position)</code></td>
+<td>Set position only.</td>
+</tr>
+<tr>
+<td><code>void SetInstanceRotation(int globalSlotIndex, quaternion rotation)</code></td>
+<td>Set rotation only.</td>
+</tr>
+<tr>
+<td><code>void SetInstanceScale(int globalSlotIndex, float3 scale)</code></td>
+<td>Set scale only.</td>
+</tr>
+<tr>
+<td><code>void MoveAndRotateInstance(int globalSlotIndex, float3 position, quaternion rotation)</code></td>
+<td>Set position and rotation.</td>
+</tr>
+<tr>
+<td><code>void MoveInstance(int globalSlotIndex, float3 position, quaternion rotation, float3 scale)</code></td>
+<td>Set full TRS. Light probes are not re-sampled automatically.</td>
+</tr>
+<tr>
+<td><code>void SetInstanceColor(int globalSlotIndex, Color32 color)</code></td>
+<td>Set per-instance color. Requires <strong>Enable Per-Instance Color</strong> on the <a href="../configuration/rendering.html">Config</a>.</td>
+</tr>
+<tr>
+<td><code>void SampleInstanceLightProbe(int globalSlotIndex, float3 position)</code></td>
+<td>Re-sample light probes at a position. Call manually after moving an instance if using legacy light probes.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="buffer--memory">Buffer &amp; Memory</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>void CompactBuffers()</code></td>
+<td>Compact GPU buffers to reduce memory waste. Leaves ~25% headroom. Causes a small hitch — call during loading screens or pauses.</td>
+</tr>
+<tr>
+<td><code>void ShiftInstances(Vector3 offset)</code></td>
+<td>Shift all instance positions and chunk bounds by an offset. For floating origin systems. You are responsible for shifting GameObjects, terrain, and cameras separately.</td>
+</tr>
+<tr>
+<td><code>void FlushStagedUploads()</code></td>
+<td>Force all staged GPU uploads to execute immediately. Normally called automatically before culling.</td>
+</tr>
+<tr>
+<td><code>long AllocatedBufferMemory</code></td>
+<td>Total allocated GPU buffer memory in bytes.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="lifecycle-example">Lifecycle Example</h2>
+<pre><code class="lang-csharp">using Unity.Collections;
+using Unity.Mathematics;
+using UnityEngine;
+
+namespace BRGInstancedRenderer
+{
+    public class DirectAPIExample : MonoBehaviour
+    {
+        [SerializeField] GameObject _prefab;
+
+        int _protoIndex = -1;
+        int _chunkId = -1;
+
+        void OnEnable()
+        {
+            var brg = BRGRenderer.Instance;
+
+            // 1. Register prototype
+            _protoIndex = brg.RegisterRenderSignatureFromPrefab(_prefab);
+            if (_protoIndex &lt; 0) return;
+
+            // 2. Allocate chunk
+            _chunkId = brg.AllocateChunk();
+
+            // 3. Build instance data
+            var instances = new NativeArray&lt;InstanceData&gt;(100, Allocator.TempJob);
+            for (int i = 0; i &lt; 100; i++)
+            {
+                instances[i] = new InstanceData
+                {
+                    position = new float3(i * 2f, 0f, 0f),
+                    rotation = quaternion.identity,
+                    scale = new float3(1f),
+                    prototypeIndex = _protoIndex,
+                    color = new Color32(255, 255, 255, 255)
+                };
+            }
+
+            // 4. Write to chunk
+            var bounds = new Bounds(Vector3.zero, new Vector3(200f, 10f, 10f));
+            brg.WriteChunk(_chunkId, instances, bounds);
+            instances.Dispose();
+        }
+
+        void OnDisable()
+        {
+            if (!BRGRenderer.HasInstance) return;
+            var brg = BRGRenderer.Instance;
+
+            // You must clean up manually
+            if (_chunkId &gt;= 0)
+            {
+                brg.FreeChunk(_chunkId);
+                _chunkId = -1;
+            }
+
+            if (_protoIndex &gt;= 0)
+            {
+                brg.UnregisterRenderSignature(_protoIndex);
+                _protoIndex = -1;
+            }
+        }
+    }
+}
+</code></pre>
+<p>Compare this with the equivalent <a href="custom-registerer.html">Custom Registerer</a> version, which handles chunk freeing and prototype unregistration automatically.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

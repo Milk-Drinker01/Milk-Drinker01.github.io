@@ -182,6 +182,35 @@ public bool SnapCrossfadeState(int viewID)
 <pre><code class="lang-csharp">// snap crossfade for a specific camera after teleporting it
 BRGInstancedRenderer.Instance.SnapCrossfadeState(myCamera);
 </code></pre>
+<h2 id="shiftinstances">ShiftInstances</h2>
+<pre><code class="lang-csharp">public void ShiftInstances(Vector3 offset)
+</code></pre>
+<p>Shift all instance positions and chunk bounds by an offset. Designed for <a href="../features/floating-origin.html">floating world origin</a> systems that periodically re-center the world to avoid floating-point precision issues at large coordinates.</p>
+<p>This only shifts the BRG data — you are responsible for shifting GameObjects, terrain, cameras, and any other world-space objects separately.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>offset</strong></td>
+<td>Vector3</td>
+<td>World-space offset to apply to all instances and chunk bounds.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-csharp">// re-center the world around the player
+Vector3 shift = -player.transform.position;
+BRGRenderer.Instance.ShiftInstances(shift);
+
+// shift everything else too
+player.transform.position += shift;
+// ... shift terrain, cameras, etc.
+</code></pre>
 
 </article>
 
