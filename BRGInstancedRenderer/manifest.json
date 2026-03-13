@@ -52,6 +52,16 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/api/system-overview.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/api/system-overview.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/changelog.md",
       "output": {
         ".html": {

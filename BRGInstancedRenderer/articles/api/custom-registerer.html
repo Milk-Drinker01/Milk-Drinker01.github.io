@@ -88,6 +88,9 @@
 <h1 id="custom-registerer">Custom Registerer</h1>
 
 <hr>
+<blockquote>
+<p>Before reading this page, make sure you've read <a href="system-overview.html">System Overview</a> to understand how prototypes, render signatures, chunks, and pools work together.</p>
+</blockquote>
 <p><code>BRGRegisterer</code> is an abstract base class for building your own instance registration components. It handles the BRG singleton lifecycle, prototype reference counting, chunk tracking with automatic cleanup, overflow management, and editor support — so your subclass only needs to focus on <em>what</em> to register and <em>where</em>.</p>
 <p>Both built-in registerers (<a href="../components/brg-gameobject-group.html">BRG GameObject Group</a> and <a href="../components/brg-terrain-registerer.html">BRG Terrain Registerer</a>) extend this class.</p>
 <p>For a working example, see <a href="registerer-example.html">Registerer Example</a>.</p>

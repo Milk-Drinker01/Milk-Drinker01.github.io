@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>System Overview | BRG Instanced Renderer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="System Overview | BRG Instanced Renderer ">
+      <meta name="description" content="Documentation for BRG Instanced Renderer.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="BRG Instanced Renderer">
+            BRG Instanced Renderer
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="system-overview">System Overview</h1>
+
+<hr>
+<p>This page explains how BRG Instanced Renderer organizes and renders instances internally. Understanding these concepts will help you write effective <a href="custom-registerer.html">Custom Registerers</a> and make informed decisions about chunk layout and memory.</p>
+<h2 id="prototypes-and-render-signatures">Prototypes and Render Signatures</h2>
+<p>A <strong>prototype</strong> is the asset identity for a type of instance — the mesh, materials, LOD meshes, LOD screen sizes, fade mode, and other visual properties extracted from a prefab. Two prefabs that share the same mesh and materials produce the same prototype.</p>
+<p>A <strong>render signature</strong> combines a prototype with render behavior configuration — shadow cascade limits, motion vector mode, density settings, crossfade duration, rendering layer mask, and so on. This is the actual registration unit. The same prototype (same prefab) can produce multiple render signatures if registered with different render settings (e.g. different shadow cascades or density modes).</p>
+<p>When you call <code>RegisterRenderSignatureFromPrefab(prefab)</code>, the system extracts both the prototype data and the render config (including any <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a> settings), and returns a <strong>prototype index</strong> — a global integer ID that instances use to reference their render signature.</p>
+<p>Deduplication uses a hash of both the asset identity and the config, so identical registrations share a single index while the same prefab with different settings gets separate indices.</p>
+<h2 id="chunks">Chunks</h2>
+<p>A <strong>chunk</strong> is a spatial grouping of instances with shared culling bounds. Chunks are not per-render-signature — a single chunk can contain a mix of instances from any number of different render signatures. Every instance belongs to exactly one chunk, but chunks are allowed to spatially overlap — an instance can exist within the spatial bounds of a different chunk even though it only belongs to one. There is no strict spatial partitioning; chunks are simply logical groupings with a bounding box used for culling.</p>
+<p>Chunks are the first thing the culling system evaluates. Before testing any individual instance, the system tests the chunk's bounding box against the camera frustum and cull distance. If the entire chunk is outside the frustum or beyond the cull distance, all of its instances are skipped in one operation.</p>
+<p>This means chunk layout directly affects performance:</p>
+<ul>
+<li><strong>Spatially tight chunks</strong> (instances close together) cull efficiently because the bounding box is small and likely to be entirely inside or outside the frustum.</li>
+<li><strong>Spatially large chunks</strong> produce large bounding boxes that are less likely to be culled at the chunk level, meaning more instances proceed to per-instance GPU culling. This is not a major concern — per-instance culling on the GPU is fast, and processing a few extra instances has negligible impact. Chunk-level culling is an optimization, not a requirement.</li>
+</ul>
+<p>When a chunk write exceeds the maximum instances per chunk, the system automatically creates <strong>overflow chunks</strong> and splits the data across them. Overflow chunks share the same culling bounds as the primary chunk, so they are always culled together as a group. This is handled transparently — queries like <code>GetInstanceLinks()</code> and <code>GetTotalChunkInstanceCount()</code> aggregate across the primary and overflow chunks automatically.</p>
+<h2 id="pools">Pools</h2>
+<p>Pools are the memory layer between chunks and individual instances. Like chunks, pools are not per-render-signature — a single pool can hold instances of different signatures. Each pool is a <strong>fixed-size block</strong> in the global GPU buffer (64, 128, or 256 instance slots, set via the <a href="../configuration/pooling.html">Config</a>).</p>
+<p>When instances are written to a chunk, the system allocates enough pools to hold them. For example, writing 200 instances with a pool size of 64 allocates 4 pools (256 slots, 200 occupied). Pools are returned to a free list when their chunk is released, and reused by future allocations.</p>
+<p>Pool size affects the tradeoff between memory efficiency and culling granularity. Smaller pools waste less memory on partially-filled allocations but require more bookkeeping. Larger pools are more memory-efficient when chunks are densely packed.</p>
+<blockquote>
+<p>For guidance on pool utilization, see <a href="../getting-started/tips.html">Important Tips</a>.</p>
+</blockquote>
+<h2 id="culling-pipeline">Culling Pipeline</h2>
+<p>Every frame, each camera triggers a multi-stage culling pipeline that determines which instances are visible. The pipeline runs in two phases: a CPU pre-pass on chunks, followed by GPU compute passes on individual instances.</p>
+<h3 id="burst-job-chunk-culling">Burst Job Chunk Culling</h3>
+<p>For each chunk, the system tests:</p>
+<ol>
+<li><strong>Frustum culling</strong> — the chunk's bounding box is tested against the camera's six frustum planes. If the box is entirely outside any plane, the chunk is culled.</li>
+<li><strong>Distance culling</strong> — the closest point on the bounding box to the camera is compared against the chunk's cull distance. If the chunk is too far, it is culled.</li>
+<li><strong>Baked occlusion culling</strong> — if enabled, the system queries Unity's occlusion data to check whether the chunk is hidden behind static geometry.</li>
+</ol>
+<p>Chunks that survive produce a visibility mask that is uploaded to the GPU for the next stage.</p>
+<h3 id="gpu-chunk-culling">GPU Chunk Culling</h3>
+<p>If HZB occlusion culling is enabled, a compute shader performs a hierarchical Z-buffer test on each chunk that passed the Burst job stage. Chunks whose bounding box is fully occluded by closer geometry are culled before any per-instance work begins.</p>
+<h3 id="gpu-instance-culling">GPU Instance Culling</h3>
+<p>A compute shader iterates over the instances in each visible chunk and applies per-instance tests:</p>
+<ol>
+<li><strong>Density culling</strong> — each instance has a deterministic spatial hash. If the hash exceeds the current density scale, the instance is culled. This provides stochastic thinning that is stable across frames.</li>
+<li><strong>Screen-size culling</strong> — the instance's projected screen size is computed from its world-space bounds and distance to the camera. If it falls below the smallest LOD threshold, it is culled entirely.</li>
+<li><strong>LOD selection</strong> — the screen size is compared against the prototype's LOD thresholds to select which mesh to render. If crossfade is active, both the current and target LOD are emitted with a blend factor.</li>
+<li><strong>HZB occlusion culling</strong> — if enabled, the instance's bounds are tested against a hierarchical Z-buffer (a mipmap pyramid of the depth buffer). Instances hidden behind closer geometry are culled.</li>
+<li><strong>Shadow culling</strong> — separate shadow-specific tests compare against per-prototype shadow distances and cascade limits.</li>
+</ol>
+<p>Surviving instances are sorted into <strong>draw buckets</strong> grouped by prototype, LOD level, and render pass (main vs. shadow). The system then finalizes indirect draw arguments and dispatches them through Unity's BatchRendererGroup API.</p>
+<h2 id="registration-to-rendering">Registration to Rendering</h2>
+<p>Putting it all together, the full pipeline from setup to screen is:</p>
+<ol>
+<li><strong>Register render signatures</strong> — extract prototype data and render config from prefabs and assign prototype indices.</li>
+<li><strong>Allocate chunks</strong> — reserve chunk slots for spatial groups of instances.</li>
+<li><strong>Write instances</strong> — fill chunks with instance data (position, rotation, scale, prototype index). The system allocates pools, packs data into GPU buffers, and computes chunk bounds.</li>
+<li><strong>Per-frame culling</strong> — each camera triggers the Burst job chunk cull, then the GPU instance cull. Visible instances are bucketed into indirect draw calls.</li>
+<li><strong>Rendering</strong> — Unity's BatchRendererGroup dispatches the draw calls. Per-instance transforms and properties are read directly from GPU buffers with no CPU involvement.</li>
+</ol>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
