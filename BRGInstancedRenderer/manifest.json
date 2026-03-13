@@ -242,6 +242,16 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/configuration/terrain.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/terrain.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/editor-tools/debugging.md",
       "output": {
         ".html": {
@@ -549,6 +559,16 @@
       "output": {
         "resource": {
           "relative_path": "images/LODGroup-Component.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/Light-Probes.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/Light-Probes.png"
         }
       },
       "version": ""

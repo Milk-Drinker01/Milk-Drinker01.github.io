@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Light Probes | BRG Instanced Renderer </title>
+      <title>Terrain | BRG Instanced Renderer </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Light Probes | BRG Instanced Renderer ">
+      <meta name="title" content="Terrain | BRG Instanced Renderer ">
       <meta name="description" content="Documentation for BRG Instanced Renderer.">
       
       <link rel="icon" href="../../favicon.ico">
@@ -85,22 +85,66 @@
         </div>
 
         <article data-uid="">
-<h1 id="light-probes">Light Probes</h1>
+<h1 id="terrain">Terrain</h1>
 
 <hr>
-<p><img src="../../images/Light-Probes.png" alt="Light Probes"></p>
-<p>BRG Instanced Renderer supports both of Unity's light probe systems, so GPU-instanced objects receive correct baked indirect lighting.</p>
-<h4 id="adaptive-probe-volumes-apv">Adaptive Probe Volumes (APV)</h4>
-<p>Unity's modern probe system is fully supported with no action needed to enable it. This is the recommended mode for new projects.</p>
-<h4 id="legacy-light-probes">Legacy Light Probes</h4>
-<p>Traditional Light Probe Group support for existing scenes. Per-instance SH coefficients are sampled and uploaded to the GPU. Enable via <strong>Support Legacy Light Probes</strong> on the <a href="../getting-started/brg-instanced-renderer-config.html">Config</a>.</p>
-<div class="NOTE">
-<h5>Note</h5>
-<p>Legacy light probes add 128 bytes per instance to the GPU buffer (~65% total per-instance memory increase). Only enable if your project uses Light Probe Groups instead of APV.</p>
-</div>
-<p>Terrain detail instances (grass, small rocks, etc.) also receive light probe data automatically based on their position.</p>
+<p>Global streaming budget settings for terrain detail rendering. These apply across all terrains in the scene.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Terrain Max Uploads Per Frame</strong></td>
+<td>int</td>
+<td>16</td>
+<td>Maximum detail chunk uploads per frame across all terrains. Lower values give smoother frame times but slower loading.</td>
+</tr>
+<tr>
+<td><strong>Terrain Max Unloads Per Frame</strong></td>
+<td>int</td>
+<td>16</td>
+<td>Maximum detail chunk unloads per frame across all terrains.</td>
+</tr>
+<tr>
+<td><strong>Terrain Max Concurrent Jobs</strong></td>
+<td>int</td>
+<td>32</td>
+<td>Maximum detail extraction jobs in flight simultaneously across all terrains.</td>
+</tr>
+<tr>
+<td><strong>Terrain Complete Jobs Same Frame</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Force extraction jobs to complete on the same frame they are scheduled. Eliminates pop-in at the cost of a per-patch main thread stall.</td>
+</tr>
+<tr>
+<td><strong>Terrain Skip Throttle On Start</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Bypass the upload throttle on the first frame so all in-range patches load immediately. Causes a one-time hitch but no pop-in.</td>
+</tr>
+<tr>
+<td><strong>Terrain Unload Hysteresis</strong></td>
+<td>float</td>
+<td>10m</td>
+<td>Extra distance beyond the detail render distance to keep patches loaded, preventing rapid load/unload cycles at the boundary.</td>
+</tr>
+<tr>
+<td><strong>Terrain Detail Object Motion Vectors</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Enables per-object motion vectors on terrain details. When disabled, terrain details fall back to camera motion only (matching default Unity behavior). See <a href="../features/motion-vectors.html">Motion Vectors</a>.</td>
+</tr>
+</tbody>
+</table>
 <blockquote>
-<p>For light probe settings, see <a href="../getting-started/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a>.</p>
+<p>Per-terrain settings like chunk size, streaming toggle, and crossfade snapping remain on the <a href="../components/brg-terrain-registerer.html">BRG Terrain Registerer</a> component.</p>
 </blockquote>
 
 </article>

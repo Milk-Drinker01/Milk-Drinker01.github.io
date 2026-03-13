@@ -115,7 +115,7 @@
 <h4 id="screen-size-culling">Screen-Size Culling</h4>
 <p>Instances too small on screen are culled automatically, with optional fade-out. Configured per-prefab via <a href="../components/brg-prototype-extra-data-lod.html">BRG Prototype Extra Data / LOD Overrides</a>.</p>
 <h4 id="dynamic-density-culling">Dynamic Density Culling</h4>
-<p>Gradually thins out instances at distance using a deterministic hash. It helps as both a performance optimization, as well as a way to help make detail render distance blend more naturally. See <a href="dynamic-density.html">Dynamic Density</a> for details.</p>
+<p>Gradually thins out instances at distance using a deterministic hash. Instances can be crossfaded in and out for smooth transitions. It helps as both a performance optimization, as well as a way to help make detail render distance blend more naturally. See <a href="dynamic-density.html">Dynamic Density</a> for details.</p>
 <p><img src="../../images/Dynamic-Density-Culling.png" alt="Dynamic Density Culling"></p>
 <h4 id="shadow-culling">Shadow Culling</h4>
 <p>Shadow rendering has its own dedicated culling pass, with per-cascade frustum testing and per-prototype cascade limits. See <a href="shadow-optimization.html">Shadow Optimization</a> for details.</p>

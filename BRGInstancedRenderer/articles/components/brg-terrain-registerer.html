@@ -214,50 +214,9 @@
 <td>true</td>
 <td>When enabled, patches are loaded and unloaded based on camera distance. When disabled, all patches are loaded at startup.</td>
 </tr>
-<tr>
-<td><strong>Max Patch Extracts Per Frame</strong></td>
-<td>int</td>
-<td>4</td>
-<td>Maximum patches to extract data for per frame. Lower values give smoother loading but slower pop-in.</td>
-</tr>
-<tr>
-<td><strong>Max Patch Unloads Per Frame</strong></td>
-<td>int</td>
-<td>8</td>
-<td>Maximum patches to unload per frame when the camera moves away.</td>
-</tr>
-<tr>
-<td><strong>Max Concurrent Extraction Jobs</strong></td>
-<td>int</td>
-<td>32</td>
-<td>Maximum extraction jobs that can be in flight simultaneously.</td>
-</tr>
-<tr>
-<td><strong>Complete Jobs Same Frame</strong></td>
-<td>bool</td>
-<td>false</td>
-<td>Force extraction jobs to complete on the same frame they are scheduled. Eliminates pop-in at the cost of a per-patch main thread stall.</td>
-</tr>
-<tr>
-<td><strong>Skip Extract Throttle On Start</strong></td>
-<td>bool</td>
-<td>false</td>
-<td>Bypass the per-frame extract limit on the first frame so all in-range patches load immediately. Causes a one-time hitch but no pop-in.</td>
-</tr>
-<tr>
-<td><strong>Update Interval</strong></td>
-<td>float</td>
-<td>0.1s</td>
-<td>How often to check for patch changes in seconds. 0 = every frame. Editor only.</td>
-</tr>
-<tr>
-<td><strong>Unload Hysteresis</strong></td>
-<td>float</td>
-<td>10m</td>
-<td>Extra distance beyond the detail render distance to keep patches loaded, preventing rapid load/unload cycles at the boundary.</td>
-</tr>
 </tbody>
 </table>
+<p>Global streaming budget settings (upload throttle, unload throttle, concurrent jobs, hysteresis) are configured on the <a href="../configuration/terrain.html">Config asset</a>.</p>
 <h3 id="transform-generation">Transform Generation</h3>
 <table>
 <thead>

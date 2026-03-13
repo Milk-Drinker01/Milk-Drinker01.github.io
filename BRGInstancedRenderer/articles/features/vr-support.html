@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Light Probes | BRG Instanced Renderer </title>
+      <title>VR Support | BRG Instanced Renderer </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Light Probes | BRG Instanced Renderer ">
+      <meta name="title" content="VR Support | BRG Instanced Renderer ">
       <meta name="description" content="Documentation for BRG Instanced Renderer.">
       
       <link rel="icon" href="../../favicon.ico">
@@ -85,23 +85,11 @@
         </div>
 
         <article data-uid="">
-<h1 id="light-probes">Light Probes</h1>
+<h1 id="vr-support">VR Support</h1>
 
 <hr>
-<p><img src="../../images/Light-Probes.png" alt="Light Probes"></p>
-<p>BRG Instanced Renderer supports both of Unity's light probe systems, so GPU-instanced objects receive correct baked indirect lighting.</p>
-<h4 id="adaptive-probe-volumes-apv">Adaptive Probe Volumes (APV)</h4>
-<p>Unity's modern probe system is fully supported with no action needed to enable it. This is the recommended mode for new projects.</p>
-<h4 id="legacy-light-probes">Legacy Light Probes</h4>
-<p>Traditional Light Probe Group support for existing scenes. Per-instance SH coefficients are sampled and uploaded to the GPU. Enable via <strong>Support Legacy Light Probes</strong> on the <a href="../getting-started/brg-instanced-renderer-config.html">Config</a>.</p>
-<div class="NOTE">
-<h5>Note</h5>
-<p>Legacy light probes add 128 bytes per instance to the GPU buffer (~65% total per-instance memory increase). Only enable if your project uses Light Probe Groups instead of APV.</p>
-</div>
-<p>Terrain detail instances (grass, small rocks, etc.) also receive light probe data automatically based on their position.</p>
-<blockquote>
-<p>For light probe settings, see <a href="../getting-started/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a>.</p>
-</blockquote>
+<p>BRG Instanced Renderer fully supports VR rendering. Both <strong>Single Pass Instanced</strong> and <strong>Dual Camera</strong> stereo rendering modes are supported.</p>
+<p>No additional configuration is needed — VR support works automatically with your existing setup.</p>
 
 </article>
 
