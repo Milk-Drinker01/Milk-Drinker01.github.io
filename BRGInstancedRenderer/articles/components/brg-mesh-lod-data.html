@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Important Tips | BRG Instanced Renderer </title>
+      <title>BRG Mesh LOD Data | BRG Instanced Renderer </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Important Tips | BRG Instanced Renderer ">
+      <meta name="title" content="BRG Mesh LOD Data | BRG Instanced Renderer ">
       <meta name="description" content="Documentation for BRG Instanced Renderer.">
       
       <link rel="icon" href="../../favicon.ico">
@@ -85,43 +85,61 @@
         </div>
 
         <article data-uid="">
-<h1 id="important-tips">Important Tips</h1>
+<h1 id="brg-mesh-lod-data">BRG Mesh LOD Data</h1>
 
 <hr>
-<p>Practical advice for getting the best performance and memory usage out of BRG Instanced Renderer.</p>
-<h2 id="size-your-initial-allocations">Size Your Initial Allocations</h2>
-<p>GPU buffers grow automatically when capacity is exceeded, but resizing involves copying all buffer data and causes a one-time hitch. To avoid this:</p>
-<ol>
-<li>Enable <strong>Record Allocations</strong> in the <a href="../configuration/gathered-allocations.html">Config</a></li>
-<li>Play your scene and exercise worst-case scenarios</li>
-<li>Click <strong>Copy to Initial Sizes</strong> to use the recorded peaks as starting values</li>
-</ol>
-<p>This eliminates runtime buffer growth entirely.</p>
-<p><img src="../../images/Gathered-Allocations.png" alt="Gathered Allocations"></p>
-<h2 id="understand-pool-utilization">Understand Pool Utilization</h2>
-<p>Instances are stored in fixed-size <strong>pools</strong> of 64 slots each. A pool is allocated as a whole block — if a pool only holds 1 instance, the other 63 slots are wasted GPU memory.</p>
-<p>You can monitor pool utilization in the <a href="../editor-tools/system-window.html">System Window</a> under <strong>Chunk System &gt; Pool Utilization</strong>.</p>
-<h4 id="what-causes-low-utilization">What Causes Low Utilization</h4>
-<ul>
-<li><strong>Sparse chunks</strong> — A chunk with very few instances still allocates at least one full pool. If you have many chunks each holding only a handful of instances, you waste a pool per chunk.</li>
-<li><strong>Removing instances over time</strong> — As instances are removed, pools become partially empty but stay allocated.</li>
-</ul>
-<h4 id="how-to-improve-utilization">How to Improve Utilization</h4>
-<p>Use an appropriate chunk size for your instance density. Smaller chunks improve culling precision but create more chunks, each requiring at least one pool. If chunks end up with only a few instances each, most of each pool is wasted. In practice, saving GPU memory with fewer, well-filled chunks matters more than having highly precise culling. Match chunk size to your placement density so chunks stay well-filled.</p>
-<h2 id="chunk-size-matters">Chunk Size Matters</h2>
-<p>For <a href="../components/brg-terrain-registerer.html">BRG Terrain Registerer</a>, chunk size controls culling granularity:</p>
-<ul>
-<li><strong>Smaller chunks</strong> = more precise culling, but more chunks to process and potentially lower pool utilization.</li>
-<li><strong>Larger chunks</strong> = fewer chunks, better pool utilization, but less precise culling.</li>
-</ul>
-<p>The default tree chunk size (256m) and detail chunk size (32m) work well for most terrains.</p>
-<h2 id="snap-crossfade-on-load">Snap Crossfade on Load</h2>
-<p>When instances already exist in the world (e.g. scene load, save restore), crossfade animations should be skipped so everything doesn't fade in at once:</p>
-<ul>
-<li><strong>Terrain details</strong>: Enable <strong>Snap Crossfade On Start</strong> on the <a href="../components/brg-terrain-registerer.html">BRG Terrain Registerer</a> (enabled by default).</li>
-<li><strong>Custom registerers</strong>: Pass <code>snapAnimatedCrossfade: true</code> to <a href="../api/custom-registerer.html#writechunk-parameters"><code>WriteChunk</code></a>.</li>
-<li><strong>All cameras at once</strong>: Call <a href="../api/core-methods.html"><code>SnapAllCrossfadeStates()</code></a> after teleportation or scene load.</li>
-</ul>
+<p>A standalone component for configuring <strong>Mesh LOD</strong> (Unity 6.2+) on prefabs that use meshes with internal LOD ranges (<code>lodCount &gt; 1</code>). Add this to the prefab asset alongside the MeshFilter and MeshRenderer.</p>
+<p>This replaces the Mesh LOD section that was previously part of <a href="brg-prototype-extra-data.html">BRG Prototype Extra Data</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Num LODs</strong></td>
+<td>int (1–8)</td>
+<td>4</td>
+<td>Number of BRG LOD levels to create from the mesh's internal LOD ranges.</td>
+</tr>
+<tr>
+<td><strong>Fade Mode</strong></td>
+<td>enum</td>
+<td>None</td>
+<td>Crossfade mode for Mesh LOD transitions: <strong>None</strong> (hard cut). <br><strong>Crossfade</strong> (stateless dither). <br><strong>Animated Crossfade</strong> (time-based).</td>
+</tr>
+</tbody>
+</table>
+<p>When Fade Mode is set to <strong>Animated Crossfade</strong>, the <strong>Override Animated Crossfade Duration</strong> field appears.</p>
+<p>Per BRG LOD level:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Mesh LOD Index</strong></td>
+<td>Which mesh LOD index to draw for this BRG LOD level.</td>
+</tr>
+<tr>
+<td><strong>Screen Size</strong></td>
+<td>Screen-size threshold for transitioning to this LOD. Must be monotonically decreasing.</td>
+</tr>
+<tr>
+<td><strong>Fade Width</strong></td>
+<td>Crossfade transition width (only shown with stateless Crossfade mode).</td>
+</tr>
+</tbody>
+</table>
+<p>The inspector provides an <strong>Extract Screen Sizes from Mesh LOD Curve</strong> button that auto-populates screen-size thresholds from the mesh's native LOD selection curve. A <strong>LOD Selection Bias</strong> slider adjusts the renderer's bias for fine-tuning without modifying the mesh.</p>
+<p>For more details, see <a href="../features/lod-and-crossfade.html">LOD Groups and Mesh LOD</a>.</p>
 
 </article>
 

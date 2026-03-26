@@ -137,6 +137,24 @@
 </tbody>
 </table>
 <p>For a detailed breakdown of the culling pipeline, see <a href="../features/culling.html">Culling</a>.</p>
+<h2 id="occlusion-culling-considerations">Occlusion Culling Considerations</h2>
+<p>GPU occlusion culling uses a Hierarchical Z-Buffer (HZB) built from the previous frame's depth texture. There are two things to be aware of:</p>
+<ol>
+<li><strong>Depth pyramid generation takes time.</strong> Building the HZB has a small GPU cost each frame — ensure your scene has enough occluded geometry for the savings to outweigh this overhead.</li>
+<li><strong>Previous-frame depth causes false culling at low FPS.</strong> Because the depth texture comes from the previous frame, fast-moving objects at low framerates can leave behind ghost artifacts where instances behind them are incorrectly culled for one frame.</li>
+</ol>
+<p>There are two ways to address the false culling problem:</p>
+<p><strong>HZB Retest Pass</strong> — Forces all instances to render in the depth prepass (and forces a depth prepass to exist), so the system can re-test occluded instances against the <em>current</em> frame's depth. This is similar to what Unity's GPU Resident Drawer does.</p>
+<ul>
+<li>Eliminates false culling entirely</li>
+<li>Culling runs twice — once before the depth prepass, and a second time after to calculate the actual occluded instances- All instances must be rendered in the prepass, even those behind obstacles</li>
+<li>Forces a depth prepass, which adds some rendering cost</li>
+</ul>
+<p><strong>HZB Pixel Expansion</strong> — Widens the occlusion bounds by a fixed number of pixels to account for camera movement between frames.</p>
+<ul>
+<li>Much cheaper than the retest pass — no forced depth prepass and no second culling pass</li>
+<li>Less accurate — fast moving objects or cameras may still cause some false culling</li>
+</ul>
 
 </article>
 

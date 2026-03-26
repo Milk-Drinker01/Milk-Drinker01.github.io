@@ -88,7 +88,8 @@
 <h1 id="screen-size--lod-overrides">Screen Size / LOD Overrides</h1>
 
 <hr>
-<p>Per-prototype LOD and screen-size settings on <a href="brg-prototype-extra-data.html">BRG Prototype Extra Data</a>. These control LOD crossfade behavior, screen-size culling, and Mesh LOD configuration for individual prefab types.</p>
+<p>Per-prototype LOD and screen-size settings on <a href="brg-prototype-extra-data.html">BRG Prototype Extra Data</a>. These control LOD crossfade behavior and screen-size culling for individual prefab types.</p>
+<p>For Mesh LOD configuration (Unity 6.2+), see <a href="brg-mesh-lod-data.html">BRG Mesh LOD Data</a>.</p>
 <h2 id="animated-crossfade-duration">Animated Crossfade Duration</h2>
 <p>When a LOD Group with animated crossfading is present on the prefab:</p>
 <table>
@@ -116,7 +117,7 @@
 </tbody>
 </table>
 <h2 id="screen-size-culling">Screen Size Culling</h2>
-<p>Disabled when a LOD Group or Mesh LOD is active (use the LOD Group's culled level or Mesh LOD's min screen size instead).</p>
+<p>Disabled when a LOD Group or <a href="brg-mesh-lod-data.html">Mesh LOD</a> is active (use the LOD Group's culled level or Mesh LOD's min screen size instead).</p>
 <table>
 <thead>
 <tr>
@@ -148,65 +149,6 @@
 </tbody>
 </table>
 <p>When Fade Mode is set to <strong>Animated Crossfade</strong>, the <strong>Override Animated Crossfade Duration</strong> field appears here instead of the LOD Group section above.</p>
-<h2 id="mesh-lod-unity-62">Mesh LOD (Unity 6.2+)</h2>
-<p>Disabled when a LOD Group is present. Requires a mesh with internal LOD ranges (<code>lodCount &gt; 1</code>).</p>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Use Mesh LOD</strong></td>
-<td>bool</td>
-<td>false</td>
-<td>Enables Mesh LOD mode.</td>
-</tr>
-<tr>
-<td><strong>Num LODs</strong></td>
-<td>int (1–8)</td>
-<td>4</td>
-<td>Number of BRG LOD levels to create from the mesh's internal LOD ranges.</td>
-</tr>
-<tr>
-<td><strong>Fade Mode</strong></td>
-<td>enum</td>
-<td>None</td>
-<td>Crossfade mode for Mesh LOD transitions: <strong>None</strong> (hard cut). <br><strong>Crossfade</strong> (stateless dither). <br><strong>Animated Crossfade</strong> (time-based).</td>
-</tr>
-</tbody>
-</table>
-<p>When Fade Mode is set to <strong>Animated Crossfade</strong>, the <strong>Override Animated Crossfade Duration</strong> field appears here.</p>
-<p>Per BRG LOD level:</p>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Mesh LOD Index</strong></td>
-<td>Which mesh LOD index to draw for this BRG LOD level.</td>
-</tr>
-<tr>
-<td><strong>Screen Size</strong></td>
-<td>Screen-size threshold for transitioning to this LOD. Must be monotonically decreasing.</td>
-</tr>
-<tr>
-<td><strong>Fade Width</strong></td>
-<td>Crossfade transition width (only shown with stateless Crossfade mode).</td>
-</tr>
-</tbody>
-</table>
-<p>The culled level uses the <strong>Min Screen Size</strong> property as its threshold.</p>
-<p>The inspector provides an <strong>Extract Screen Sizes from Mesh LOD Curve</strong> button that auto-populates screen-size thresholds from the mesh's native LOD selection curve. A <strong>LOD Selection Bias</strong> slider adjusts the renderer's bias for fine-tuning without modifying the mesh.</p>
-<p>For more details, see <a href="../features/lod-and-crossfade.html">LOD Groups and Mesh LOD</a>.</p>
 
 </article>
 

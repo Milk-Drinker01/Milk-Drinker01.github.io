@@ -89,9 +89,9 @@
 
 <hr>
 <blockquote>
-<p>In most cases, you should use a <a href="custom-registerer.html">Custom Registerer</a> instead of calling these methods directly. <code>BRGRegisterer</code> handles singleton lifecycle, prototype reference counting, chunk tracking, overflow management, and automatic cleanup on disable. Calling the raw API means you are responsible for all of that yourself — failing to unregister prototypes or free chunks will leak GPU memory.</p>
+<p>In most cases, you should use a <a href="registration-tracker.html">BRGRegistrationTracker</a> or <a href="custom-registerer.html">Custom Registerer</a> instead of calling these methods directly. They handle prototype reference counting, chunk tracking, overflow management, and automatic cleanup. Calling the raw API means you are responsible for all of that yourself — failing to unregister prototypes or free chunks will leak GPU memory.</p>
 </blockquote>
-<p>The direct API is available on the <code>BRGRenderer</code> singleton via <code>BRGRenderer.Instance</code>. These are the same methods that <code>BRGRegisterer</code> calls internally.</p>
+<p>The direct API is available on the <code>BRGRenderer</code> singleton via <code>BRGRenderer.Instance</code>. These are the same methods that <code>BRGRegistrationTracker</code> calls internally.</p>
 <h2 id="singleton">Singleton</h2>
 <table>
 <thead>
@@ -346,7 +346,7 @@ namespace BRGInstancedRenderer
     }
 }
 </code></pre>
-<p>Compare this with the equivalent <a href="custom-registerer.html">Custom Registerer</a> version, which handles chunk freeing and prototype unregistration automatically.</p>
+<p>Compare this with the equivalent <a href="registration-tracker.html">BRGRegistrationTracker</a> or <a href="custom-registerer.html">Custom Registerer</a> version, which handle chunk freeing, overflow, and prototype unregistration automatically.</p>
 
 </article>
 

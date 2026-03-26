@@ -104,9 +104,8 @@
 </ul>
 <p>When a chunk write exceeds the maximum instances per chunk, the system automatically creates <strong>overflow chunks</strong> and splits the data across them. Overflow chunks share the same culling bounds as the primary chunk, so they are always culled together as a group. This is handled transparently — queries like <code>GetInstanceLinks()</code> and <code>GetTotalChunkInstanceCount()</code> aggregate across the primary and overflow chunks automatically.</p>
 <h2 id="pools">Pools</h2>
-<p>Pools are the memory layer between chunks and individual instances. Like chunks, pools are not per-render-signature — a single pool can hold instances of different signatures. Each pool is a <strong>fixed-size block</strong> in the global GPU buffer (64, 128, or 256 instance slots, set via the <a href="../configuration/pooling.html">Config</a>).</p>
-<p>When instances are written to a chunk, the system allocates enough pools to hold them. For example, writing 200 instances with a pool size of 64 allocates 4 pools (256 slots, 200 occupied). Pools are returned to a free list when their chunk is released, and reused by future allocations.</p>
-<p>Pool size affects the tradeoff between memory efficiency and culling granularity. Smaller pools waste less memory on partially-filled allocations but require more bookkeeping. Larger pools are more memory-efficient when chunks are densely packed.</p>
+<p>Pools are the memory layer between chunks and individual instances. Like chunks, pools are not per-render-signature — a single pool can hold instances of different signatures. Each pool is a <strong>fixed-size block of 64 instance slots</strong> in the global GPU buffer.</p>
+<p>When instances are written to a chunk, the system allocates enough pools to hold them. For example, writing 200 instances allocates 4 pools (256 slots, 200 occupied). Pools are returned to a free list when their chunk is released, and reused by future allocations.</p>
 <blockquote>
 <p>For guidance on pool utilization, see <a href="../getting-started/tips.html">Important Tips</a>.</p>
 </blockquote>

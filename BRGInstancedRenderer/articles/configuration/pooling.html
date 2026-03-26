@@ -100,16 +100,10 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>Pool Size</strong></td>
-<td>int</td>
-<td>64</td>
-<td>Number of instance slots per memory pool. Valid values: 64, 128, or 256. Smaller values waste less memory on partially-filled pools. Larger values reduce the number of pools to manage.</td>
-</tr>
-<tr>
 <td><strong>Max Pools Per Chunk</strong></td>
 <td>int</td>
 <td>32</td>
-<td>Maximum number of pools each chunk can hold. Higher values allow more instances per chunk, meaning fewer chunks to cull but less granular culling.</td>
+<td>Maximum number of pools each chunk can hold. Each pool holds 64 instances, so this limits the max instances per chunk. Higher values allow more instances per chunk, meaning fewer chunks to cull but less granular culling.</td>
 </tr>
 <tr>
 <td><strong>Initial Chunk Count</strong></td>

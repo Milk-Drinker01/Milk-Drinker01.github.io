@@ -96,7 +96,7 @@
 <h3 id="debug-bypass-chunk-culling">Debug Bypass Chunk Culling</h3>
 <p>Skips the chunk-level culling pass and processes all instances directly. Use this to verify whether a rendering issue is caused by incorrect chunk bounds or overly aggressive chunk culling.</p>
 <h3 id="debug-disable-culling">Debug Disable Culling</h3>
-<p>Skips the GPU culling pass entirely and reuses the previous frame's visibility results. This isolates the cost of culling in the profiler — if performance improves significantly with culling disabled, the culling pass may need optimization (fewer chunks, larger pool sizes).</p>
+<p>Skips the GPU culling pass entirely and reuses the previous frame's visibility results. This isolates the cost of culling in the profiler — if performance improves significantly with culling disabled, the culling pass may need optimization (fewer, larger chunks).</p>
 <h3 id="debug-disable-rendering">Debug Disable Rendering</h3>
 <p>Runs the GPU culling pipeline as normal but skips the actual draw command submission. Use this to isolate rendering cost from culling cost in the profiler.</p>
 <h3 id="debug-disable-crossfade">Debug Disable Crossfade</h3>
@@ -160,8 +160,7 @@
 </ul>
 <h3 id="high-gpu-memory-usage">High GPU memory usage</h3>
 <ul>
-<li>Check <strong>Pool Size</strong> in the Config — smaller values (64) waste less memory on partially-filled pools</li>
-<li>Lower <strong>Max Pools Per Chunk</strong> to reduce per-chunk allocation</li>
+<li>Lower <strong>Max Pools Per Chunk</strong> to reduce per-chunk allocation (each pool holds 64 instances)</li>
 <li>Review the memory estimate in the <a href="system-window.html">System Window</a></li>
 <li>If <strong>Support Legacy Light Probes</strong> is enabled, consider whether it's needed — it adds ~65% per-instance buffer cost (128 bytes/instance)</li>
 </ul>
