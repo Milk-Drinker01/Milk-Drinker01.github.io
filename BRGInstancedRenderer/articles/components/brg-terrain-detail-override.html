@@ -115,6 +115,9 @@
 </table>
 <h2 id="how-it-works">How It Works</h2>
 <p>The <a href="brg-terrain-registerer.html">BRG Terrain Registerer</a> resolves all overrides at editor time. When it encounters a detail prototype that has a BRG Terrain Detail Override component, it uses the override prefab instead for all rendering. The resolved prefab list is shown read-only in the terrain registerer inspector.</p>
+<h2 id="convert-to-terrain-prefab">Convert To Terrain Prefab</h2>
+<p>If you already have complex prefabs with LOD Groups and want to use them as terrain details, use the <strong>Tools &gt; BRG Instanced Renderer &gt; Convert To Terrain Prefab</strong> menu item. Select one or more source prefabs in the Project window and run the tool — it generates simplified single-mesh prefabs in a <code>TerrainDetailPrefab</code> subfolder next to each source, each already wired with a BRG Terrain Detail Override pointing back to the original.</p>
+<p>Assign the generated prefabs as your terrain's detail prototypes — BRG will render the original complex version at runtime.</p>
 
 </article>
 

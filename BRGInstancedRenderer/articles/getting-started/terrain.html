@@ -99,6 +99,15 @@
 <h2 id="detail-overrides">Detail Overrides</h2>
 <p>Default Unity terrain detail prototypes are single-mesh prefabs with no LOD support. To use an LOD Group variant instead, add a <a href="../components/brg-terrain-detail-override.html">BRG Terrain Detail Override</a> component to the detail prototype prefab and assign your replacement prefab to the <strong>Override Prefab</strong> field.</p>
 <p>The resolved prefab list is shown read-only in the <a href="../components/brg-terrain-registerer.html">BRG Terrain Registerer</a> inspector.</p>
+<h3 id="convert-to-terrain-prefab">Convert To Terrain Prefab</h3>
+<p>If you already have complex prefabs with LOD Groups, you can generate terrain-compatible versions automatically:</p>
+<ol>
+<li>Select one or more prefabs in the Project window</li>
+<li>Use <strong>Tools &gt; BRG Instanced Renderer &gt; Convert To Terrain Prefab</strong></li>
+<li>The tool creates simplified single-mesh prefabs in a <code>TerrainDetailPrefab</code> subfolder next to each source prefab</li>
+<li>Each generated prefab contains a BRG Terrain Detail Override pointing back to the original</li>
+</ol>
+<p>Assign the generated prefabs to your terrain's detail prototypes. BRG will render the original (with full LODs) at runtime.</p>
 
 </article>
 

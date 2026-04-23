@@ -294,7 +294,7 @@
 </table>
 <p>The inspector also shows a status line with detail prototype count, patch grid size, loaded instance/patch/chunk counts, and pending patches.</p>
 <h2 id="detail-prefab-overrides">Detail Prefab Overrides</h2>
-<p>To substitute a terrain detail prototype with a different prefab (e.g. an LOD Group variant with multiple LODs), add a <strong>BRG Terrain Detail Override</strong> component to the detail prototype prefab and assign the replacement prefab to the <strong>Override Prefab</strong> field.</p>
+<p>To substitute a terrain detail prototype with a different prefab (e.g. an LOD Group variant with multiple LODs), add a <a href="brg-terrain-detail-override.html">BRG Terrain Detail Override</a> component to the detail prototype prefab and assign the replacement prefab to the <strong>Override Prefab</strong> field.</p>
 <p>The terrain registerer resolves overrides at editor time and uses the override prefab for all rendering. The resolved prefab list is shown read-only in the inspector. Override resolution has no runtime cost.</p>
 <h2 id="inspector-actions">Inspector Actions</h2>
 <table>
@@ -342,6 +342,7 @@ public static void ClearAllExtractionCaches()
 <li>Extraction runs on worker threads to avoid frame hitches</li>
 </ul>
 <p>This allows millions of detail instances without loading the entire terrain upfront. See <a href="../features/terrain-detail-spawning.html">Terrain Detail Spawning</a> for more on the custom extraction algorithm.</p>
+<p>Unity's default detail prototypes are single-mesh prefabs with no LOD support. To use an LOD Group prefab as a detail instead, see <a href="brg-terrain-detail-override.html">BRG Terrain Detail Override</a>.</p>
 <h2 id="editor-behavior">Editor Behavior</h2>
 <ul>
 <li>Tree and detail changes from Unity's terrain paint tools are detected and updated automatically</li>
