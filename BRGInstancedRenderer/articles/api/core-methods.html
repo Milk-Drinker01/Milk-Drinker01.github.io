@@ -44,7 +44,7 @@
       <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
         <div class="container-xxl flex-nowrap">
           <a class="navbar-brand" href="../../index.html">
-            <img id="logo" class="svg" src="../../logo.png" alt="BRG Instanced Renderer">
+            <img id="logo" class="svg" src="../../logo.svg" alt="BRG Instanced Renderer">
             BRG Instanced Renderer
           </a>
           <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
@@ -115,6 +115,20 @@ BRGRenderer.Instance.SetGlobalDensity(0.5f);
 
 // restore full density
 BRGRenderer.Instance.SetGlobalDensity(1f);
+</code></pre>
+<h2 id="crossfadetimescale">CrossfadeTimeScale</h2>
+<pre><code class="lang-csharp">public float CrossfadeTimeScale { get; set; }
+</code></pre>
+<p>Multiplier applied to animated crossfade delta time. Default is <code>1f</code>. Higher values speed up transitions, lower values slow them down. Clamped to ≥ 0.</p>
+<p>The main use case is fast camera movement — when the camera moves quickly through the scene, instances cross LOD thresholds rapidly and a slow crossfade can become visible as visible popping. Increasing <code>CrossfadeTimeScale</code> shortens the transitions so they finish before the camera has moved far enough for the change to be noticeable. You can also set it to <code>0</code> to pause crossfades entirely (e.g. while the game is paused).</p>
+<pre><code class="lang-csharp">// speed up crossfades during fast camera movement
+BRGRenderer.Instance.CrossfadeTimeScale = 2f;
+
+// restore default
+BRGRenderer.Instance.CrossfadeTimeScale = 1f;
+
+// pause crossfades
+BRGRenderer.Instance.CrossfadeTimeScale = 0f;
 </code></pre>
 <h2 id="runtimerefresh">RuntimeRefresh</h2>
 <pre><code class="lang-csharp">public void RuntimeRefresh()
