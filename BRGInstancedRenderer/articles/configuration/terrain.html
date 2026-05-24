@@ -141,6 +141,18 @@
 <td>false</td>
 <td>Enables per-object motion vectors on terrain details. When disabled, terrain details fall back to camera motion only (matching default Unity behavior). See <a href="../features/motion-vectors.html">Motion Vectors</a>.</td>
 </tr>
+<tr>
+<td><strong>Cull Details At Detail Distance</strong></td>
+<td>bool</td>
+<td>true</td>
+<td>Hard-culls detail instances beyond the terrain's detail object distance. Prevents visible gridding artifacts caused by detail chunk size.</td>
+</tr>
+<tr>
+<td><strong>Enable Terrain Tree Selection</strong></td>
+<td>bool</td>
+<td>true</td>
+<td>(Editor only.) Enables click-to-select for terrain trees in the Scene View. Spawns a temporary proxy GameObject for transform editing.</td>
+</tr>
 </tbody>
 </table>
 <blockquote>

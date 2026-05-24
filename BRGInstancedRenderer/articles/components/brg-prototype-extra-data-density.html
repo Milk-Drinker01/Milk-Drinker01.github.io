@@ -88,7 +88,7 @@
 <h1 id="density">Density</h1>
 
 <hr>
-<p>Per-prototype density settings on <a href="brg-prototype-extra-data.html">BRG Prototype Extra Data</a>. These control runtime density scaling and GPU-side dynamic density culling for individual prefab types.</p>
+<p>Per-prototype density settings on <a href="brg-prototype-extra-data.html">BRG Prototype Extra Data</a>. These control runtime density scaling and GPU-side distance-based density culling for individual prefab types.</p>
 <h2 id="global-density-scaling">Global Density Scaling</h2>
 <table>
 <thead>
@@ -108,7 +108,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="dynamic-density">Dynamic Density</h2>
+<h2 id="distance-density">Distance Density</h2>
 <table>
 <thead>
 <tr>
@@ -120,16 +120,16 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>Enable Dynamic Density</strong></td>
+<td><strong>Enable Distance Density</strong></td>
 <td>bool</td>
 <td>false</td>
-<td>Enables GPU-side density culling for this prototype.</td>
+<td>Enables GPU-side per-instance density culling for this prototype. Instances are randomly thinned based on distance or screen size.</td>
 </tr>
 <tr>
 <td><strong>Min Fraction</strong></td>
 <td>float (0–1)</td>
-<td>0.3</td>
-<td>Minimum proportion of instances kept at maximum distance (30% by default).</td>
+<td>0</td>
+<td>Minimum proportion of instances kept at maximum distance. 0 = cull all at max distance; 0.3 = keep 30%.</td>
 </tr>
 <tr>
 <td><strong>Fade Width</strong></td>
@@ -138,10 +138,10 @@
 <td>Fade band width for smooth transitions. Only editable when the prototype has a stateless crossfade mode set (see below).</td>
 </tr>
 <tr>
-<td><strong>Dynamic Density Mode</strong></td>
+<td><strong>Distance Density Mode</strong></td>
 <td>enum</td>
 <td>ScreenSize</td>
-<td><strong>Screen Size</strong> — density based on screen-space size. <br><strong>Distance</strong> — density based on world-space distance.</td>
+<td><strong>Screen Size</strong> — density based on screen-space size (consistent with LOD). <br><strong>Raw Distance</strong> — density based on world-space distance (more predictable for ground cover).</td>
 </tr>
 <tr>
 <td><strong>Screen Size Mode</strong></td>
@@ -151,8 +151,8 @@
 </tr>
 <tr>
 <td><strong>Start Screen Size</strong></td>
-<td>float (0.001–1)</td>
-<td>0.1</td>
+<td>float (0.1–10%)</td>
+<td>2%</td>
 <td>Screen size percentage above which full density is maintained. Only shown in Screen Size mode.</td>
 </tr>
 <tr>
@@ -165,18 +165,18 @@
 <td><strong>Start Distance</strong></td>
 <td>float</td>
 <td>50m</td>
-<td>Distance below which full density is maintained. Only shown in Distance mode.</td>
+<td>Distance below which full density is maintained. Only shown in Raw Distance mode.</td>
 </tr>
 <tr>
 <td><strong>End Distance</strong></td>
 <td>float</td>
 <td>150m</td>
-<td>Distance at which minimum density is reached. Only shown in Distance mode.</td>
+<td>Distance at which minimum density is reached. Only shown in Raw Distance mode.</td>
 </tr>
 </tbody>
 </table>
 <h3 id="density-fade-behavior">Density Fade Behavior</h3>
-<p>Dynamic density uses the prototype's LOD crossfade mode for fade transitions. The crossfade mode is determined by whichever LOD system is active on the prototype: <strong>LOD Group</strong>, <strong>Min Screen Size culling</strong>, or <strong>Mesh LOD</strong>.</p>
+<p>Distance density uses the prototype's LOD crossfade mode for fade transitions. The crossfade mode is determined by whichever LOD system is active on the prototype: <strong>LOD Group</strong>, <strong>Min Screen Size culling</strong>, or <strong>Mesh LOD</strong>.</p>
 <ul>
 <li><strong>Stateless Crossfade</strong> — the Fade Width field controls the fade band width. For screen-size mode this is a screen-size fraction; for distance mode this is a density fraction.</li>
 <li><strong>Animated Crossfade</strong> — fade transitions use the animated crossfade duration automatically. The Fade Width field shows the fade duration in seconds.</li>

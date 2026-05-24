@@ -104,14 +104,14 @@
 <tr>
 <td><strong>Chunk Mode</strong></td>
 <td>enum</td>
-<td>Static</td>
+<td>Static (Single Chunk)</td>
 <td>Controls how instances are spatially organized. See <a href="#chunk-modes">Chunk Modes</a> below.</td>
 </tr>
 <tr>
 <td><strong>Chunk Size</strong></td>
 <td>float</td>
 <td>50m</td>
-<td>World-space size of the spatial grid cells. Instances are grouped into chunks based on their position. Affects culling granularity — smaller chunks cull more precisely, larger chunks reduce overhead. Only applies to <strong>Static</strong> mode.</td>
+<td>World-space size of the spatial grid cells. Instances are grouped into chunks based on their position. Affects culling granularity — smaller chunks cull more precisely, larger chunks reduce overhead. Only applies to <strong>Static (Multi Chunk)</strong> mode.</td>
 </tr>
 <tr>
 <td><strong>Cull Distance</strong></td>
@@ -160,9 +160,11 @@
 <li><strong>Instance Count:</strong> Total instances across all chunks</li>
 </ul>
 <h2 id="chunk-modes">Chunk Modes</h2>
-<h4 id="static-default">Static (Default)</h4>
+<h4 id="static-single-chunk--default">Static (Single Chunk) — Default</h4>
+<p>All instances go into one chunk with tight bounds that encapsulate them. The <strong>Chunk Size</strong> setting is ignored. Best for small groups of static instances where spatial sub-chunking would add overhead without meaningful culling benefit.</p>
+<h4 id="static-multi-chunk">Static (Multi Chunk)</h4>
 <p>Instances are placed into a spatial grid based on their world position and the <strong>Chunk Size</strong> setting. Each chunk has tight bounding boxes computed at edit time, giving the best culling precision. If a grid cell exceeds the maximum instance capacity (determined by <a href="../getting-started/brg-instanced-renderer-config.html">Config</a> pool settings), it is split into multiple chunks.</p>
-<p>Best for instances that don't move at runtime.</p>
+<p>Best for large groups of static instances spread out spatially.</p>
 <h4 id="dynamic-global-chunk">Dynamic Global Chunk</h4>
 <p>All instances are placed into a single chunk with world-sized bounds. The <strong>Chunk Size</strong> setting is ignored. This mode is intended for instances that move frequently at runtime, since the chunk bounds don't need to encapsulate specific positions.</p>
 <p>Best for instances that move frequently. Use with <a href="#native-transform-tracking">native transform tracking</a>.</p>

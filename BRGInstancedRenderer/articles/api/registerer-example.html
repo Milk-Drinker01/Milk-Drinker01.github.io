@@ -143,18 +143,6 @@
 <td>0</td>
 <td>Max render distance for the chunk. 0 = unlimited.</td>
 </tr>
-<tr>
-<td><strong>Snap Animated Crossfade On First Frame</strong></td>
-<td>bool</td>
-<td>true</td>
-<td>Skip animated crossfade fade-in on first appearance (instances pop in instantly).</td>
-</tr>
-<tr>
-<td><strong>Create Instance Handles</strong></td>
-<td>bool</td>
-<td>true</td>
-<td>Track per-instance slot indices for runtime mutation. Costs memory — only enable if you need to move, color, or remove individual instances.</td>
-</tr>
 </tbody>
 </table>
 <h2 id="lifecycle">Lifecycle</h2>
@@ -234,7 +222,7 @@
 </tr>
 </tbody>
 </table>
-<p>The per-instance buttons (Add, Remove, Colors, Scales, Scatter) require <strong>Create Instance Handles</strong> to be enabled, since they use <code>InstanceLink</code> handles to modify individual instances.</p>
+<p>The per-instance buttons use <code>InstanceLink</code> handles obtained via <code>GetInstanceLink(chunk, localIndex)</code> or returned from <code>AddInstance()</code>.</p>
 <h2 id="how-it-works">How It Works</h2>
 <p>The example demonstrates the key steps of a custom registerer:</p>
 <h3 id="oninitialize">OnInitialize</h3>
@@ -244,10 +232,10 @@
 </ol>
 <h3 id="onshutdown">OnShutdown</h3>
 <p>Clears local chunk state. The base class handles freeing chunks and unregistering prototypes.</p>
-<h3 id="oninstancehandlesprovided">OnInstanceHandlesProvided</h3>
-<p>When a chunk is written with <code>createInstanceHandles = true</code>, the slot indices may not be available immediately (deferred GPU upload). The base class calls <code>OnInstanceHandlesProvided(chunkId)</code> once the handles are ready. The example caches <code>InstanceLink</code> handles at this point for use by the per-instance buttons.</p>
+<h3 id="onchunkwritten">OnChunkWritten</h3>
+<p>When a chunk is written, the GPU writes may be deferred (e.g. for a buffer resize). The base class calls <code>OnChunkWritten(chunkId)</code> once the primary chunk and all of its overflow sub-chunks have completed their writes. The example uses this to refresh its cached instance count after async writes complete.</p>
 <h3 id="instance-mutation">Instance Mutation</h3>
-<p>The per-instance buttons demonstrate using <code>InstanceLink</code> methods:</p>
+<p>Per-instance buttons use the staged <code>Stage*</code> API to modify instances. Multiple updates to the same slot in one frame collapse into a single GPU write:</p>
 <pre><code class="lang-csharp">// add an instance
 var link = AddInstance(chunkState.link, new InstanceData
 {
@@ -258,13 +246,13 @@ var link = AddInstance(chunkState.link, new InstanceData
     color = new Color32(255, 128, 64, 255)
 });
 
-// modify it later
-link.SetColor(new Color32(0, 255, 0, 255));
-link.SetPosition(newPosition);
-link.SetScale(new float3(1.5f));
+// modify it later (staged - merged into one GPU write per slot per frame)
+StageColor(link, new Color32(0, 255, 0, 255));
+StagePosition(link, newPosition);
+StageScale(link, new float3(1.5f));
 
 // remove it
-link.Remove();
+StageRemove(link);
 </code></pre>
 <h2 id="debug">Debug</h2>
 <table>

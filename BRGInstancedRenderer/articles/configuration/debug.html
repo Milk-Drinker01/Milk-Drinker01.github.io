@@ -105,22 +105,16 @@
 <td>Outputs verbose logging to the console for all major operations.</td>
 </tr>
 <tr>
-<td><strong>Debug Bypass Chunk Culling</strong></td>
+<td><strong>Debug Disable CPU Chunk Culling</strong></td>
 <td>bool</td>
 <td>false</td>
-<td>Processes all instances regardless of chunk-level culling results. Useful for verifying that chunk culling is working correctly.</td>
-</tr>
-<tr>
-<td><strong>Debug Skip CPU Chunk Cull</strong></td>
-<td>bool</td>
-<td>false</td>
-<td>Skips the CPU-side chunk frustum culling pass. All chunks are submitted to the GPU culling pipeline regardless of frustum visibility.</td>
+<td>Marks all chunks visible, bypassing the CPU-side frustum/distance cull. GPU culling still runs. Useful for verifying that chunk-level culling is working correctly.</td>
 </tr>
 <tr>
 <td><strong>Debug Disable Culling</strong></td>
 <td>bool</td>
 <td>false</td>
-<td>Skips GPU culling entirely and reuses the previous frame's visibility. Useful for isolating culling cost in the profiler.</td>
+<td>Skips all GPU culling dispatches and reuses the previous frame's visibility. Useful for isolating CPU vs GPU culling cost.</td>
 </tr>
 <tr>
 <td><strong>Debug Disable Rendering</strong></td>
@@ -129,10 +123,22 @@
 <td>Runs GPU culling as normal but skips the actual BRG rendering. Useful for isolating rendering cost.</td>
 </tr>
 <tr>
+<td><strong>Show Chunk Bounds</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Draws chunk wireframe gizmos in the Scene View when a registerer is selected.</td>
+</tr>
+<tr>
 <td><strong>Debug Visualize Culling In Scene View</strong></td>
 <td>bool</td>
 <td>false</td>
 <td>Freezes culling to the Game camera's frustum so you can orbit in the Scene View and see what is being culled.</td>
+</tr>
+<tr>
+<td><strong>Debug Defer Pool Frees</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Defer pool frees until after <code>FlushStagedUploads</code>. Prevents freed pools from being reused before staged overrides flush. Edge-case workaround — leave off unless you hit specific issues.</td>
 </tr>
 </tbody>
 </table>

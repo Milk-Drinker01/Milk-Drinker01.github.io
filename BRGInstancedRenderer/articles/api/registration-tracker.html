@@ -329,7 +329,7 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 </tbody>
 </table>
 <h3 id="rendersignature">RenderSignature</h3>
-<p>The full registration unit — combines a <code>PrototypeData</code> asset with render behavior configuration. This is what you pass to <code>RegisterRenderSignature</code> or <code>RegisterRenderSignatures</code> when you need explicit control over render settings.</p>
+<p>The full registration unit — combines a <code>PrototypeData</code> asset with render behavior configuration. This is what you pass to <code>RegisterRenderSignature</code> when you need explicit control over render settings.</p>
 <p>The same prefab can be registered multiple times with different render settings. Deduplication uses both <code>sourcePrefab</code> and a hash of the config fields, so two <code>RenderSignature</code>s with the same prefab but different shadow settings are treated as separate prototypes.</p>
 <table>
 <thead>
@@ -396,40 +396,40 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 <td>Enable runtime global density scaling.</td>
 </tr>
 <tr>
-<td><strong>enableDynamicDensity</strong></td>
+<td><strong>enableDistanceDensity</strong></td>
 <td>bool</td>
 <td>false</td>
-<td>Enable per-instance dynamic density.</td>
+<td>Enable per-instance distance density culling.</td>
 </tr>
 <tr>
-<td><strong>dynamicDensityMode</strong></td>
-<td>DynamicDensityMode</td>
+<td><strong>distanceDensityMode</strong></td>
+<td>DistanceDensityMode</td>
 <td>ScreenSize</td>
-<td>ScreenSize or Distance.</td>
+<td>ScreenSize or RawDistance.</td>
 </tr>
 <tr>
 <td><strong>densityStartScreenSize</strong></td>
 <td>float</td>
-<td>0.1</td>
-<td>Screen size where thinning begins.</td>
+<td>2</td>
+<td>Screen-size percentage where thinning begins (Screen Size mode).</td>
 </tr>
 <tr>
 <td><strong>densityStartDistance</strong></td>
 <td>float</td>
 <td>50</td>
-<td>Distance where thinning begins.</td>
+<td>Distance where thinning begins (Raw Distance mode).</td>
 </tr>
 <tr>
 <td><strong>densityEndDistance</strong></td>
 <td>float</td>
 <td>150</td>
-<td>Distance where thinning reaches minimum.</td>
+<td>Distance where thinning reaches minimum (Raw Distance mode).</td>
 </tr>
 <tr>
 <td><strong>densityMinFraction</strong></td>
 <td>float</td>
-<td>0.3</td>
-<td>Minimum density fraction.</td>
+<td>0</td>
+<td>Minimum density fraction at max distance. 0 = cull all; 0.3 = keep 30%.</td>
 </tr>
 <tr>
 <td><strong>densityFadeWidth</strong></td>
@@ -453,7 +453,7 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 </table>
 <p>Most users can simply call <code>RegisterRenderSignatureFromPrefab(GameObject)</code>, which extracts a <code>RenderSignature</code> from the prefab automatically (including any <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a> settings). You can also call <code>ExtractRenderSignature(GameObject)</code> to get a <code>RenderSignature</code> without registering it, modify it, and then pass it to <code>RegisterRenderSignature</code>.</p>
 <h3 id="chunklink">ChunkLink</h3>
-<p>Handle to an allocated BRG chunk. Tracked for automatic cleanup on shutdown.</p>
+<p>Handle to an allocated BRG chunk. Tracked for automatic cleanup on shutdown. Includes a generation counter for ABA-safe liveness checks.</p>
 <table>
 <thead>
 <tr>
@@ -469,9 +469,34 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 <td>Internal chunk identifier.</td>
 </tr>
 <tr>
+<td><strong>Generation</strong></td>
+<td>int</td>
+<td>Generation counter — incremented when the chunk slot is reused, so a stale <code>ChunkLink</code> won't accidentally point at a new chunk.</td>
+</tr>
+<tr>
 <td><strong>IsValid</strong></td>
 <td>bool</td>
-<td><code>true</code> if the chunk was successfully allocated.</td>
+<td><code>true</code> if the chunk was successfully allocated (<code>Id &gt;= 0</code>).</td>
+</tr>
+<tr>
+<td><strong>IsAlive</strong></td>
+<td>bool</td>
+<td><code>true</code> if the chunk is still allocated and matches its generation. Use this for ABA-safe checks before operating on a stored <code>ChunkLink</code>.</td>
+</tr>
+<tr>
+<td><strong>NumActivePools</strong></td>
+<td>int</td>
+<td>How many pools the chunk currently occupies.</td>
+</tr>
+<tr>
+<td><strong>GetPoolGlobalIndex(int localIdx)</strong></td>
+<td>int</td>
+<td>Global index of the pool at the given local position within the chunk.</td>
+</tr>
+<tr>
+<td><strong>NumInstancesInPool(int localIdx)</strong></td>
+<td>int</td>
+<td>Instance count in the pool at the given local position.</td>
 </tr>
 <tr>
 <td><strong>Invalid</strong></td>
@@ -481,53 +506,8 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 </tbody>
 </table>
 <h3 id="instancelink">InstanceLink</h3>
-<p>Handle to a single instance within a chunk. Provides convenience methods for per-instance modification.</p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>SetColor(Color32)</code></td>
-<td>Set per-instance color.</td>
-</tr>
-<tr>
-<td><code>SetPosition(float3)</code></td>
-<td>Set position only.</td>
-</tr>
-<tr>
-<td><code>SetRotation(quaternion)</code></td>
-<td>Set rotation only.</td>
-</tr>
-<tr>
-<td><code>SetScale(float3)</code></td>
-<td>Set scale only.</td>
-</tr>
-<tr>
-<td><code>MoveAndRotate(float3, quaternion)</code></td>
-<td>Set position and rotation.</td>
-</tr>
-<tr>
-<td><code>Move(float3, quaternion, float3)</code></td>
-<td>Set full TRS (position, rotation, scale).</td>
-</tr>
-<tr>
-<td><code>SampleLightProbe(float3)</code></td>
-<td>Re-sample light probes at the given position.</td>
-</tr>
-<tr>
-<td><code>SetEnabled(bool)</code></td>
-<td>Enable or disable this instance. Disabled instances are invisible to culling but keep their slot.</td>
-</tr>
-<tr>
-<td><code>Remove()</code></td>
-<td>Remove this instance from its chunk.</td>
-</tr>
-</tbody>
-</table>
+<p>Handle to a single instance — the chunk it lives in plus its global slot index. The <code>ChunkId</code> may be an overflow chunk, not the primary <code>ChunkLink.Id</code>.</p>
+<p><code>InstanceLink</code> is a passive handle — all per-instance operations (move, color, remove, etc.) are performed via methods on the tracker or registerer. See <a href="#tracked-staging">Tracked Staging</a> and <a href="#unsafe-direct-modification">Unsafe Direct Modification</a> below.</p>
 <table>
 <thead>
 <tr>
@@ -538,19 +518,24 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 </thead>
 <tbody>
 <tr>
-<td><strong>GlobalBRGSlotIndex</strong></td>
-<td>int</td>
-<td>Global slot index in the instance buffer.</td>
-</tr>
-<tr>
 <td><strong>ChunkId</strong></td>
 <td>int</td>
 <td>The chunk this instance belongs to (may be an overflow chunk).</td>
 </tr>
 <tr>
+<td><strong>GlobalBRGSlotIndex</strong></td>
+<td>int</td>
+<td>Global slot index in the instance buffer.</td>
+</tr>
+<tr>
 <td><strong>IsValid</strong></td>
 <td>bool</td>
-<td><code>true</code> if the instance handle is valid.</td>
+<td><code>true</code> if the slot index is <code>&gt;= 0</code>.</td>
+</tr>
+<tr>
+<td><strong>Invalid</strong></td>
+<td>static</td>
+<td>Sentinel value (<code>-1, -1</code>).</td>
 </tr>
 </tbody>
 </table>
@@ -570,19 +555,19 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 </tr>
 <tr>
 <td><code>int RegisterRenderSignatureFromPrefab(GameObject prefab)</code></td>
-<td>Register from a prefab. Returns the global prototype index, or -1 on failure.</td>
+<td>Register a single signature extracted from the prefab. Returns the global prototype index, or -1 on failure.</td>
+</tr>
+<tr>
+<td><code>int[] RegisterRenderSignaturesFromPrefab(GameObject prefab)</code></td>
+<td>Register multiple signatures extracted from a prefab that produces more than one (e.g. multi-renderer prefabs). Returns the array of global indices.</td>
 </tr>
 <tr>
 <td><code>int RegisterRenderSignature(RenderSignature signature)</code></td>
 <td>Register an explicit <code>RenderSignature</code>. Returns the global prototype index, or -1 on failure.</td>
 </tr>
 <tr>
-<td><code>Dictionary&lt;int,int&gt; RegisterRenderSignatures(List&lt;RenderSignature&gt; signatures)</code></td>
-<td>Batch-register. Returns a local-to-global index remap.</td>
-</tr>
-<tr>
-<td><code>void UnregisterRenderSignatures(Dictionary&lt;int,int&gt; remap)</code></td>
-<td>Manually unregister a batch before shutdown.</td>
+<td><code>void UnregisterRenderSignature(int globalIdx)</code></td>
+<td>Manually unregister a single prototype. Removes it from the tracker's auto-cleanup list.</td>
 </tr>
 </tbody>
 </table>
@@ -597,11 +582,15 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 </thead>
 <tbody>
 <tr>
+<td><code>int MaxInstancesPerChunk</code></td>
+<td>Maximum instances a single chunk can hold (driven by <strong>Max Pools Per Chunk</strong> × 64 in the <a href="../configuration/pooling.html">Config</a>).</td>
+</tr>
+<tr>
 <td><code>ChunkLink AllocChunk()</code></td>
 <td>Allocate a new chunk.</td>
 </tr>
 <tr>
-<td><code>void WriteChunk(ChunkLink, NativeArray&lt;InstanceData&gt;, Bounds, ...)</code></td>
+<td><code>void WriteChunk(ChunkLink, NativeArray&lt;InstanceData&gt;, Bounds, float cullDistance = 0, float instanceCullDistance = float.MaxValue)</code></td>
 <td>Write instances to a chunk. Automatically splits across overflow chunks if instance count exceeds <code>MaxInstancesPerChunk</code>. Overflow chunks share bounds with the primary chunk.</td>
 </tr>
 <tr>
@@ -610,11 +599,66 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 </tr>
 <tr>
 <td><code>void RecalculateChunkBounds(ChunkLink, Bounds)</code></td>
-<td>Update chunk culling bounds.</td>
+<td>Update chunk culling bounds (applies to primary + all overflows).</td>
+</tr>
+<tr>
+<td><code>void SetChunkEnabled(ChunkLink, bool)</code></td>
+<td>Enable or disable a chunk for rendering (applies to primary + all overflows). Disabled chunks skip culling and rendering.</td>
+</tr>
+<tr>
+<td><code>bool GetChunkEnabled(ChunkLink)</code></td>
+<td>Returns whether the chunk is currently enabled.</td>
+</tr>
+<tr>
+<td><code>void SetRenderEnabled(bool)</code></td>
+<td>Enable/disable rendering for ALL chunks owned by this tracker at once.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="instance-management">Instance Management</h2>
+<h3 id="writechunk-parameters">WriteChunk Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>link</strong></td>
+<td>ChunkLink</td>
+<td>—</td>
+<td>The chunk to write to.</td>
+</tr>
+<tr>
+<td><strong>instances</strong></td>
+<td>NativeArray&lt;InstanceData&gt;</td>
+<td>—</td>
+<td>Instance data array.</td>
+</tr>
+<tr>
+<td><strong>bounds</strong></td>
+<td>Bounds</td>
+<td>—</td>
+<td>World-space AABB used for hierarchical culling. Should tightly enclose all instances.</td>
+</tr>
+<tr>
+<td><strong>cullDistance</strong></td>
+<td>float</td>
+<td>0</td>
+<td>Per-chunk max render distance. 0 = unlimited.</td>
+</tr>
+<tr>
+<td><strong>instanceCullDistance</strong></td>
+<td>float</td>
+<td>float.MaxValue</td>
+<td>Per-instance max render distance applied during GPU culling.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="instance-lifecycle">Instance Lifecycle</h2>
 <table>
 <thead>
 <tr>
@@ -625,19 +669,19 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 <tbody>
 <tr>
 <td><code>InstanceLink AddInstance(ChunkLink, InstanceData)</code></td>
-<td>Add a single instance. Tries the primary chunk, then overflow chunks, then allocates a new overflow if needed.</td>
+<td>Add a single instance. Tries the primary chunk, then existing overflow chunks, then allocates a new overflow if needed. Returns <code>InstanceLink.Invalid</code> on failure or for a stale/freed <code>ChunkLink</code>.</td>
 </tr>
 <tr>
-<td><code>InstanceLink[] AddInstances(ChunkLink, NativeArray&lt;InstanceData&gt;, int)</code></td>
-<td>Add multiple instances with automatic overflow.</td>
+<td><code>InstanceLink[] AddInstances(ChunkLink, NativeArray&lt;InstanceData&gt;, int count)</code></td>
+<td>Add multiple instances with automatic overflow. Returns one <code>InstanceLink</code> per added instance.</td>
 </tr>
 <tr>
 <td><code>InstanceLink MoveInstanceToChunk(InstanceLink source, ChunkLink dest, InstanceData)</code></td>
-<td>Move an instance between chunks. Adds to destination first, then removes from source. Returns <code>InstanceLink.Invalid</code> if the destination is full.</td>
+<td>Add to destination first, then remove from source. Returns <code>InstanceLink.Invalid</code> if the destination is full — source untouched in that case.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="queries">Queries</h2>
+<h2 id="lookups">Lookups</h2>
 <table>
 <thead>
 <tr>
@@ -647,12 +691,8 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 </thead>
 <tbody>
 <tr>
-<td><code>InstanceLink[] GetInstanceLinks(ChunkLink)</code></td>
-<td>Get handles for all instances (primary + overflow). Only available for chunks written with <code>createInstanceHandles = true</code>.</td>
-</tr>
-<tr>
-<td><code>int[] GetInstanceSlots(ChunkLink)</code></td>
-<td>Get raw global slot indices for the primary chunk only.</td>
+<td><code>InstanceLink GetInstanceLink(ChunkLink, int localIndex)</code></td>
+<td>Resolve a logical instance index (0..<code>GetTotalChunkInstanceCount</code> − 1, spanning primary + overflow) into a current <code>InstanceLink</code>. Returns <code>InstanceLink.Invalid</code> if the chunk is freed or the index is out of range.</td>
 </tr>
 <tr>
 <td><code>int GetTotalChunkInstanceCount(ChunkLink)</code></td>
@@ -660,7 +700,7 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 </tr>
 <tr>
 <td><code>int GetOverflowChunkCount(ChunkLink)</code></td>
-<td>Number of overflow chunks.</td>
+<td>Number of overflow chunks attached to this primary.</td>
 </tr>
 <tr>
 <td><code>void GetPerChunkInstanceCounts(ChunkLink, List&lt;int&gt;)</code></td>
@@ -668,12 +708,112 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 </tr>
 </tbody>
 </table>
-<h2 id="instance-handle-callback">Instance Handle Callback</h2>
-<p>When writing chunks with <code>createInstanceHandles = true</code>, the handles may not be available immediately if a deferred GPU buffer resize is needed. Subscribe to <code>InstanceHandlesReady</code> to be notified when handles are ready:</p>
-<pre><code class="lang-csharp">tracker.InstanceHandlesReady += (chunkId) =&gt;
+<h2 id="tracked-staging">Tracked Staging</h2>
+<p>For most use cases, you should use the staged <code>Stage*</code> API. These methods accumulate per-slot writes and merge them so that multiple updates to the same instance within one frame collapse into a single GPU write. The staged changes are flushed automatically during <code>BRGRenderer</code>'s next update.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>StagePosition(InstanceLink \| int slot, float3)</code></td>
+<td>Update position.</td>
+</tr>
+<tr>
+<td><code>StageRotation(InstanceLink \| int slot, quaternion)</code></td>
+<td>Update rotation.</td>
+</tr>
+<tr>
+<td><code>StageScale(InstanceLink \| int slot, float3)</code></td>
+<td>Update scale.</td>
+</tr>
+<tr>
+<td><code>StageMoveAndRotate(InstanceLink \| int slot, float3, quaternion)</code></td>
+<td>Update position and rotation.</td>
+</tr>
+<tr>
+<td><code>StageMove(InstanceLink \| int slot, float3, quaternion, float3)</code></td>
+<td>Update full TRS.</td>
+</tr>
+<tr>
+<td><code>StageColor(InstanceLink \| int slot, Color32)</code></td>
+<td>Update per-instance color.</td>
+</tr>
+<tr>
+<td><code>StageSetEnabled(InstanceLink \| int slot, bool)</code></td>
+<td>Enable or disable a single instance. Disabled instances stay in the buffer but are culled.</td>
+</tr>
+<tr>
+<td><code>StageRemove(InstanceLink)</code> / <code>StageRemove(int chunkId, int slot)</code></td>
+<td>Remove an instance. Also drops any pending staged writes for that slot.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-csharp">// move + color + enable in one frame -&gt; single merged GPU write
+tracker.StageMoveAndRotate(link, newPos, newRot);
+tracker.StageColor(link, Color.red);
+tracker.StageSetEnabled(link, true);
+</code></pre>
+<h2 id="unsafe-direct-modification">Unsafe Direct Modification</h2>
+<p>The <code>*Unsafe</code> variants are direct pass-throughs to <code>BRGRenderer</code> with no buffering, no merging, and no conflict resolution. Use them only when you know what you're doing — for example, in performance-critical hot paths where you've already deduplicated writes yourself, or when you need writes to land immediately.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SetPositionUnsafe(InstanceLink \| int slot, float3)</code></td>
+<td>Direct position write.</td>
+</tr>
+<tr>
+<td><code>SetRotationUnsafe(InstanceLink \| int slot, quaternion)</code></td>
+<td>Direct rotation write.</td>
+</tr>
+<tr>
+<td><code>SetScaleUnsafe(InstanceLink \| int slot, float3)</code></td>
+<td>Direct scale write.</td>
+</tr>
+<tr>
+<td><code>MoveAndRotateUnsafe(InstanceLink \| int slot, float3, quaternion)</code></td>
+<td>Position + rotation.</td>
+</tr>
+<tr>
+<td><code>MoveUnsafe(InstanceLink \| int slot, float3, quaternion, float3)</code></td>
+<td>Full TRS.</td>
+</tr>
+<tr>
+<td><code>SetColorUnsafe(InstanceLink \| int slot, Color32)</code></td>
+<td>Direct color write.</td>
+</tr>
+<tr>
+<td><code>SetEnabledUnsafe(InstanceLink \| int slot, bool)</code></td>
+<td>Direct enable/disable.</td>
+</tr>
+<tr>
+<td><code>RemoveUnsafe(InstanceLink)</code> / <code>RemoveUnsafe(int chunkId, int slot)</code></td>
+<td>Direct removal.</td>
+</tr>
+<tr>
+<td><code>SampleLightProbeUnsafe(InstanceLink \| int slot, float3 position)</code></td>
+<td>Re-sample light probes at a position.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Mixing staged and unsafe writes on the same slot in the same frame is undefined — pick one path.</p>
+</blockquote>
+<h2 id="chunkwritten-event">ChunkWritten Event</h2>
+<p>When <code>WriteChunk</code> is called, the underlying GPU writes may be deferred (e.g. for a buffer resize). The <code>ChunkWritten</code> event fires once per primary chunk after all of its sub-chunks (primary + overflow) have completed their writes, so you can safely call <code>GetInstanceLink</code> afterward.</p>
+<pre><code class="lang-csharp">tracker.ChunkWritten += (chunkId) =&gt;
 {
-    var links = tracker.GetInstanceLinks(myChunkLink);
-    // cache or use links
+    var link = tracker.GetInstanceLink(myChunkLink, 0);
+    // cache or modify the instance
 };
 </code></pre>
 <h2 id="difference-from-brgregisterer">Difference from BRGRegisterer</h2>
@@ -682,6 +822,7 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 <li>Automatic <code>Initialize()</code> on <code>OnEnable</code>, <code>Shutdown()</code> on <code>OnDisable</code></li>
 <li>Editor support via <code>[ExecuteAlways]</code> with deferred initialization</li>
 <li>Abstract <code>OnInitialize()</code> / <code>OnShutdown()</code> hooks via the callback system</li>
+<li>A virtual <code>OnChunkWritten(int)</code> hook for the <code>ChunkWritten</code> event</li>
 <li>Protected method forwarding so subclasses don't touch the tracker directly</li>
 </ul>
 <p>If your registration logic lives in a MonoBehaviour, use <a href="custom-registerer.html">Custom Registerer</a>. If it doesn't, use <code>BRGRegistrationTracker</code> directly.</p>

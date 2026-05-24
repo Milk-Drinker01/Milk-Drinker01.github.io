@@ -88,8 +88,8 @@
 <h1 id="core-methods">Core Methods</h1>
 
 <hr>
-<p>Public methods on the <code>BRGInstancedRenderer</code> singleton for runtime control.</p>
-<p>Access the singleton via <code>BRGInstancedRenderer.Instance</code>.</p>
+<p>Public methods on the <code>BRGRenderer</code> singleton for runtime control.</p>
+<p>Access the singleton via <code>BRGRenderer.Instance</code>.</p>
 <h2 id="setglobaldensity">SetGlobalDensity</h2>
 <pre><code class="lang-csharp">public void SetGlobalDensity(float density)
 </code></pre>
@@ -134,14 +134,14 @@ BRGRenderer.Instance.CrossfadeTimeScale = 0f;
 <pre><code class="lang-csharp">public void RuntimeRefresh()
 </code></pre>
 <p>A faster refresh path for use at runtime. Shuts down and re-initializes all active registerers, causing them to re-extract and re-upload their instance data. Use this after you have programmatically changed terrain data, swapped prefabs, or modified prototype settings at runtime.</p>
-<pre><code class="lang-csharp">BRGInstancedRenderer.Instance.RuntimeRefresh();
+<pre><code class="lang-csharp">BRGRenderer.Instance.RuntimeRefresh();
 </code></pre>
 <h2 id="compactbuffers">CompactBuffers</h2>
 <pre><code class="lang-csharp">public void CompactBuffers()
 </code></pre>
 <p>Compacts the internal instance pool and chunk buffers to reduce GPU memory waste. Leaves approximately 25% headroom above current usage. This causes a small frame hitch, so call it during pauses, loading screens, or scene transitions rather than during gameplay.</p>
 <pre><code class="lang-csharp">// compact during a loading screen
-BRGInstancedRenderer.Instance.CompactBuffers();
+BRGRenderer.Instance.CompactBuffers();
 </code></pre>
 <p>The <a href="../getting-started/brg-instanced-renderer-config.html">Config</a> also provides an <strong>Enable Auto Compaction</strong> option that runs compaction automatically when utilization is low, but manual compaction is recommended to prevent hitches.</p>
 <h2 id="snapallcrossfadestates">SnapAllCrossfadeStates</h2>
@@ -150,7 +150,7 @@ BRGInstancedRenderer.Instance.CompactBuffers();
 <p>Snap all crossfade animations to their target LODs for all cameras. Call after teleportation or scene load to prevent a mass fade-in of all visible instances.</p>
 <pre><code class="lang-csharp">// after teleporting the player
 player.transform.position = newPosition;
-BRGInstancedRenderer.Instance.SnapAllCrossfadeStates();
+BRGRenderer.Instance.SnapAllCrossfadeStates();
 </code></pre>
 <h2 id="snapcrossfadestate">SnapCrossfadeState</h2>
 <pre><code class="lang-csharp">public bool SnapCrossfadeState(Camera camera)
@@ -194,7 +194,22 @@ public bool SnapCrossfadeState(int viewID)
 </tbody>
 </table>
 <pre><code class="lang-csharp">// snap crossfade for a specific camera after teleporting it
-BRGInstancedRenderer.Instance.SnapCrossfadeState(myCamera);
+BRGRenderer.Instance.SnapCrossfadeState(myCamera);
+</code></pre>
+<h2 id="purgeunusedprototypes">PurgeUnusedPrototypes</h2>
+<pre><code class="lang-csharp">public int PurgeUnusedPrototypes()
+</code></pre>
+<p>Immediately remove all prototypes with a reference count of zero, bypassing the <strong>Prototype Idle Grace Period</strong> on the <a href="../configuration/pooling.html">Config</a>. Returns the number of prototypes purged.</p>
+<p>By default, unused prototypes stay alive for the grace period (default 30s) so that re-registering the same prefab during a scene transition reuses the existing GPU data with zero work. Call this method only when you want to reclaim GPU memory immediately — for example, during a memory-tight loading screen.</p>
+<pre><code class="lang-csharp">int purged = BRGRenderer.Instance.PurgeUnusedPrototypes();
+Debug.Log($&quot;Purged {purged} unused prototypes&quot;);
+</code></pre>
+<h2 id="resamplealllightprobes">ResampleAllLightProbes</h2>
+<pre><code class="lang-csharp">public void ResampleAllLightProbes()
+</code></pre>
+<p>Force a re-sample of legacy light probes for every active instance. Only relevant when <strong>Support Legacy Light Probes</strong> is enabled on the <a href="../configuration/rendering.html">Config</a>. Call this after Adaptive Probe Volumes or legacy probes are rebaked at runtime, otherwise existing instances continue using their last sampled values.</p>
+<pre><code class="lang-csharp">LightmapSettings.lightProbes = newProbeData;
+BRGRenderer.Instance.ResampleAllLightProbes();
 </code></pre>
 <h2 id="shiftinstances">ShiftInstances</h2>
 <pre><code class="lang-csharp">public void ShiftInstances(Vector3 offset)

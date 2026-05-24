@@ -129,6 +129,10 @@
 <td>Register a render signature from a prefab. Returns the prototype index, or -1 on failure. Increments the reference count if already registered.</td>
 </tr>
 <tr>
+<td><code>int[] RegisterRenderSignaturesFromPrefab(GameObject prefab)</code></td>
+<td>Register multiple signatures from a prefab that produces more than one (e.g. multi-renderer prefabs). Returns the array of prototype indices.</td>
+</tr>
+<tr>
 <td><code>int RegisterRenderSignature(RenderSignature signature)</code></td>
 <td>Register a custom render signature. Deduplicates by asset identity hash + config hash. Returns the prototype index.</td>
 </tr>
@@ -164,29 +168,44 @@
 <td>Allocate a new chunk. Returns the chunk ID.</td>
 </tr>
 <tr>
-<td><code>void WriteChunk(int chunkId, NativeArray&lt;InstanceData&gt; instances, Bounds bounds, float cullDistance = 0f, bool snapAnimatedCrossfade = false, bool createInstanceHandles = false)</code></td>
-<td>Write instances to a chunk. Bounds should tightly enclose all instances. Set <code>createInstanceHandles</code> to <code>true</code> if you need per-instance modification later.</td>
+<td><code>void WriteChunk(int chunkId, NativeArray&lt;InstanceData&gt; instances, Bounds bounds, float cullDistance = 0f, float instanceCullDistance = float.MaxValue)</code></td>
+<td>Write instances to a chunk. Bounds should tightly enclose all instances. <code>cullDistance</code> is a per-chunk distance cutoff (0 = unlimited). <code>instanceCullDistance</code> applies during GPU culling per-instance.</td>
 </tr>
 <tr>
 <td><code>void FreeChunk(int chunkId)</code></td>
 <td>Free a chunk and return its pools to the free list.</td>
 </tr>
 <tr>
+<td><code>bool IsChunkValid(int chunkId, int generation)</code></td>
+<td>ABA-safe liveness check. Use against a <code>ChunkLink</code>'s stored generation to detect stale handles.</td>
+</tr>
+<tr>
+<td><code>int GetChunkGeneration(int chunkId)</code></td>
+<td>Get the current generation counter for a chunk slot.</td>
+</tr>
+<tr>
 <td><code>void RecalculateChunkBounds(int chunkId, Bounds newBounds)</code></td>
 <td>Update chunk culling bounds. Use after removals have made the original bounds too loose.</td>
+</tr>
+<tr>
+<td><code>void SetChunkEnabled(int chunkId, bool enabled)</code></td>
+<td>Enable or disable a chunk for rendering.</td>
 </tr>
 <tr>
 <td><code>int GetChunkInstanceCount(int chunkId)</code></td>
 <td>Get the number of instances in a chunk.</td>
 </tr>
 <tr>
-<td><code>int[] GetChunkInstanceSlots(int chunkId)</code></td>
-<td>Get global slot indices for all instances in the chunk. Only valid if the chunk was written with <code>createInstanceHandles = true</code>.</td>
+<td><code>int GetChunkPoolCount(int chunkId)</code></td>
+<td>Get the number of pools currently used by a chunk.</td>
+</tr>
+<tr>
+<td><code>int GetChunkPoolIndex(int chunkId, int poolLocalIdx)</code></td>
+<td>Get the global pool index for a chunk's local pool slot.</td>
 </tr>
 </tbody>
 </table>
 <h2 id="instance-addition--removal">Instance Addition &amp; Removal</h2>
-<p>These methods require the chunk to have been written with <code>createInstanceHandles = true</code>.</p>
 <table>
 <thead>
 <tr>
@@ -200,15 +219,15 @@
 <td>Add a single instance. Returns the global slot index, or -1 if the chunk is full.</td>
 </tr>
 <tr>
-<td><code>void AddInstances(int chunkId, NativeArray&lt;InstanceData&gt; instances, int count, NativeArray&lt;int&gt; outSlotIndices)</code></td>
-<td>Add multiple instances. Slot indices are written to <code>outSlotIndices</code> (-1 for any that didn't fit).</td>
+<td><code>int AppendInstances(int chunkId, NativeArray&lt;InstanceData&gt; instances, int srcOffset, int count, NativeArray&lt;int&gt; outSlotIndices)</code></td>
+<td>Add multiple instances. Returns the number actually placed. Slot indices are written to <code>outSlotIndices</code>.</td>
 </tr>
 <tr>
 <td><code>void RemoveInstance(int chunkId, int globalSlotIndex)</code></td>
 <td>Remove an instance by slot index. Chunk bounds are not automatically recalculated.</td>
 </tr>
 <tr>
-<td><code>void SetInstanceEnabled(int chunkId, int globalSlotIndex, bool enabled)</code></td>
+<td><code>void SetInstanceEnabled(int globalSlotIndex, bool enabled)</code></td>
 <td>Enable or disable an instance. Disabled instances are invisible to culling but keep their slot and pool allocation.</td>
 </tr>
 </tbody>

@@ -107,7 +107,7 @@
 <p>An optional <strong>HZB Retest Pass</strong> adds a second phase: after the current frame's depth prepass, instances that were occluded in the first pass are re-tested against the fresh depth buffer. This recovers instances that were falsely occluded due to camera movement, reducing temporal artifacts. Enable via <strong>Use HZB Retest Pass</strong> on the <a href="../getting-started/brg-instanced-renderer-config.html">Config</a>.</p>
 <div class="NOTE">
 <h5>Note</h5>
-<p>In HDRP, the retest pass requires patching the HDRP package to inject a depth prepass event. An editor script is included to apply and revert this patch automatically via <strong>Tools &gt; BRG Instanced Renderer &gt; HDRP Patches</strong>. URP supports the retest pass without any patching.</p>
+<p>In HDRP, the retest pass requires patching the HDRP package to inject a depth prepass event. An editor script is included to apply and revert this patch automatically via <strong>Tools &gt; BRG Instanced Renderer &gt; HDRP &gt; Apply Depth Prepass Patch</strong>. URP supports the retest pass without any patching.</p>
 </div>
 <p><img src="../../images/Occlusion-Culling.png" alt="Occlusion Culling"></p>
 <h4 id="distance-culling">Distance Culling</h4>

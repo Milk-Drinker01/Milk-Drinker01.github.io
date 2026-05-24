@@ -133,12 +133,6 @@
 <td>Read-only. Shows the terrain's <strong>Tree Distance</strong> setting. Adjust this in Unity's Terrain settings.</td>
 </tr>
 <tr>
-<td><strong>Create Instance Handles</strong></td>
-<td>bool</td>
-<td>false</td>
-<td>Store per-instance handles for trees, enabling per-instance operations like <code>InstanceLink.SetColor</code>. Increases memory usage. Required for <code>GetTreeInstanceLinks()</code>.</td>
-</tr>
-<tr>
 <td><strong>Chunk Size</strong></td>
 <td>float</td>
 <td>256m</td>
@@ -149,12 +143,6 @@
 <td>bool</td>
 <td>false</td>
 <td>Draw wireframe boxes in the Scene View for each tree chunk, color-coded by fill percentage.</td>
-</tr>
-<tr>
-<td><strong>Show Instance Spheres</strong></td>
-<td>bool</td>
-<td>false</td>
-<td>Draw bounding spheres for each tree instance. Slow with many trees.</td>
 </tr>
 <tr>
 <td><strong>Skip BRG Upload</strong></td>
@@ -253,12 +241,6 @@
 <td>true</td>
 <td>Snap animated crossfade to the target LOD for patches already in range when the component initializes. Prevents a mass fade-in on scene load.</td>
 </tr>
-<tr>
-<td><strong>Snap Crossfade On Load</strong></td>
-<td>bool</td>
-<td>false</td>
-<td>Snap animated crossfade for patches streamed in during gameplay. When off, newly loaded details crossfade in smoothly. When on, they appear at their correct LOD immediately.</td>
-</tr>
 </tbody>
 </table>
 <h3 id="debug">Debug</h3>
@@ -277,12 +259,6 @@
 <td>bool</td>
 <td>false</td>
 <td>Draw wireframe boxes in the Scene View for each detail chunk, color-coded by fill percentage.</td>
-</tr>
-<tr>
-<td><strong>Show Instance Spheres</strong></td>
-<td>bool</td>
-<td>false</td>
-<td>Draw bounding spheres for each detail instance. Very slow — requires refresh to populate.</td>
 </tr>
 <tr>
 <td><strong>Skip BRG Upload</strong></td>
@@ -319,7 +295,7 @@
 <h3 id="gettreeinstancelinks">GetTreeInstanceLinks</h3>
 <pre><code class="lang-csharp">public InstanceLink[] GetTreeInstanceLinks()
 </code></pre>
-<p>Returns <code>InstanceLink</code> handles for all registered tree instances. Requires <strong>Create Instance Handles</strong> to be enabled on the Trees section. Use these handles to modify individual trees at runtime (e.g., set per-tree color).</p>
+<p>Returns <code>InstanceLink</code> handles for all registered tree instances, or <code>null</code> if trees aren't registered yet. Use the returned handles with the <code>Stage*</code> API (or <code>*Unsafe</code> direct API) to modify individual trees at runtime (e.g. set per-tree color).</p>
 <h3 id="clearextractioncache">ClearExtractionCache</h3>
 <pre><code class="lang-csharp">public static void ClearExtractionCache(Terrain terrain)
 public static void ClearAllExtractionCaches()

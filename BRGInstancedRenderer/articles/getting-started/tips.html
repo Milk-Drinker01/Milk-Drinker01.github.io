@@ -119,8 +119,8 @@
 <p>When instances already exist in the world (e.g. scene load, save restore), crossfade animations should be skipped so everything doesn't fade in at once:</p>
 <ul>
 <li><strong>Terrain details</strong>: Enable <strong>Snap Crossfade On Start</strong> on the <a href="../components/brg-terrain-registerer.html">BRG Terrain Registerer</a> (enabled by default).</li>
-<li><strong>Custom registerers</strong>: Pass <code>snapAnimatedCrossfade: true</code> to <a href="../api/custom-registerer.html#writechunk-parameters"><code>WriteChunk</code></a>.</li>
-<li><strong>All cameras at once</strong>: Call <a href="../api/core-methods.html"><code>SnapAllCrossfadeStates()</code></a> after teleportation or scene load.</li>
+<li><strong>All cameras at once</strong>: Call <a href="../api/core-methods.html#snapallcrossfadestates"><code>SnapAllCrossfadeStates()</code></a> after teleportation or scene load.</li>
+<li><strong>Single camera</strong>: Call <a href="../api/core-methods.html#snapcrossfadestate"><code>SnapCrossfadeState(camera)</code></a> to snap one camera's view.</li>
 </ul>
 
 </article>
