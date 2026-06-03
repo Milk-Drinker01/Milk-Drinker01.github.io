@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>AI Reference | BRG Instanced Renderer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="AI Reference | BRG Instanced Renderer ">
+      <meta name="description" content="Documentation for BRG Instanced Renderer.">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="BRG Instanced Renderer">
+            BRG Instanced Renderer
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="ai-reference">AI Reference</h1>
+
+<hr>
+<p><button id="copy-ai-docs" class="copy-ai-docs-btn" onclick="copyAIDocs(this)">Copy contents to clipboard</button></p>
+<script>
+function copyAIDocs(btn) {
+  fetch('ai-reference.md')
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+    .then(t => navigator.clipboard.writeText(t))
+    .then(() => {
+      const original = btn.textContent;
+      btn.textContent = 'Copied!';
+      btn.disabled = true;
+      setTimeout(() => { btn.textContent = original; btn.disabled = false; }, 1500);
+    })
+    .catch(err => {
+      btn.textContent = 'Copy failed';
+      setTimeout(() => { btn.textContent = 'Copy contents to clipboard'; }, 1500);
+      console.error('AI docs copy failed:', err);
+    });
+}
+</script>
+<p>A condensed router for AI tools working with BRG Instanced Renderer. The package singleton is <code>BRGRenderer</code> (accessed via <code>BRGRenderer.Instance</code>). There are two entry points for registering instances: subclass <code>BRGRegisterer</code> (MonoBehaviour) or use <code>BRGRegistrationTracker</code> directly (non-MonoBehaviour). This doc points you at authoritative source and docs rather than duplicating them — read the linked files for full detail.</p>
+<h2 id="where-to-look">Where to look</h2>
+<p>All paths below are inside the BRGInstancedRenderer package folder in the Unity project.</p>
+<table>
+<thead>
+<tr>
+<th>What you need</th>
+<th>Read</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tracker API + struct shapes (<code>InstanceData</code>, <code>InstanceLink</code>, <code>ChunkLink</code>, <code>RenderSignature</code>)</td>
+<td><code>Runtime/Scripts/Registerers/BRGRegistrationTracker.cs</code> (its MonoBehaviour wrapper lives in <code>Runtime/Scripts/Registerers/BRGRegisterer.cs</code>)</td>
+</tr>
+<tr>
+<td>MonoBehaviour subclass API + protected forwarders</td>
+<td><code>Runtime/Scripts/Registerers/BRGRegisterer.cs</code></td>
+</tr>
+<tr>
+<td>Singleton (<code>BRGRenderer</code>) full API</td>
+<td><code>Runtime/Scripts/Core/BRGInstancedRenderer.cs</code> + partials (<code>.Batches.cs</code>, <code>.Chunks.cs</code>, <code>.Culling.cs</code>, <code>.HZB.cs</code>, <code>.Prototypes.cs</code>, <code>.SpeedTree.cs</code>, <code>.Upload.cs</code>)</td>
+</tr>
+<tr>
+<td>Working custom-registerer example (uses <code>Stage*</code> patterns)</td>
+<td><code>Examples/Scripts/BRGRegistererExample.cs</code></td>
+</tr>
+<tr>
+<td>Per-instance color via <code>InstanceLink</code> on a real terrain (uses <code>GetInstanceLink</code> + <code>*Unsafe</code>)</td>
+<td><code>Examples/Scripts/TreeRandomColor.cs</code></td>
+</tr>
+<tr>
+<td>Reference terrain implementation</td>
+<td><code>Runtime/Scripts/Registerers/Terrain/TerrainBRGRegisterer.cs</code> + <code>.Trees.cs</code> / <code>.Details.cs</code> partials</td>
+</tr>
+<tr>
+<td>Reference GameObject-group implementation</td>
+<td><code>Runtime/Scripts/Registerers/GameObjects/BRGGameObjectGroup.cs</code></td>
+</tr>
+<tr>
+<td>Config schema (every serialized field + tooltips)</td>
+<td><code>Runtime/Scripts/Config/BRGInstancedRendererConfig.cs</code></td>
+</tr>
+<tr>
+<td>Per-prototype shadow / LOD / density overrides</td>
+<td><code>Runtime/Scripts/Config/BRGPrototypeExtraData.cs</code></td>
+</tr>
+<tr>
+<td>Unity 6.2+ Mesh LOD setup</td>
+<td><code>Runtime/Scripts/Config/BRGMeshLodData.cs</code></td>
+</tr>
+<tr>
+<td>Per-camera LOD bias and crossfade snap</td>
+<td><code>Runtime/Scripts/Config/BRGCameraSettings.cs</code></td>
+</tr>
+<tr>
+<td>Terrain detail prototype override</td>
+<td><code>Runtime/Scripts/Registerers/Terrain/BRGTerrainDetailOverride.cs</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="non-obvious-concepts">Non-obvious concepts</h2>
+<p>These are not visible from reading any single file. State them explicitly to avoid generating wrong code.</p>
+<ul>
+<li>The singleton class is <code>BRGRenderer</code>, not <code>BRGInstancedRenderer</code>. Access it via <code>BRGRenderer.Instance</code>.</li>
+<li>A <strong>chunk</strong> holds a mix of any number of render signatures. Chunks are not per-signature.</li>
+<li>A <strong>pool</strong> also holds a mix of any number of render signatures. Pools are fixed-size GPU memory blocks of <strong>64 instance slots each</strong> (hard-coded — not configurable).</li>
+<li>A <strong>prototype index</strong> is the global handle returned by <code>RegisterRenderSignature*</code>. A <strong><code>RenderSignature</code></strong> is the full data (asset + render config). These are different things.</li>
+<li>Instances spatially overlapping with a chunk don't have to belong to it. Each instance belongs to exactly one chunk, but multiple chunks can spatially overlap.</li>
+<li>Spatially large chunks are fine. Chunk culling is an optimization, not a requirement — culling a few extra instances that survive chunk-level culling is cheap on the GPU.</li>
+<li><code>InstanceLink</code> is a <strong>passive handle</strong> (just <code>ChunkId</code> + <code>GlobalBRGSlotIndex</code>). All per-instance mutation lives on the tracker/registerer via <code>Stage*</code> or <code>*Unsafe</code> methods — there are no methods directly on <code>InstanceLink</code>.</li>
+<li><code>ChunkLink</code> carries an ABA-safe <strong>generation counter</strong>. Use <code>ChunkLink.IsAlive</code> (not just <code>IsValid</code>) before operating on a stored link.</li>
+<li><strong>Overflow chunks</strong> are allocated automatically when <code>WriteChunk</code> or <code>AddInstance</code> exceeds <code>MaxInstancesPerChunk</code>. They share the primary's culling bounds. <code>GetInstanceLink</code>, <code>GetTotalChunkInstanceCount</code>, <code>ReleaseChunk</code>, and the <code>ChunkWritten</code> event all span primary + overflows transparently.</li>
+<li>The <strong><code>ChunkWritten</code></strong> event fires once per primary chunk after the primary AND all its overflow sub-chunks have completed their GPU writes. Use it to safely call <code>GetInstanceLink</code> after <code>WriteChunk</code>.</li>
+<li><code>WriteChunk</code> is a one-shot bulk write. For runtime instance mutation use <code>AddInstance</code> / <code>Stage*</code> / <code>*Unsafe</code>.</li>
+<li><code>BRGRegistrationTracker</code> is the non-MonoBehaviour entry point — wire <code>InitializeCallback</code> / <code>ShutdownCallback</code> for setup/teardown logic instead of subclassing.</li>
+</ul>
+<h2 id="using-instancelinks">Using InstanceLinks</h2>
+<p>An <code>InstanceLink</code> is the handle you pass to every per-instance modification call. It's just <code>ChunkId</code> + <code>GlobalBRGSlotIndex</code> — no methods on it directly.</p>
+<p><strong>How to obtain one:</strong></p>
+<ul>
+<li>Returned by <code>AddInstance(chunk, instanceData)</code> and <code>AddInstances(chunk, array, count)</code> when you grow a chunk one or many instances at a time.</li>
+<li>Returned by <code>MoveInstanceToChunk(source, dest, instanceData)</code> when moving between chunks.</li>
+<li>Looked up by logical index via <code>GetInstanceLink(chunkLink, localIndex)</code> — where <code>localIndex</code> is <code>0..GetTotalChunkInstanceCount(chunkLink) - 1</code> and spans primary + overflow chunks transparently. Use this for chunks populated by <code>WriteChunk</code> (not <code>AddInstance</code>), or any time you need the link for the Nth instance in a chunk.</li>
+</ul>
+<p><strong>How to use one:</strong> pass to any <code>Stage*</code> or <code>*Unsafe</code> method on the tracker (or, inside a registerer subclass, on <code>this</code>). Examples: <code>tracker.StageColor(link, color)</code>, <code>tracker.SetPositionUnsafe(link, pos)</code>, <code>tracker.StageRemove(link)</code>.</p>
+<p><strong>Timing:</strong> <code>WriteChunk</code> does not necessarily complete its GPU upload on the same frame — the write can be deferred (e.g. for a buffer resize). Do <strong>not</strong> call <code>GetInstanceLink</code> immediately after <code>WriteChunk</code> and assume the link is valid; the slot indices aren't guaranteed to exist yet. Instead, grab links from <strong>inside the <code>ChunkWritten</code> event handler</strong> (or <code>OnChunkWritten(int chunkId)</code> override in a subclass), which fires once per primary chunk after primary + all overflow sub-chunks have finished writing. That's the only path that's guaranteed safe. If you really need a link before the callback fires, check <code>link.IsValid</code> before using it.</p>
+<p><strong>Two reference patterns:</strong></p>
+<ul>
+<li><code>Examples/Scripts/BRGRegistererExample.cs</code> — stores <code>InstanceLink</code>s in a list as instances are added (<code>AddInstance</code> return value) and modifies them later with <code>Stage*</code> calls for batch updates.</li>
+<li><code>Examples/Scripts/TreeRandomColor.cs</code> — sits next to a <code>TerrainBRGRegisterer</code>, subscribes to <code>OnTreeChunkWritten</code>, then uses <code>Registration.GetInstanceLink(chunk, i)</code> + <code>Registration.SetColorUnsafe(link, color)</code> to apply a one-shot random color per tree.</li>
+</ul>
+<h2 id="stage-vs-unsafe">Stage* vs *Unsafe</h2>
+<p>There are two paths for modifying existing instances:</p>
+<ul>
+<li><strong><code>Stage*</code></strong> — keeps a per-slot dictionary on the tracker. Repeated writes to the same slot (or to different fields of the same slot) are merged into a single entry, then bulk-uploaded to <code>BRGRenderer</code> when the tracker flushes each frame. Use this if your code might touch the same slot more than once per frame — dedup is handled for you.</li>
+<li><strong><code>*Unsafe</code></strong> — bypasses the tracker and forwards each call directly to <code>BRGRenderer</code>. You must guarantee at most one write per slot per frame yourself. Two <code>*Unsafe</code> calls on the same slot in the same frame, or mixing <code>Stage*</code> and <code>*Unsafe</code> on the same slot, both produce undefined results.</li>
+</ul>
+<p>Default to <code>Stage*</code>. Only reach for <code>*Unsafe</code> in code paths where you've already deduplicated writes per slot.</p>
+<h2 id="public-api-surface">Public API surface</h2>
+<p>Flat name listing grouped by area. For signatures, parameter details, and behavior, read the linked source/docs.</p>
+<p><strong><code>BRGRenderer</code></strong> (singleton, via <code>BRGRenderer.Instance</code>)</p>
+<ul>
+<li>Lifecycle: <code>Instance</code>, <code>HasInstance</code>, <code>IsInitialized</code>, <code>Dispose</code>, <code>Shutdown</code>, <code>Reinitialize</code>, <code>RuntimeRefresh</code></li>
+<li>Registration: <code>RegisterRenderSignatureFromPrefab</code>, <code>RegisterRenderSignaturesFromPrefab</code>, <code>RegisterRenderSignature</code>, <code>UnregisterRenderSignature</code>, <code>PurgeUnusedPrototypes</code>, <code>GetPrototype</code>, <code>GetPrototypeRefCount</code>, <code>GetPrototypeInstanceCount</code></li>
+<li>Chunks: <code>AllocateChunk</code>, <code>WriteChunk</code>, <code>FreeChunk</code>, <code>IsChunkValid</code>, <code>GetChunkGeneration</code>, <code>GetChunkInstanceCount</code>, <code>GetChunkBounds</code>, <code>GetChunkPoolCount</code>, <code>GetChunkPoolIndex</code>, <code>GetPoolOccupancy</code>, <code>RecalculateChunkBounds</code>, <code>SetChunkEnabled</code>, <code>GetChunkEnabled</code></li>
+<li>Direct instance modification: <code>SetInstancePosition</code>, <code>SetInstanceRotation</code>, <code>SetInstanceScale</code>, <code>MoveAndRotateInstance</code>, <code>MoveInstance</code>, <code>SetInstanceColor</code>, <code>SetInstanceEnabled</code>, <code>IsInstanceEnabled</code>, <code>SampleInstanceLightProbe</code>, <code>AddInstance</code>, <code>AppendInstances</code>, <code>RemoveInstance</code></li>
+<li>Buffer / memory: <code>CompactBuffers</code>, <code>ShiftInstances</code>, <code>FlushStagedUploads</code>, <code>GetMemoryBreakdown</code>, <code>AllocatedBufferMemory</code></li>
+<li>Crossfade / density / probes: <code>SnapAllCrossfadeStates</code>, <code>SnapCrossfadeState</code>, <code>CrossfadeTimeScale</code>, <code>SetGlobalDensity</code>, <code>ResampleAllLightProbes</code></li>
+</ul>
+<p><strong><code>BRGRegistrationTracker</code></strong> (non-MonoBehaviour entry point)</p>
+<ul>
+<li>Lifecycle: <code>Initialize</code>, <code>Shutdown</code>, <code>InitializeCallback</code>, <code>ShutdownCallback</code>, <code>BRGSystem</code>, <code>IsRegistered</code>, <code>Name</code></li>
+<li>Events: <code>ChunkWritten</code></li>
+<li>Registration: <code>ExtractRenderSignature</code>, <code>RegisterRenderSignatureFromPrefab</code>, <code>RegisterRenderSignaturesFromPrefab</code>, <code>RegisterRenderSignature</code>, <code>UnregisterRenderSignature</code></li>
+<li>Chunks: <code>MaxInstancesPerChunk</code>, <code>AllocChunk</code>, <code>WriteChunk</code>, <code>ReleaseChunk</code>, <code>RecalculateChunkBounds</code>, <code>SetChunkEnabled</code>, <code>GetChunkEnabled</code>, <code>SetRenderEnabled</code></li>
+<li>Instance lifecycle: <code>AddInstance</code>, <code>AddInstances</code>, <code>MoveInstanceToChunk</code></li>
+<li>Lookups: <code>GetInstanceLink</code>, <code>GetTotalChunkInstanceCount</code>, <code>GetOverflowChunkCount</code>, <code>GetPerChunkInstanceCounts</code></li>
+<li>Staged writes: <code>StagePosition</code>, <code>StageRotation</code>, <code>StageScale</code>, <code>StageMoveAndRotate</code>, <code>StageMove</code>, <code>StageColor</code>, <code>StageSetEnabled</code>, <code>StageRemove</code></li>
+<li>Unsafe direct writes: <code>SetPositionUnsafe</code>, <code>SetRotationUnsafe</code>, <code>SetScaleUnsafe</code>, <code>MoveAndRotateUnsafe</code>, <code>MoveUnsafe</code>, <code>SetColorUnsafe</code>, <code>SetEnabledUnsafe</code>, <code>RemoveUnsafe</code>, <code>SampleLightProbeUnsafe</code></li>
+</ul>
+<p><strong><code>BRGRegisterer</code></strong> (MonoBehaviour subclass entry point)</p>
+<ul>
+<li>Implement: <code>OnInitialize</code>, <code>OnShutdown</code> (abstract); <code>OnChunkWritten(int chunkId)</code> (virtual)</li>
+<li>Lifecycle: <code>Initialize</code>, <code>Shutdown</code>, <code>Registration</code> (the underlying tracker)</li>
+<li>Protected (for use inside your subclass): all tracker methods above for registration / chunks / instance lifecycle / lookups</li>
+<li>Public (also callable from outside): <code>SetChunkEnabled</code>, <code>GetChunkEnabled</code>, <code>SetRenderEnabled</code>, all <code>Stage*</code> and <code>*Unsafe</code> methods</li>
+</ul>
+<p><strong>Components users add in the editor</strong></p>
+<ul>
+<li><code>BRGInstancedRendererConfig</code> — singleton config asset (auto-created at <code>Assets/BRGInstancedRenderer/BRGIRConfig.asset</code>, auto-added to Preloaded Assets)</li>
+<li><code>BRGGameObjectGroup</code> + <code>BRGGameObjectLink</code> — GameObject batch conversion with native transform tracking</li>
+<li><code>TerrainBRGRegisterer</code> + <code>BRGTerrainDetailOverride</code> — terrain tree/detail registration with optional LOD-group detail prototypes</li>
+<li><code>BRGPrototypeExtraData</code> — per-prefab shadow cascade / shadow LOD / density / screen-size / LOD-fade overrides</li>
+<li><code>BRGMeshLodData</code> — Unity 6.2+ Mesh LOD level config (alternative to LOD Groups)</li>
+<li><code>BRGCameraSettings</code> — per-camera LOD bias multiplier and <code>SnapCrossfade()</code></li>
+</ul>
+<h2 id="footguns">Footguns</h2>
+<ul>
+<li>In <code>OnShutdown()</code>, clear only local state. The base class frees chunks and unregisters prototypes automatically — don't do it yourself or you'll double-free.</li>
+<li>Don't call <code>BRGRenderer.Instance.AllocateChunk</code> / <code>FreeChunk</code> / <code>RegisterRenderSignature</code> directly from inside a registerer subclass. Use the inherited protected wrappers (<code>AllocChunk</code>, <code>ReleaseChunk</code>, <code>RegisterRenderSignatureFromPrefab</code>, etc.) so the base class can track them for automatic cleanup.</li>
+<li>After <code>WriteChunk</code>, don't assume <code>GetInstanceLink</code> will return valid handles on the same call — the GPU write may be deferred. Subscribe to <code>ChunkWritten</code> (or override <code>OnChunkWritten</code> in your subclass) and call <code>GetInstanceLink</code> from there.</li>
+<li>A stored <code>ChunkLink</code> can go stale if the chunk was freed elsewhere. Use <code>ChunkLink.IsAlive</code> (which checks generation against <code>BRGRenderer</code>'s current state) before mutating through it, not just <code>IsValid</code>.</li>
+<li>For per-camera operations (e.g. snap crossfade after a teleport on one specific camera), add a <code>BRGCameraSettings</code> component to that camera or call <code>BRGRenderer.Instance.SnapCrossfadeState(camera)</code>. <code>SnapAllCrossfadeStates()</code> covers every camera at once.</li>
+<li>Pool size is hard-coded to 64. Don't try to configure it. <strong>Max Pools Per Chunk</strong> in the config controls how many pools a chunk may hold (= max instances per chunk).</li>
+<li><code>Stage*</code> and <code>*Unsafe</code> cannot be safely used on the same slot in the same frame, and <code>*Unsafe</code> cannot be used twice on the same slot in the same frame either. See the Stage* vs *Unsafe section above.</li>
+</ul>
+<h2 id="closing">Closing</h2>
+<p>If you need something not covered here, read the source in <code>Runtime/Scripts/</code> (it's the authoritative truth). This file is just a router — when in doubt, open the file and read it.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

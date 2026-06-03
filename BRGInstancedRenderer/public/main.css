@@ -282,6 +282,34 @@ footer {
   opacity: 0.5;
 }
 
+/* --- AI Reference copy button --- */
+.copy-ai-docs-btn {
+  display: inline-block;
+  background: var(--brand-primary);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5em 1em;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 1em;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.copy-ai-docs-btn:hover:not(:disabled) {
+  background: var(--brand-primary-hover);
+}
+
+.copy-ai-docs-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.copy-ai-docs-btn:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
 /* ===== LANDING PAGE / HERO ===== */
 
 .hero-section {

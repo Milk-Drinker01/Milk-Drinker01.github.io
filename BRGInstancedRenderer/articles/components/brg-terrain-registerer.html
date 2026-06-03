@@ -301,6 +301,22 @@
 public static void ClearAllExtractionCaches()
 </code></pre>
 <p>Clear cached tree and detail extraction data for a specific terrain or all terrains. The component caches extraction data to avoid redundant work across enable/disable cycles. Call these when terrain data has changed externally and you need a clean re-extraction.</p>
+<h2 id="runtime-distance-overrides">Runtime Distance Overrides</h2>
+<p>Two static properties let you override tree and detail render distances at runtime across <strong>all active terrain registerers</strong>. Useful for graphics-quality scaling (e.g. push trees and grass farther on high-end hardware, pull them in on low-end).</p>
+<pre><code class="lang-csharp">public static float TerrainBRGRegisterer.TreeRenderDistance   // default: float.MaxValue
+public static float TerrainBRGRegisterer.DetailRenderDistance // default: float.MaxValue
+</code></pre>
+<p>The effective render distance is <code>min(terrain setting, override)</code> — so the override can only <em>reduce</em> the distance, never exceed what the terrain itself was configured for. Setting either back to <code>float.MaxValue</code> removes the override.</p>
+<p>Assigning to these properties immediately re-applies the new distance to every registered chunk on every active terrain.</p>
+<pre><code class="lang-csharp">// pull tree render distance in to 200m globally
+TerrainBRGRegisterer.TreeRenderDistance = 200f;
+
+// pull detail render distance in to 80m globally
+TerrainBRGRegisterer.DetailRenderDistance = 80f;
+
+// remove the override
+TerrainBRGRegisterer.TreeRenderDistance = float.MaxValue;
+</code></pre>
 <h2 id="how-trees-work">How Trees Work</h2>
 <p>Tree instances are read from the terrain data when the component initializes. They are:</p>
 <ol>
