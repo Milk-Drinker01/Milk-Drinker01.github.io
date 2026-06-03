@@ -130,7 +130,7 @@ namespace BRGInstancedRenderer
                     position = new float3(i * 2f, 0f, 0f),
                     rotation = quaternion.identity,
                     scale = new float3(1f),
-                    prototypeIndex = _protoIndex,
+                    signatureIndex = _protoIndex,
                     color = new Color32(255, 255, 255, 255)
                 };
             }
@@ -234,9 +234,9 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 <td>Local scale.</td>
 </tr>
 <tr>
-<td><strong>prototypeIndex</strong></td>
+<td><strong>signatureIndex</strong></td>
 <td>int</td>
-<td>Global prototype index returned by <code>RegisterRenderSignatureFromPrefab</code> or <code>RegisterRenderSignature</code>.</td>
+<td>Global signature/prototype index returned by <code>RegisterRenderSignatureFromPrefab</code> or <code>RegisterRenderSignature</code>.</td>
 </tr>
 <tr>
 <td><strong>color</strong></td>

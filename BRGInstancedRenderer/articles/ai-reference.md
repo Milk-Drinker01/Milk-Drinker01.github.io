@@ -33,10 +33,10 @@ All paths below are inside the BRGInstancedRenderer package folder in the Unity 
 |---------------|------|
 | Tracker API + struct shapes (`InstanceData`, `InstanceLink`, `ChunkLink`, `RenderSignature`) | `Runtime/Scripts/Registerers/BRGRegistrationTracker.cs` (its MonoBehaviour wrapper lives in `Runtime/Scripts/Registerers/BRGRegisterer.cs`) |
 | MonoBehaviour subclass API + protected forwarders | `Runtime/Scripts/Registerers/BRGRegisterer.cs` |
-| Singleton (`BRGRenderer`) full API | `Runtime/Scripts/Core/BRGInstancedRenderer.cs` + partials (`.Batches.cs`, `.Chunks.cs`, `.Culling.cs`, `.HZB.cs`, `.Prototypes.cs`, `.SpeedTree.cs`, `.Upload.cs`) |
+| Singleton (`BRGRenderer`) full API | `Runtime/Scripts/Core/BRGInstancedRenderer.cs` + partials (`.Batches.cs`, `.Chunks.cs`, `.Culling.cs`, `.Debug.cs`, `.HZB.cs`, `.Prototypes.cs`, `.SpeedTree.cs`, `.Upload.cs`) |
 | Working custom-registerer example (uses `Stage*` patterns) | `Examples/Scripts/BRGRegistererExample.cs` |
 | Per-instance color via `InstanceLink` on a real terrain (uses `GetInstanceLink` + `*Unsafe`) | `Examples/Scripts/TreeRandomColor.cs` |
-| Reference terrain implementation | `Runtime/Scripts/Registerers/Terrain/TerrainBRGRegisterer.cs` + `.Trees.cs` / `.Details.cs` partials |
+| Reference terrain implementation | `Runtime/Scripts/Registerers/Terrain/TerrainBRGRegisterer.cs` + `.Trees.cs` / `.Details.cs` / `.Details.Extraction.cs` partials |
 | Reference GameObject-group implementation | `Runtime/Scripts/Registerers/GameObjects/BRGGameObjectGroup.cs` |
 | Config schema (every serialized field + tooltips) | `Runtime/Scripts/Config/BRGInstancedRendererConfig.cs` |
 | Per-prototype shadow / LOD / density overrides | `Runtime/Scripts/Config/BRGPrototypeExtraData.cs` |
@@ -89,7 +89,7 @@ Default to `Stage*`. Only reach for `*Unsafe` in code paths where you've already
 
 ## Public API surface
 
-Flat name listing grouped by area. For signatures, parameter details, and behavior, read the linked source/docs.
+**Names only — do NOT infer signatures from names.** Before calling any method, open the source file (see *Where to look*) and read its actual signature. Common pitfalls: `AllocChunk()` takes no arguments (bounds go in `WriteChunk`, not `AllocChunk`); `WriteChunk(link, instances, bounds, cullDistance, instanceCullDistance)` takes a `ChunkLink` and a `NativeArray<InstanceData>`, not a chunk id and a managed array; the `InstanceData` field is `signatureIndex` (not `prototypeIndex`).
 
 **`BRGRenderer`** (singleton, via `BRGRenderer.Instance`)
 - Lifecycle: `Instance`, `HasInstance`, `IsInitialized`, `Dispose`, `Shutdown`, `Reinitialize`, `RuntimeRefresh`

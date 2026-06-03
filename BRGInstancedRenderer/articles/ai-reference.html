@@ -128,7 +128,7 @@ function copyAIDocs(btn) {
 </tr>
 <tr>
 <td>Singleton (<code>BRGRenderer</code>) full API</td>
-<td><code>Runtime/Scripts/Core/BRGInstancedRenderer.cs</code> + partials (<code>.Batches.cs</code>, <code>.Chunks.cs</code>, <code>.Culling.cs</code>, <code>.HZB.cs</code>, <code>.Prototypes.cs</code>, <code>.SpeedTree.cs</code>, <code>.Upload.cs</code>)</td>
+<td><code>Runtime/Scripts/Core/BRGInstancedRenderer.cs</code> + partials (<code>.Batches.cs</code>, <code>.Chunks.cs</code>, <code>.Culling.cs</code>, <code>.Debug.cs</code>, <code>.HZB.cs</code>, <code>.Prototypes.cs</code>, <code>.SpeedTree.cs</code>, <code>.Upload.cs</code>)</td>
 </tr>
 <tr>
 <td>Working custom-registerer example (uses <code>Stage*</code> patterns)</td>
@@ -140,7 +140,7 @@ function copyAIDocs(btn) {
 </tr>
 <tr>
 <td>Reference terrain implementation</td>
-<td><code>Runtime/Scripts/Registerers/Terrain/TerrainBRGRegisterer.cs</code> + <code>.Trees.cs</code> / <code>.Details.cs</code> partials</td>
+<td><code>Runtime/Scripts/Registerers/Terrain/TerrainBRGRegisterer.cs</code> + <code>.Trees.cs</code> / <code>.Details.cs</code> / <code>.Details.Extraction.cs</code> partials</td>
 </tr>
 <tr>
 <td>Reference GameObject-group implementation</td>
@@ -207,7 +207,7 @@ function copyAIDocs(btn) {
 </ul>
 <p>Default to <code>Stage*</code>. Only reach for <code>*Unsafe</code> in code paths where you've already deduplicated writes per slot.</p>
 <h2 id="public-api-surface">Public API surface</h2>
-<p>Flat name listing grouped by area. For signatures, parameter details, and behavior, read the linked source/docs.</p>
+<p><strong>Names only — do NOT infer signatures from names.</strong> Before calling any method, open the source file (see <em>Where to look</em>) and read its actual signature. Common pitfalls: <code>AllocChunk()</code> takes no arguments (bounds go in <code>WriteChunk</code>, not <code>AllocChunk</code>); <code>WriteChunk(link, instances, bounds, cullDistance, instanceCullDistance)</code> takes a <code>ChunkLink</code> and a <code>NativeArray&lt;InstanceData&gt;</code>, not a chunk id and a managed array; the <code>InstanceData</code> field is <code>signatureIndex</code> (not <code>prototypeIndex</code>).</p>
 <p><strong><code>BRGRenderer</code></strong> (singleton, via <code>BRGRenderer.Instance</code>)</p>
 <ul>
 <li>Lifecycle: <code>Instance</code>, <code>HasInstance</code>, <code>IsInitialized</code>, <code>Dispose</code>, <code>Shutdown</code>, <code>Reinitialize</code>, <code>RuntimeRefresh</code></li>
