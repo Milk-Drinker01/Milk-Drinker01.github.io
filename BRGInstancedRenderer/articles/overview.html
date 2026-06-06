@@ -91,18 +91,19 @@
 <p><img src="../images/BRGIR-HDRP.png" alt="BRG Instanced Renderer HDRP"></p>
 <h2 id="what-is-brg-instanced-renderer">What is BRG Instanced Renderer?</h2>
 <p>BRG Instanced Renderer is the best way to optimize rendering in your project. Render massive amounts of instances with minimal draw calls, and stream millions of instances to the system with zero hitching. BRG Instanced Renderer also runs in the editor outside of play mode, for rapid editor speed and iteration times.</p>
-<h2 id="why-switch-from-your-existing-gpu-instancing-solution">Why Switch From Your Existing GPU Instancing Solution?</h2>
+<h2 id="why-upgrade-to-brg-instanced-renderer">Why Upgrade to BRG Instanced Renderer?</h2>
 <p>BRG Instanced Renderer has one main advantage over the competition — it is built on top of Unity's latest <strong>Batch Renderer Group Indirect API</strong>. Existing solutions still use the older API (<code>Graphics.RenderMeshIndirect</code> or <code>DrawMeshInstancedIndirect</code>).</p>
 <p>The new API is better for the following reasons:</p>
 <ul>
 <li><strong>Persistent Draw Commands</strong> — less CPU work every frame</li>
 <li><strong>SRP Batching Support</strong> — pass merging</li>
 <li><strong>Shared Buffers &amp; Optimized Memory Layout</strong></li>
+<li><strong>Deeper integration with the Render Pipeline</strong></li>
 </ul>
 <p>On top of exceptional performance, you can expect a true &quot;works right out of the box&quot; setup. The renderer works with zero modifications to your shaders thanks to the Batch Renderer Group variants that Unity automatically creates for all SRP shaders.</p>
 <p>Additionally, you can expect unmatched support. We use BRG Instanced Renderer as a crucial integration in our own shipped game, which makes fixing any reported bugs or issues our top priority.</p>
 <h2 id="ultimate-performance">Ultimate Performance</h2>
-<p>Thanks to the latest Batch Renderer Group API, BRG Instanced Renderer is designed to achieve industry-leading GPU instancing performance. Everything is designed to run on the GPU via compute shaders.</p>
+<p>Thanks to the latest Batch Renderer Group API, BRG Instanced Renderer delivers industry-leading GPU instancing performance. Everything is designed to run on the GPU via compute shaders.</p>
 <ul>
 <li>Innovative instance pooling and chunk system
 <ul>
@@ -144,7 +145,7 @@
 </ul>
 </li>
 </ul>
-<h2 id="we-have-the-features-you-need">We Have the Features You Need</h2>
+<h2 id="packed-with-features">Packed With Features</h2>
 <p>No missing links. BRG Instanced Renderer comes packed with every feature you could possibly need.</p>
 <ul>
 <li>LOD Groups with all normal crossfade options
@@ -159,11 +160,11 @@
 <li>Per-instance rendering layers</li>
 <li>Per-instance motion vectors toggle for correct TAA and upscaling</li>
 <li>LOD Bias from Quality Settings, with optional per-camera multiplier</li>
-<li>User-interactable API for your existing streaming and loading setups</li>
+<li>User-interactable API for procedural generation and your existing streaming/loading setups</li>
 <li>Both APV and legacy light probes are supported</li>
 <li>Optional per-instance color</li>
 <li>Render terrain details with LOD groups</li>
-<li>SpeedTree Wind supported natively — BRG Instanced Renderer is the only GPU instancer with this feature</li>
+<li>SpeedTree Wind supported natively and works out of the box</li>
 <li>Negative instance scale handling (2 modes)
 <ul>
 <li>Proper Flip Winding</li>
@@ -188,7 +189,7 @@
 </ul>
 </li>
 </ul>
-<h2 id="guaranteed-to-work">Guaranteed to Work</h2>
+<h2 id="guaranteed-compatibility">Guaranteed Compatibility</h2>
 <p>Other assets fail with some GPU/graphics API combinations. BRG Instanced Renderer has been extensively tested, confirmed working, and tuned for all major GPU vendors, across all graphics APIs. (Compute-capable graphics API and device required.)</p>
 <table>
 <thead>
@@ -215,12 +216,16 @@
 <td>Metal</td>
 </tr>
 <tr>
+<td>Meta Quest</td>
+<td>Vulkan</td>
+</tr>
+<tr>
 <td>PlayStation 5</td>
 <td>NGGC</td>
 </tr>
 </tbody>
 </table>
-<p>Xbox and Nintendo Switch should work but have not been tested yet. If you have access to console hardware, please reach out and let us know your results.</p>
+<p>* Xbox and Nintendo Switch rendering should work but is not yet tested. If you have access to console hardware, please reach out and let us know your results.</p>
 <h2 id="5-star-rated-developer-and-support">5-Star Rated Developer and Support</h2>
 <p>Our team has been delivering 5-star assets for 4 years, with our reviews emphasizing exceptional support speed and quality. Contact us through our Discord for any bug reports or feature requests. We use BRG Instanced Renderer in our own shipped product, which makes fixing all reported bugs our top priority.</p>
 <h2 id="requirements">Requirements</h2>
