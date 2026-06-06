@@ -44,7 +44,7 @@
       <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
         <div class="container-xxl flex-nowrap">
           <a class="navbar-brand" href="../../index.html">
-            <img id="logo" class="svg" src="../../logo.png" alt="BRG Instanced Renderer">
+            <img id="logo" class="svg" src="../../logo.svg" alt="BRG Instanced Renderer">
             BRG Instanced Renderer
           </a>
           <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,8 +88,49 @@
 <h1 id="brg-instance-group">BRG Instance Group</h1>
 
 <hr>
-<p>Converts a hierarchy of prefab instances into GPU-instanced rendering via BRG Instanced Renderer. Instances are spatially batched into chunks and serialized, so startup is instant with no runtime transform scanning.</p>
-<p>For a step-by-step setup guide, see <a href="../getting-started/prefab-instances.html">Getting Started: GameObjects</a>.</p>
+<p>Converts a hierarchy of child GameObjects into a compact baked instance blob and renders it via BRG Instanced Renderer with <strong>zero per-instance GameObject overhead</strong>. After baking, the child GameObjects are destroyed — only transforms and render signatures remain, stored on the component itself.</p>
+<p>This is an alternative to <a href="brg-gameobject-group.html">BRG GameObject Group</a>. Use it when you don't need per-instance runtime transform tracking, scripting access, or scene-level edits on individual instances.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>BRG GameObject Group</th>
+<th>BRG Instance Group</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Source GameObjects</td>
+<td>Kept (renderers disabled)</td>
+<td><strong>Destroyed at bake</strong></td>
+</tr>
+<tr>
+<td>Per-instance link components</td>
+<td>Yes (<code>BRGGameObjectLink</code>)</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Native transform tracking</td>
+<td>Yes (auto-syncs to GPU when transforms move)</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Storage size</td>
+<td>Higher</td>
+<td><strong>Lower</strong> (~44 bytes per instance)</td>
+</tr>
+<tr>
+<td>Per-instance scene edits</td>
+<td>Yes</td>
+<td>No (re-bake or <code>Expand</code> first)</td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Static or runtime-movable groups that still need editor selectability</td>
+<td>Large static groups where overhead matters (forests, props, debris)</td>
+</tr>
+</tbody>
+</table>
 <h2 id="inspector-properties">Inspector Properties</h2>
 <table>
 <thead>
@@ -102,22 +143,28 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>Chunk Size</strong></td>
-<td>float</td>
-<td>50m</td>
-<td>World-space size of the spatial grid cells. Instances are grouped into chunks based on their position. Affects culling granularity — smaller chunks cull more precisely, larger chunks reduce overhead.</td>
+<td><strong>Chunk Mode</strong></td>
+<td>enum</td>
+<td>Static (Multi Chunk)</td>
+<td>Controls how instances are spatially organized. See <a href="brg-gameobject-group.html#chunk-modes">Chunk Modes</a> on the GameObject Group page — the same modes apply here.</td>
 </tr>
 <tr>
-<td><strong>Cull Distance</strong></td>
+<td><strong>Chunk Size (m)</strong></td>
+<td>float</td>
+<td>256m</td>
+<td>World-space size of the spatial grid cells. Only shown for <strong>Static (Multi Chunk)</strong> mode.</td>
+</tr>
+<tr>
+<td><strong>Chunk Cull Distance (m)</strong></td>
 <td>float</td>
 <td>0</td>
-<td>Maximum render distance in meters. Instances in this group beyond this distance are not rendered. 0 means no distance limit.</td>
+<td>Max render distance per chunk. 0 = no distance culling. Hidden in <strong>Dynamic Global Chunk</strong> mode.</td>
 </tr>
 <tr>
-<td><strong>Show Chunk Gizmos</strong></td>
+<td><strong>Detect Prefab Overrides</strong></td>
 <td>bool</td>
-<td>true</td>
-<td>Draws wireframe bounding boxes in the Scene View for each chunk, color-coded by fill percentage.</td>
+<td>false</td>
+<td>When enabled, instances with property overrides (e.g. swapped material, custom shadow settings, <a href="brg-prototype-extra-data.html">BRG Prototype Extra Data</a> differences) bake as separate prototypes. When disabled, all instances of the same prefab share one prototype and overrides are ignored. Only shown before baking.</td>
 </tr>
 </tbody>
 </table>
@@ -126,48 +173,102 @@
 <thead>
 <tr>
 <th>Button</th>
+<th>When</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Convert Children to Instances</strong></td>
-<td>Scans all direct children, groups them into spatial chunks, serializes the data, and disables their Mesh Renderers and LOD Groups.</td>
+<td><strong>Bake Children</strong></td>
+<td>Before bake</td>
+<td>Walks all children, packs each LODGroup or standalone MeshRenderer as a baked instance, then <strong>destroys the source GameObjects</strong>. Shows a confirmation dialog. Not undoable — back up your scene first.</td>
 </tr>
 <tr>
-<td><strong>Revert to GameObjects</strong></td>
-<td>Re-enables original Mesh Renderers and LOD Groups, returning to standard Unity rendering.</td>
-</tr>
-<tr>
-<td><strong>Refresh</strong></td>
-<td>Rebuilds chunk data from the current state of the source objects. Use after moving, adding, or removing instances.</td>
+<td><strong>Expand to GameObjects</strong></td>
+<td>After bake</td>
+<td>Recreates editable GameObjects from the baked data. If the original was a prefab, the prefab is re-instantiated (preserving the prefab link). For non-prefab content, GameObjects are reconstructed from the stored mesh/material data.</td>
 </tr>
 </tbody>
 </table>
-<p>You can also convert arbitrary GameObjects (not just children) via the hierarchy context menu: <strong>GameObject &gt; BRG &gt; Convert to BRG Instances</strong>. This creates a new BRG Instance Group and converts the selected objects into it.</p>
+<p>You can also bake directly from the hierarchy context menu: <strong>GameObject &gt; BRG &gt; Convert to BRG Instances (Instance Group, removes original GameObjects)</strong>. This creates a new BRG Instance Group, parents the selection under it, and bakes immediately.</p>
+<h2 id="what-bake-preserves-and-loses">What Bake Preserves and Loses</h2>
+<p>Baking captures only what BRG needs to render. <strong>Anything else on the source GameObjects is lost.</strong></p>
+<p>Preserved:</p>
+<ul>
+<li>World-space position, rotation, scale (lossy scale)</li>
+<li>Mesh, materials, LOD layout, motion vector mode, shadow casting mode, rendering layer mask, layer</li>
+<li>LOD reference size and fade mode</li>
+<li>Per-prototype settings from any <a href="brg-prototype-extra-data.html">BRG Prototype Extra Data</a> on the source (shadow cascade, density, screen-size cull, etc.)</li>
+<li>Prefab asset reference (used by <code>Expand</code> to re-instantiate the original prefab)</li>
+</ul>
+<p>Lost:</p>
+<ul>
+<li>GameObject names, tags, layers beyond what BRG uses</li>
+<li>Extra components (colliders, scripts, audio sources, lightmap indices, etc.)</li>
+<li>Per-instance material property block overrides</li>
+<li>Anything outside the renderer/LODGroup hierarchy</li>
+</ul>
 <h2 id="status-display">Status Display</h2>
-<p>When converted, the inspector shows:</p>
+<p>After baking, the inspector shows:</p>
 <ul>
-<li><strong>Converted:</strong> Yes/No</li>
-<li><strong>Chunk Count:</strong> Number of spatial chunks</li>
-<li><strong>Prototype Count:</strong> Number of unique prefab types</li>
-<li><strong>Instance Count:</strong> Total instances across all chunks</li>
+<li><strong>Instances</strong> — total baked instance count</li>
+<li><strong>Prototypes</strong> — number of unique render signatures</li>
 </ul>
-<h2 id="how-chunks-work">How Chunks Work</h2>
-<p>During conversion, instances are placed into a spatial grid based on their world position and the <strong>Chunk Size</strong> setting. If a grid cell exceeds the maximum instance capacity (determined by <a href="brg-instanced-renderer-config.md">Config</a> pool settings), it is split into multiple chunks.</p>
-<p>Each chunk stores:</p>
+<h2 id="runtime-properties">Runtime Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>IsBaked</strong></td>
+<td>bool</td>
+<td><code>true</code> after baking, <code>false</code> before bake or after Expand.</td>
+</tr>
+<tr>
+<td><strong>InstanceCount</strong></td>
+<td>int</td>
+<td>Total baked instance count.</td>
+</tr>
+<tr>
+<td><strong>PrototypeCount</strong></td>
+<td>int</td>
+<td>Number of unique render signatures.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="how-it-works">How It Works</h2>
+<ol>
+<li><strong>Bake</strong> walks each direct child's hierarchy. Every LODGroup and every standalone MeshRenderer (one not claimed by a LODGroup) becomes one BRG instance.</li>
+<li>Render signatures are extracted via the registration tracker and deduplicated. With <strong>Detect Prefab Overrides</strong> off, prefab instances dedupe by prefab identity (overrides ignored). With it on, instances that differ from their base prefab get distinct signatures.</li>
+<li>Each instance's world transform is packed into a 44-byte record (position, rotation, scale, local prototype index).</li>
+<li>The packed blob and the signature snapshots are stored on the component as serialized data.</li>
+<li>The source GameObjects are destroyed.</li>
+<li>At runtime (or in the editor with <code>ExecuteAlways</code>), <code>OnInitialize</code> registers the snapshotted signatures with BRGRenderer, allocates chunks based on the chosen Chunk Mode, and uploads the unpacked instance data.</li>
+</ol>
+<h2 id="when-to-use">When to Use</h2>
+<p>Use <strong>BRG Instance Group</strong> for:</p>
 <ul>
-<li>A bounding box used for hierarchical culling</li>
-<li>Instance data (position, rotation, scale, prototype index)</li>
-<li>The cull distance for distance-based culling</li>
+<li>Large counts of static decorative props (tens of thousands of trees, rocks, debris, etc.)</li>
+<li>Groups where you'd otherwise want to &quot;flatten&quot; or strip the GameObjects for memory reasons</li>
+<li>Scenes where you never need to script per-instance edits at runtime</li>
 </ul>
-<p>Chunks are the first level of the hierarchical culling pipeline — chunks outside the camera frustum or behind occluders are skipped entirely before any per-instance work.</p>
+<p>Use <a href="brg-gameobject-group.html">BRG GameObject Group</a> instead when:</p>
+<ul>
+<li>Instances may move at runtime and need automatic transform sync</li>
+<li>You want to keep selecting and editing individual instances in the Scene View</li>
+<li>You need other components (colliders, scripts) on each instance</li>
+</ul>
 <h2 id="notes">Notes</h2>
 <ul>
-<li>Source GameObjects remain in the hierarchy after conversion. Their renderers are disabled but you can still select and move them.</li>
-<li>After editing source objects, always click <strong>Refresh</strong> to update the serialized chunk data.</li>
-<li>Each source object gets a <strong>BRG Instance Link</strong> component that tracks its relationship to the group.</li>
-<li>Mixed prefab types under the same parent are fully supported. Each unique prefab becomes a separate prototype.</li>
+<li>Bake permanently modifies the scene. The dialog warns you — back up first.</li>
+<li><code>Expand to GameObjects</code> is the safety valve — you can always recover an editable hierarchy from the baked data (modulo the lost extras listed above).</li>
+<li>The Chunk Mode default differs from BRG GameObject Group (<code>Static (Multi Chunk)</code> here, <code>Static (Single Chunk)</code> there) because Instance Group is intended for large groups.</li>
+<li>Per-prefab settings (shadow optimization, density, crossfade) are read from <a href="brg-prototype-extra-data.html">BRG Prototype Extra Data</a> on the source prefab at bake time and frozen into the signature.</li>
 </ul>
 
 </article>

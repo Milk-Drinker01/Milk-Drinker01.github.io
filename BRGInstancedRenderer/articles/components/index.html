@@ -92,9 +92,13 @@
 <h4 id="brg-terrain-registerer"><a href="brg-terrain-registerer.html">BRG Terrain Registerer</a></h4>
 <p>Registers a Unity Terrain's trees and details for GPU-instanced rendering.</p>
 <h4 id="brg-gameobject-group"><a href="brg-gameobject-group.html">BRG GameObject Group</a></h4>
-<p>Converts prefab hierarchies into GPU-instanced rendering with spatial chunking, serialization, and native transform tracking.</p>
+<p>Converts prefab hierarchies into GPU-instanced rendering with spatial chunking, serialization, and native transform tracking. Source GameObjects are kept (renderers disabled).</p>
+<h4 id="brg-instance-group"><a href="brg-instance-group.html">BRG Instance Group</a></h4>
+<p>Compact baked alternative to BRG GameObject Group. Destroys the source GameObjects after baking, storing only transforms and render signatures on the component itself — zero per-instance GameObject overhead.</p>
 <h4 id="brg-prototype-extra-data"><a href="brg-prototype-extra-data.html">BRG Prototype Extra Data</a></h4>
 <p>Optional per-prefab overrides for shadows, LOD, motion vectors, and dynamic density.</p>
+<h4 id="brg-prototype-group"><a href="brg-prototype-group.html">BRG Prototype Group</a></h4>
+<p>ScriptableObject that groups prototypes for runtime LOD bias and density control. One <code>SetLodBias</code> / <code>SetDensity</code> call updates every member at once.</p>
 <h4 id="brg-terrain-detail-override"><a href="brg-terrain-detail-override.html">BRG Terrain Detail Override</a></h4>
 <p>Substitutes a terrain detail prototype with a different prefab (e.g. one with an LOD Group).</p>
 <h4 id="brg-camera-settings"><a href="brg-camera-settings.html">BRG Camera Settings</a></h4>

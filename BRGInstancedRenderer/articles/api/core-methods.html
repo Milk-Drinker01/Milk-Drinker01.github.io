@@ -90,32 +90,9 @@
 <hr>
 <p>Public methods on the <code>BRGRenderer</code> singleton for runtime control.</p>
 <p>Access the singleton via <code>BRGRenderer.Instance</code>.</p>
-<h2 id="setglobaldensity">SetGlobalDensity</h2>
-<pre><code class="lang-csharp">public void SetGlobalDensity(float density)
-</code></pre>
-<p>Set the global density scale (0–1). Prototypes with <strong>Enable Global Density Scaling</strong> enabled on their <a href="../components/brg-prototype-extra-data-density.html">BRG Prototype Extra Data / Density</a> will thin out instances proportionally.</p>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>density</strong></td>
-<td>float</td>
-<td>Density multiplier, clamped to 0–1. 1 = full density, 0 = maximum culling.</td>
-</tr>
-</tbody>
-</table>
-<pre><code class="lang-csharp">// reduce density to 50% (e.g. as a graphics setting)
-BRGRenderer.Instance.SetGlobalDensity(0.5f);
-
-// restore full density
-BRGRenderer.Instance.SetGlobalDensity(1f);
-</code></pre>
+<blockquote>
+<p>For runtime LOD bias and density scaling per prototype group, see <a href="../components/brg-prototype-group.html">BRG Prototype Group</a>. The old singleton-level <code>SetGlobalDensity</code> has been replaced by <code>BRGPrototypeGroup.SetDensity()</code>.</p>
+</blockquote>
 <h2 id="crossfadetimescale">CrossfadeTimeScale</h2>
 <pre><code class="lang-csharp">public float CrossfadeTimeScale { get; set; }
 </code></pre>

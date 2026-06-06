@@ -90,12 +90,31 @@
 <hr>
 <p>An optional component that you add to <strong>prefab assets</strong> to customize how BRG Instanced Renderer handles shadow rendering, LOD behavior, motion vectors, and dynamic density for that specific prefab type.</p>
 <p>Any prefab registered as a prototype (via <a href="brg-gameobject-group.html">BRG GameObject Group</a> or <a href="brg-terrain-registerer.html">Terrain Registerer</a>) will pick up these settings automatically.</p>
+<h2 id="prototype-group">Prototype Group</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Prototype Group</strong></td>
+<td><a href="brg-prototype-group.html">BRGPrototypeGroup</a></td>
+<td>None</td>
+<td>Optional group asset for runtime LOD bias and density control. Assign the same group to multiple prefabs and call <code>group.SetLodBias()</code> / <code>group.SetDensity()</code> to update them all together. When unassigned, the prototype uses default LOD bias (1) and full density (1).</td>
+</tr>
+</tbody>
+</table>
 <h4 id="shadow-optimizations"><a href="brg-prototype-extra-data-shadow.html">Shadow Optimizations</a></h4>
 <p>Per-prototype shadow cascade limits, shadow LOD, shadow distance, and shadow crossfade cascade overrides.</p>
 <h4 id="screen-size--lod-overrides"><a href="brg-prototype-extra-data-lod.html">Screen Size / LOD Overrides</a></h4>
 <p>Animated crossfade duration overrides and screen-size culling.</p>
 <h4 id="density"><a href="brg-prototype-extra-data-density.html">Density</a></h4>
-<p>Runtime density scaling and GPU-side dynamic density culling with screen-size or distance modes.</p>
+<p>Per-prototype distance density ramp (screen-size or distance based). For runtime global density scaling, assign a <a href="brg-prototype-group.html">Prototype Group</a>.</p>
 <h4 id="other-settings"><a href="brg-prototype-extra-data-other.html">Other Settings</a></h4>
 <p>Motion vector control and other per-prototype options.</p>
 <h2 id="notes">Notes</h2>

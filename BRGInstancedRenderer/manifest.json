@@ -132,6 +132,16 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/components/brg-instance-group.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/components/brg-instance-group.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/components/brg-mesh-lod-data.md",
       "output": {
         ".html": {
@@ -186,6 +196,16 @@
       "output": {
         ".html": {
           "relative_path": "articles/components/brg-prototype-extra-data.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/components/brg-prototype-group.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/components/brg-prototype-group.html"
         }
       },
       "version": ""

@@ -88,8 +88,9 @@
 <h1 id="gameobjects">GameObjects</h1>
 
 <hr>
-<p>Render placed prefab instances through BRG Instanced Renderer using the <strong>BRG GameObject Group</strong> component.</p>
-<h2 id="setup">Setup</h2>
+<p>There are two ways to render placed prefab instances through BRG Instanced Renderer. Pick based on whether you want to keep the source GameObjects around.</p>
+<h2 id="option-a--brg-gameobject-group-keeps-source-gameobjects">Option A — BRG GameObject Group (keeps source GameObjects)</h2>
+<p>Best when you want to keep selecting and moving individual instances at runtime or in the editor.</p>
 <ol>
 <li>Place your prefab instances as children of a parent GameObject</li>
 <li>Add the <strong>BRG GameObject Group</strong> component to the parent</li>
@@ -97,9 +98,17 @@
 <li>Configure settings — see the <a href="../components/brg-gameobject-group.html">BRG GameObject Group</a> component reference</li>
 </ol>
 <p>The source GameObjects remain in the hierarchy for editing and <a href="../components/brg-gameobject-group.html#native-transform-tracking">transform tracking</a>. To rebuild after changes, click <strong>Refresh</strong>. To revert back to standard Unity rendering, click <strong>Revert to GameObjects</strong>.</p>
+<h2 id="option-b--brg-instance-group-destroys-source-gameobjects">Option B — BRG Instance Group (destroys source GameObjects)</h2>
+<p>Best for large counts of static decorative props where per-instance GameObject overhead matters (forests, debris fields, etc.).</p>
+<ol>
+<li>Place your prefab instances as children of a parent GameObject</li>
+<li>Add the <strong>BRG Instance Group</strong> component to the parent</li>
+<li>Click <strong>Bake Children</strong> in the inspector</li>
+</ol>
+<p>The bake packs each instance's transform + render signature into a compact blob on the component and <strong>destroys the source GameObjects</strong>. See the <a href="../components/brg-instance-group.html">BRG Instance Group</a> component reference for the full tradeoff list and the <strong>Expand to GameObjects</strong> safety valve.</p>
 <div class="TIP">
 <h5>Tip</h5>
-<p>Add <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a> to your prefabs to control shadow cascades, density, crossfade, and other per-prefab settings.</p>
+<p>Add <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a> to your prefabs to control shadow cascades, density, crossfade, and other per-prefab settings. Both options pick these up automatically.</p>
 </div>
 
 </article>

@@ -88,26 +88,10 @@
 <h1 id="density">Density</h1>
 
 <hr>
-<p>Per-prototype density settings on <a href="brg-prototype-extra-data.html">BRG Prototype Extra Data</a>. These control runtime density scaling and GPU-side distance-based density culling for individual prefab types.</p>
-<h2 id="global-density-scaling">Global Density Scaling</h2>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Enable Global Density Scaling</strong></td>
-<td>bool</td>
-<td>false</td>
-<td>Allows this prototype to participate in runtime global density scaling via <code>BRGRenderer.SetGlobalDensity()</code>.</td>
-</tr>
-</tbody>
-</table>
+<p>Per-prototype distance density settings on <a href="brg-prototype-extra-data.html">BRG Prototype Extra Data</a>. Distance density is a GPU-side hash-based thinning ramp that uses the prototype's own crossfade mode for transitions.</p>
+<blockquote>
+<p>For runtime global density scaling (e.g. &quot;thin all grass to 50% on Low quality&quot;), assign a <a href="brg-prototype-group.html">BRG Prototype Group</a> and call <code>group.SetDensity()</code>. The old <code>BRGRenderer.SetGlobalDensity()</code> and per-prototype &quot;Enable Global Density Scaling&quot; checkbox have been removed in favor of the per-group system.</p>
+</blockquote>
 <h2 id="distance-density">Distance Density</h2>
 <table>
 <thead>

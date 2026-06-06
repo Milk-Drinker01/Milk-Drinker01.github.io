@@ -143,8 +143,12 @@ function copyAIDocs(btn) {
 <td><code>Runtime/Scripts/Registerers/Terrain/TerrainBRGRegisterer.cs</code> + <code>.Trees.cs</code> / <code>.Details.cs</code> / <code>.Details.Extraction.cs</code> partials</td>
 </tr>
 <tr>
-<td>Reference GameObject-group implementation</td>
+<td>Reference GameObject-group implementation (kept-source, transform-tracked)</td>
 <td><code>Runtime/Scripts/Registerers/GameObjects/BRGGameObjectGroup.cs</code></td>
+</tr>
+<tr>
+<td>Reference baked-instance group implementation (destroyed-source, packed blob)</td>
+<td><code>Runtime/Scripts/Registerers/Baked/BRGInstanceGroup.cs</code> + <code>.Bake.cs</code></td>
 </tr>
 <tr>
 <td>Config schema (every serialized field + tooltips)</td>
@@ -153,6 +157,10 @@ function copyAIDocs(btn) {
 <tr>
 <td>Per-prototype shadow / LOD / density overrides</td>
 <td><code>Runtime/Scripts/Config/BRGPrototypeExtraData.cs</code></td>
+</tr>
+<tr>
+<td>Per-group runtime LOD bias + density control (ScriptableObject)</td>
+<td><code>Runtime/Scripts/Config/BRGPrototypeGroup.cs</code></td>
 </tr>
 <tr>
 <td>Unity 6.2+ Mesh LOD setup</td>
@@ -215,7 +223,7 @@ function copyAIDocs(btn) {
 <li>Chunks: <code>AllocateChunk</code>, <code>WriteChunk</code>, <code>FreeChunk</code>, <code>IsChunkValid</code>, <code>GetChunkGeneration</code>, <code>GetChunkInstanceCount</code>, <code>GetChunkBounds</code>, <code>GetChunkPoolCount</code>, <code>GetChunkPoolIndex</code>, <code>GetPoolOccupancy</code>, <code>RecalculateChunkBounds</code>, <code>SetChunkEnabled</code>, <code>GetChunkEnabled</code></li>
 <li>Direct instance modification: <code>SetInstancePosition</code>, <code>SetInstanceRotation</code>, <code>SetInstanceScale</code>, <code>MoveAndRotateInstance</code>, <code>MoveInstance</code>, <code>SetInstanceColor</code>, <code>SetInstanceEnabled</code>, <code>IsInstanceEnabled</code>, <code>SampleInstanceLightProbe</code>, <code>AddInstance</code>, <code>AppendInstances</code>, <code>RemoveInstance</code></li>
 <li>Buffer / memory: <code>CompactBuffers</code>, <code>ShiftInstances</code>, <code>FlushStagedUploads</code>, <code>GetMemoryBreakdown</code>, <code>AllocatedBufferMemory</code></li>
-<li>Crossfade / density / probes: <code>SnapAllCrossfadeStates</code>, <code>SnapCrossfadeState</code>, <code>CrossfadeTimeScale</code>, <code>SetGlobalDensity</code>, <code>ResampleAllLightProbes</code></li>
+<li>Crossfade / probes: <code>SnapAllCrossfadeStates</code>, <code>SnapCrossfadeState</code>, <code>CrossfadeTimeScale</code>, <code>ResampleAllLightProbes</code> (runtime density and LOD-bias scaling are now per-group via <code>BRGPrototypeGroup</code>, not on the singleton)</li>
 </ul>
 <p><strong><code>BRGRegistrationTracker</code></strong> (non-MonoBehaviour entry point)</p>
 <ul>
@@ -238,9 +246,11 @@ function copyAIDocs(btn) {
 <p><strong>Components users add in the editor</strong></p>
 <ul>
 <li><code>BRGInstancedRendererConfig</code> — singleton config asset (auto-created at <code>Assets/BRGInstancedRenderer/BRGIRConfig.asset</code>, auto-added to Preloaded Assets)</li>
-<li><code>BRGGameObjectGroup</code> + <code>BRGGameObjectLink</code> — GameObject batch conversion with native transform tracking</li>
+<li><code>BRGGameObjectGroup</code> + <code>BRGGameObjectLink</code> — GameObject batch conversion with native transform tracking (source GameObjects kept, renderers disabled)</li>
+<li><code>BRGInstanceGroup</code> — alternative baked path that <strong>destroys</strong> the source GameObjects after baking, storing transforms + render signatures on the component. Smaller storage, zero per-instance GameObject overhead, no automatic transform tracking. <code>Bake()</code> / <code>ExpandToGameObjects()</code> editor methods, <code>IsBaked</code> / <code>InstanceCount</code> / <code>PrototypeCount</code> runtime properties.</li>
 <li><code>TerrainBRGRegisterer</code> + <code>BRGTerrainDetailOverride</code> — terrain tree/detail registration with optional LOD-group detail prototypes</li>
-<li><code>BRGPrototypeExtraData</code> — per-prefab shadow cascade / shadow LOD / density / screen-size / LOD-fade overrides</li>
+<li><code>BRGPrototypeExtraData</code> — per-prefab shadow cascade / shadow LOD / density / screen-size / LOD-fade overrides; also carries the optional <code>prototypeGroup</code> reference</li>
+<li><code>BRGPrototypeGroup</code> — ScriptableObject identity token for runtime LOD bias and density control. <strong>Replaces the removed <code>BRGRenderer.SetGlobalDensity</code>.</strong> <code>SetLodBias(float)</code> and <code>SetDensity(float)</code> apply to every prototype that references the group; values are runtime-only (default 1) and not serialized — re-apply each session</li>
 <li><code>BRGMeshLodData</code> — Unity 6.2+ Mesh LOD level config (alternative to LOD Groups)</li>
 <li><code>BRGCameraSettings</code> — per-camera LOD bias multiplier and <code>SnapCrossfade()</code></li>
 </ul>

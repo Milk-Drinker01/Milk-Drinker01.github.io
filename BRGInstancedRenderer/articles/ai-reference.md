@@ -37,9 +37,11 @@ All paths below are inside the BRGInstancedRenderer package folder in the Unity 
 | Working custom-registerer example (uses `Stage*` patterns) | `Examples/Scripts/BRGRegistererExample.cs` |
 | Per-instance color via `InstanceLink` on a real terrain (uses `GetInstanceLink` + `*Unsafe`) | `Examples/Scripts/TreeRandomColor.cs` |
 | Reference terrain implementation | `Runtime/Scripts/Registerers/Terrain/TerrainBRGRegisterer.cs` + `.Trees.cs` / `.Details.cs` / `.Details.Extraction.cs` partials |
-| Reference GameObject-group implementation | `Runtime/Scripts/Registerers/GameObjects/BRGGameObjectGroup.cs` |
+| Reference GameObject-group implementation (kept-source, transform-tracked) | `Runtime/Scripts/Registerers/GameObjects/BRGGameObjectGroup.cs` |
+| Reference baked-instance group implementation (destroyed-source, packed blob) | `Runtime/Scripts/Registerers/Baked/BRGInstanceGroup.cs` + `.Bake.cs` |
 | Config schema (every serialized field + tooltips) | `Runtime/Scripts/Config/BRGInstancedRendererConfig.cs` |
 | Per-prototype shadow / LOD / density overrides | `Runtime/Scripts/Config/BRGPrototypeExtraData.cs` |
+| Per-group runtime LOD bias + density control (ScriptableObject) | `Runtime/Scripts/Config/BRGPrototypeGroup.cs` |
 | Unity 6.2+ Mesh LOD setup | `Runtime/Scripts/Config/BRGMeshLodData.cs` |
 | Per-camera LOD bias and crossfade snap | `Runtime/Scripts/Config/BRGCameraSettings.cs` |
 | Terrain detail prototype override | `Runtime/Scripts/Registerers/Terrain/BRGTerrainDetailOverride.cs` |
@@ -97,7 +99,7 @@ Default to `Stage*`. Only reach for `*Unsafe` in code paths where you've already
 - Chunks: `AllocateChunk`, `WriteChunk`, `FreeChunk`, `IsChunkValid`, `GetChunkGeneration`, `GetChunkInstanceCount`, `GetChunkBounds`, `GetChunkPoolCount`, `GetChunkPoolIndex`, `GetPoolOccupancy`, `RecalculateChunkBounds`, `SetChunkEnabled`, `GetChunkEnabled`
 - Direct instance modification: `SetInstancePosition`, `SetInstanceRotation`, `SetInstanceScale`, `MoveAndRotateInstance`, `MoveInstance`, `SetInstanceColor`, `SetInstanceEnabled`, `IsInstanceEnabled`, `SampleInstanceLightProbe`, `AddInstance`, `AppendInstances`, `RemoveInstance`
 - Buffer / memory: `CompactBuffers`, `ShiftInstances`, `FlushStagedUploads`, `GetMemoryBreakdown`, `AllocatedBufferMemory`
-- Crossfade / density / probes: `SnapAllCrossfadeStates`, `SnapCrossfadeState`, `CrossfadeTimeScale`, `SetGlobalDensity`, `ResampleAllLightProbes`
+- Crossfade / probes: `SnapAllCrossfadeStates`, `SnapCrossfadeState`, `CrossfadeTimeScale`, `ResampleAllLightProbes` (runtime density and LOD-bias scaling are now per-group via `BRGPrototypeGroup`, not on the singleton)
 
 **`BRGRegistrationTracker`** (non-MonoBehaviour entry point)
 - Lifecycle: `Initialize`, `Shutdown`, `InitializeCallback`, `ShutdownCallback`, `BRGSystem`, `IsRegistered`, `Name`
@@ -117,9 +119,11 @@ Default to `Stage*`. Only reach for `*Unsafe` in code paths where you've already
 
 **Components users add in the editor**
 - `BRGInstancedRendererConfig` — singleton config asset (auto-created at `Assets/BRGInstancedRenderer/BRGIRConfig.asset`, auto-added to Preloaded Assets)
-- `BRGGameObjectGroup` + `BRGGameObjectLink` — GameObject batch conversion with native transform tracking
+- `BRGGameObjectGroup` + `BRGGameObjectLink` — GameObject batch conversion with native transform tracking (source GameObjects kept, renderers disabled)
+- `BRGInstanceGroup` — alternative baked path that **destroys** the source GameObjects after baking, storing transforms + render signatures on the component. Smaller storage, zero per-instance GameObject overhead, no automatic transform tracking. `Bake()` / `ExpandToGameObjects()` editor methods, `IsBaked` / `InstanceCount` / `PrototypeCount` runtime properties.
 - `TerrainBRGRegisterer` + `BRGTerrainDetailOverride` — terrain tree/detail registration with optional LOD-group detail prototypes
-- `BRGPrototypeExtraData` — per-prefab shadow cascade / shadow LOD / density / screen-size / LOD-fade overrides
+- `BRGPrototypeExtraData` — per-prefab shadow cascade / shadow LOD / density / screen-size / LOD-fade overrides; also carries the optional `prototypeGroup` reference
+- `BRGPrototypeGroup` — ScriptableObject identity token for runtime LOD bias and density control. **Replaces the removed `BRGRenderer.SetGlobalDensity`.** `SetLodBias(float)` and `SetDensity(float)` apply to every prototype that references the group; values are runtime-only (default 1) and not serialized — re-apply each session
 - `BRGMeshLodData` — Unity 6.2+ Mesh LOD level config (alternative to LOD Groups)
 - `BRGCameraSettings` — per-camera LOD bias multiplier and `SnapCrossfade()`
 

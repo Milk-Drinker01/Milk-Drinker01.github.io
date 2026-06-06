@@ -101,7 +101,7 @@
 <h4 id="gpu-driven-pipeline">GPU-Driven Pipeline</h4>
 <p>All culling, LOD selection, and draw call generation runs on the GPU via compute shaders. CPU cost is near-zero regardless of instance count — the CPU only submits a fixed number of compute dispatches and indirect draw calls per frame.</p>
 <h4 id="runtime-density-scaling">Runtime Density Scaling</h4>
-<p>The system supports a global runtime density scale via <code>BRGRenderer.Instance.SetGlobalDensity(float)</code>, allowing you to dynamically adjust instance density at runtime (e.g., for quality settings or performance scaling). Prototypes must have <strong>Enable Global Density Scaling</strong> checked to participate.</p>
+<p>The system supports runtime density scaling via <a href="../components/brg-prototype-group.html">BRG Prototype Group</a> assets. Assign prefabs that should be controlled together to the same group, then call <code>group.SetDensity(0.5f)</code> to thin all members to 50%. Useful for quality settings or dynamic performance scaling. Each group also carries a <code>SetLodBias()</code> for per-group LOD quality tuning.</p>
 <h4 id="auto-compaction">Auto-Compaction</h4>
 <p>GPU buffers can be automatically shrunk when waste exceeds 50%, reclaiming memory after large numbers of instances are removed. Configurable on the <a href="../getting-started/brg-instanced-renderer-config.html">Config</a>.</p>
 <h4 id="editor-performance">Editor Performance</h4>
