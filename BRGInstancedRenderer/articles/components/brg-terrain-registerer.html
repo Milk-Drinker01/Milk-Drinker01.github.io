@@ -90,6 +90,10 @@
 <hr>
 <p>Registers a Unity Terrain's trees and details for GPU-instanced rendering through BRG Instanced Renderer. Trees are extracted once at startup. Details stream dynamically around the camera using C# Jobs and Burst Compiler.</p>
 <p>For a step-by-step setup guide, see <a href="../getting-started/terrain.html">Getting Started: Terrain</a>.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>Most terrain options are controlled in the global <a href="../configuration/terrain.html">Config</a> (streaming budgets, motion vectors, detail distance culling, etc.). The settings on this component are limited to per-terrain options.</p>
+</div>
 <h2 id="settings">Settings</h2>
 <table>
 <thead>

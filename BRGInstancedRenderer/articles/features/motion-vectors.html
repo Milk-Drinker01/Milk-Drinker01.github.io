@@ -89,13 +89,12 @@
 
 <hr>
 <p>BRG Instanced Renderer supports per-instance motion vectors for accurate TAA, temporal upscaling (FSR, DLSS, STP), and motion blur.</p>
-<p>All three Unity motion vector modes are supported:</p>
+<p>All three Unity motion vector modes are supported, set via each prefab's MeshRenderer:</p>
 <ul>
 <li><strong>Camera Motion</strong> — Motion vectors from camera movement only.</li>
 <li><strong>Per Object Motion</strong> — Full per-instance motion vectors including object movement.</li>
 <li><strong>Force No Motion</strong> — No motion vectors generated.</li>
 </ul>
-<p>Motion vector mode can be force-disabled per-prefab to save GPU work on small details like grass. Configured via <a href="../components/brg-prototype-extra-data-other.html">BRG Prototype Extra Data / Other Settings</a>.</p>
 <div class="NOTE">
 <h5>Note</h5>
 <p>Unlike normal Unity terrain rendering, BRG Instanced Renderer can render <strong>Per Object Motion Vectors</strong> on terrain details. This must be enabled in the <a href="../getting-started/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a>. Otherwise, terrain details will fall back to rendering <strong>Camera Motion Only</strong> to match default Unity behavior.</p>
@@ -104,9 +103,6 @@
 <h5>Tip</h5>
 <p>In Unity, shader-based motion vectors (used for things like wind animation) require <strong>Per Object Motion</strong>.</p>
 </div>
-<blockquote>
-<p>For motion vector settings, see <a href="../components/brg-prototype-extra-data-other.html">BRG Prototype Extra Data / Other Settings</a>.</p>
-</blockquote>
 
 </article>
 
