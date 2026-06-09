@@ -36,6 +36,7 @@ All paths below are inside the BRGInstancedRenderer package folder in the Unity 
 | Singleton (`BRGRenderer`) full API | `Runtime/Scripts/Core/BRGInstancedRenderer.cs` + partials (`.Batches.cs`, `.Chunks.cs`, `.Culling.cs`, `.Debug.cs`, `.HZB.cs`, `.Prototypes.cs`, `.SpeedTree.cs`, `.Upload.cs`) |
 | Working custom-registerer example (uses `Stage*` patterns) | `Examples/Scripts/BRGRegistererExample.cs` |
 | Per-instance color via `InstanceLink` on a real terrain (uses `GetInstanceLink` + `*Unsafe`) | `Examples/Scripts/TreeRandomColor.cs` |
+| Per-frame animated `InstanceLink` mutation (cache links in `OnChunkWritten`, then `StagePosition` + `StageColor` every Update) | `Examples/Demos/Scripts/InstanceLinkWaveDemo.cs` |
 | Reference terrain implementation | `Runtime/Scripts/Registerers/Terrain/TerrainBRGRegisterer.cs` + `.Trees.cs` / `.Details.cs` / `.Details.Extraction.cs` partials |
 | Reference GameObject-group implementation (kept-source, transform-tracked) | `Runtime/Scripts/Registerers/GameObjects/BRGGameObjectGroup.cs` |
 | Reference baked-instance group implementation (destroyed-source, packed blob) | `Runtime/Scripts/Registerers/Baked/BRGInstanceGroup.cs` + `.Bake.cs` |
@@ -135,6 +136,8 @@ Default to `Stage*`. Only reach for `*Unsafe` in code paths where you've already
 - A stored `ChunkLink` can go stale if the chunk was freed elsewhere. Use `ChunkLink.IsAlive` (which checks generation against `BRGRenderer`'s current state) before mutating through it, not just `IsValid`.
 - For per-camera operations (e.g. snap crossfade after a teleport on one specific camera), add a `BRGCameraSettings` component to that camera or call `BRGRenderer.Instance.SnapCrossfadeState(camera)`. `SnapAllCrossfadeStates()` covers every camera at once.
 - Pool size is hard-coded to 64. Don't try to configure it. **Max Pools Per Chunk** in the config controls how many pools a chunk may hold (= max instances per chunk).
+- **The `color` field on `InstanceData` is NOT uploaded by `WriteChunk`, `AddInstance`, or `AppendInstances`.** All three paths only upload `position` / `rotation` / `scale` / `signatureIndex` (verified: they share the same `GPUStagedInstanceData` packing which has no color slot). Setting `color` on `InstanceData` is silently ignored. To apply per-instance color, call `StageColor(link, color)` (or `SetColorUnsafe(link, color)`) after the chunk is written — typically from `OnChunkWritten`. Per-instance color also requires **Enable Per-Instance Color** in the [Config](../configuration/rendering.md).
+- For instances that move at runtime, pad your `WriteChunk` bounds by the maximum displacement they'll travel. Otherwise instances will get chunk-culled at peak motion (rising above or falling below the tight initial bounds). See `Examples/Demos/Scripts/InstanceLinkWaveDemo.cs` for the pattern (`new Bounds(center, new Vector3(w, amplitude*2+1, d))`).
 - `Stage*` and `*Unsafe` cannot be safely used on the same slot in the same frame, and `*Unsafe` cannot be used twice on the same slot in the same frame either. See the Stage* vs *Unsafe section above.
 
 ## Closing

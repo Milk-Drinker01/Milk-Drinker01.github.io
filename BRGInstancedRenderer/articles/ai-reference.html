@@ -139,6 +139,10 @@ function copyAIDocs(btn) {
 <td><code>Examples/Scripts/TreeRandomColor.cs</code></td>
 </tr>
 <tr>
+<td>Per-frame animated <code>InstanceLink</code> mutation (cache links in <code>OnChunkWritten</code>, then <code>StagePosition</code> + <code>StageColor</code> every Update)</td>
+<td><code>Examples/Demos/Scripts/InstanceLinkWaveDemo.cs</code></td>
+</tr>
+<tr>
 <td>Reference terrain implementation</td>
 <td><code>Runtime/Scripts/Registerers/Terrain/TerrainBRGRegisterer.cs</code> + <code>.Trees.cs</code> / <code>.Details.cs</code> / <code>.Details.Extraction.cs</code> partials</td>
 </tr>
@@ -262,6 +266,8 @@ function copyAIDocs(btn) {
 <li>A stored <code>ChunkLink</code> can go stale if the chunk was freed elsewhere. Use <code>ChunkLink.IsAlive</code> (which checks generation against <code>BRGRenderer</code>'s current state) before mutating through it, not just <code>IsValid</code>.</li>
 <li>For per-camera operations (e.g. snap crossfade after a teleport on one specific camera), add a <code>BRGCameraSettings</code> component to that camera or call <code>BRGRenderer.Instance.SnapCrossfadeState(camera)</code>. <code>SnapAllCrossfadeStates()</code> covers every camera at once.</li>
 <li>Pool size is hard-coded to 64. Don't try to configure it. <strong>Max Pools Per Chunk</strong> in the config controls how many pools a chunk may hold (= max instances per chunk).</li>
+<li><strong>The <code>color</code> field on <code>InstanceData</code> is NOT uploaded by <code>WriteChunk</code>, <code>AddInstance</code>, or <code>AppendInstances</code>.</strong> All three paths only upload <code>position</code> / <code>rotation</code> / <code>scale</code> / <code>signatureIndex</code> (verified: they share the same <code>GPUStagedInstanceData</code> packing which has no color slot). Setting <code>color</code> on <code>InstanceData</code> is silently ignored. To apply per-instance color, call <code>StageColor(link, color)</code> (or <code>SetColorUnsafe(link, color)</code>) after the chunk is written — typically from <code>OnChunkWritten</code>. Per-instance color also requires <strong>Enable Per-Instance Color</strong> in the <a href="../configuration/rendering.md">Config</a>.</li>
+<li>For instances that move at runtime, pad your <code>WriteChunk</code> bounds by the maximum displacement they'll travel. Otherwise instances will get chunk-culled at peak motion (rising above or falling below the tight initial bounds). See <code>Examples/Demos/Scripts/InstanceLinkWaveDemo.cs</code> for the pattern (<code>new Bounds(center, new Vector3(w, amplitude*2+1, d))</code>).</li>
 <li><code>Stage*</code> and <code>*Unsafe</code> cannot be safely used on the same slot in the same frame, and <code>*Unsafe</code> cannot be used twice on the same slot in the same frame either. See the Stage* vs *Unsafe section above.</li>
 </ul>
 <h2 id="closing">Closing</h2>
