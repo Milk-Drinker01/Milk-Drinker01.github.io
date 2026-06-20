@@ -88,6 +88,37 @@
 <h1 id="changelog">Changelog</h1>
 
 <hr>
+<h2 id="major-update-110--2026-06-09">Major Update 1.1.0 — 2026-06-09</h2>
+<h3 id="features">Features</h3>
+<ul>
+<li>Added shadow occlusion culling to improve shadow rendering performance</li>
+<li>Added the ability to render terrain &quot;Texture Grass&quot; details with BRGIR</li>
+<li>Optimized Point Light shadow culling</li>
+<li>Distance Density scaling is now multiplied by global density scaling for a correct combined result</li>
+</ul>
+<h3 id="bug-fixes">Bug Fixes</h3>
+<ul>
+<li>Fixed rendering on Adreno mobile GPUs</li>
+<li>Fixed occlusion culling breaking when changing resolution scale or using upscalers on both URP and HDRP</li>
+<li>Fixed occlusion culling in URP compatibility mode</li>
+<li>Fixed broken Point Light shadow rendering</li>
+<li>Fixed instances disappearing when spawning and moving them on the same frame</li>
+<li>Fixed incorrect detail streaming on rectangular terrains</li>
+<li>Optimized undo/redo speed for scenes using terrains</li>
+<li>Fixed Legacy Light Probes not working properly in player builds</li>
+</ul>
+<h3 id="debugging">Debugging</h3>
+<ul>
+<li>Improved &quot;Runtime Stats&quot; window to show more useful information</li>
+<li>Added debug option to draw bounding spheres</li>
+</ul>
+<h2 id="105--2026-06-09">1.0.5 — 2026-06-09</h2>
+<ul>
+<li>Lazy draw command emission: prototypes that have never had any instances no longer emit draw commands</li>
+<li>Dead code cleanup across multiple files</li>
+<li>Fixed errors when deleting materials actively used by BRG</li>
+<li>Fixed BRGIR config being re-created when deleting the plugin from the project</li>
+</ul>
 <h2 id="104--2026-06-09">1.0.4 — 2026-06-09</h2>
 <ul>
 <li>Added new example showing how to use Instance Links</li>

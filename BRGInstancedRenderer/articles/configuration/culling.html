@@ -123,6 +123,12 @@
 <td>Fixed pixel expansion applied during HZB testing to compensate for camera movement between frames. Higher values are more conservative (fewer false culls) at the cost of reduced culling effectiveness.</td>
 </tr>
 <tr>
+<td><strong>Shadow Caster Occlusion</strong></td>
+<td>bool</td>
+<td>true</td>
+<td>Culls shadow casters whose entire swept shadow volume is hidden behind the previous frame's depth. <strong>Directional lights only</strong>, and requires <strong>Use GPU Occlusion Culling</strong>. Worst-case artifact: a shadow can reappear one frame late after a fast disocclusion.</td>
+</tr>
+<tr>
 <td><strong>Default Small Mesh Size</strong></td>
 <td>float</td>
 <td>0.3%</td>

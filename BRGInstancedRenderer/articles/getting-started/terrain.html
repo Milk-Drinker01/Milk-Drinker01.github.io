@@ -108,6 +108,8 @@
 <li>Each generated prefab contains a BRG Terrain Detail Override pointing back to the original</li>
 </ol>
 <p>Assign the generated prefabs to your terrain's detail prototypes. BRG will render the original (with full LODs) at runtime.</p>
+<h2 id="texture-mode-grass-urp">Texture-Mode Grass (URP)</h2>
+<p>If your terrain uses Unity's texture-mode grass (<code>DetailRenderMode.Grass</code> or <code>DetailRenderMode.GrassBillboard</code>), enable <strong>Allow Texture Grass</strong> in the <a href="../configuration/terrain.html">Terrain Config</a>. This is a URP-only feature — texture grass is unsupported on HDRP. When the option is off, mesh-based detail prototypes still render normally.</p>
 
 </article>
 

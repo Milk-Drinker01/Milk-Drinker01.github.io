@@ -119,6 +119,15 @@
 <p><img src="../../images/Dynamic-Density-Culling.png" alt="Dynamic Density Culling"></p>
 <h4 id="shadow-culling">Shadow Culling</h4>
 <p>Shadow rendering has its own dedicated culling pass, with per-cascade frustum testing and per-prototype cascade limits. See <a href="shadow-optimization.html">Shadow Optimization</a> for details.</p>
+<h5 id="shadow-caster-occlusion-hzb">Shadow Caster Occlusion (HZB)</h5>
+<p>Shadow casters whose entire swept shadow volume is hidden behind the previous frame's depth are skipped on the GPU. For example, a tree behind a tall mountain doesn't need to render shadows if its shadow can't possibly reach a visible surface. This dramatically reduces shadow pass cost in scenes with large occluders.</p>
+<ul>
+<li><strong>Directional lights only.</strong> Point and spot light shadow casters are not tested.</li>
+<li>Requires <strong>Use GPU Occlusion Culling</strong> (the HZB pipeline must already be running).</li>
+<li>Tested against the owning camera's previous-frame HZB.</li>
+<li>Enable via <strong>Shadow Caster Occlusion</strong> on the <a href="../configuration/culling.html">Config</a>. On by default.</li>
+<li>Worst-case artifact: a shadow can reappear one frame late after a fast disocclusion (e.g. when a camera whips around a corner). At normal framerates this is imperceptible.</li>
+</ul>
 <blockquote>
 <p>For culling settings, see <a href="../getting-started/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a> and <a href="../components/brg-prototype-extra-data-density.html">BRG Prototype Extra Data / Density</a>.</p>
 </blockquote>

@@ -148,6 +148,12 @@
 <td>Hard-culls detail instances beyond the terrain's detail object distance. Prevents visible gridding artifacts caused by detail chunk size.</td>
 </tr>
 <tr>
+<td><strong>Allow Texture Grass</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>(URP only.) Renders texture-mode terrain details (<code>DetailRenderMode.Grass</code> and <code>DetailRenderMode.GrassBillboard</code>) through BRG. When enabled, the texture grass shader is serialized into the config so it ships in player builds. Leave off if all your detail prototypes are mesh-based.</td>
+</tr>
+<tr>
 <td><strong>Enable Terrain Tree Selection</strong></td>
 <td>bool</td>
 <td>true</td>

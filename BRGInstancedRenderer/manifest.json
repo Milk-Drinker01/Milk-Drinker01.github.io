@@ -21,21 +21,21 @@
       "version": ""
     },
     {
-      "type": "Resource",
-      "source_relative_path": "articles/ai-reference.md",
-      "output": {
-        "resource": {
-          "relative_path": "articles/ai-reference.md"
-        }
-      },
-      "version": ""
-    },
-    {
       "type": "Conceptual",
       "source_relative_path": "articles/ai-reference.md",
       "output": {
         ".html": {
           "relative_path": "articles/ai-reference.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "articles/ai-reference.md",
+      "output": {
+        "resource": {
+          "relative_path": "articles/ai-reference.md"
         }
       },
       "version": ""
@@ -506,6 +506,16 @@
       "output": {
         ".html": {
           "relative_path": "articles/getting-started/installation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting-started/mobile.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting-started/mobile.html"
         }
       },
       "version": ""
