@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Grass Mode | Ultimate Foliage Renormalizer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Grass Mode | Ultimate Foliage Renormalizer ">
+      <meta name="description" content="Documentation for Ultimate Foliage Renormalizer.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="Ultimate Foliage Renormalizer">
+            Ultimate Foliage Renormalizer
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="grass-mode">Grass Mode</h1>
+
+<hr>
+<p>Grass Mode is super fast and simple, but it has a huge impact on grass quality. It pushes your foliage's normals smoothly upward, so blades of grass catch light as a soft, unified surface instead of a field of flat cards.</p>
+<p>Use it for grass, clovers, and other small detail meshes. For trees and bushes, use <a href="general-mode.html">General Mode</a> instead.</p>
+<p><img src="../../images/grass-mode-comparison.png" alt="Grass Mode — renormalized vs. imported"></p>
+<h2 id="how-to-use-grass-mode">How to Use Grass Mode</h2>
+<ol>
+<li>Complete <a href="first-steps.html">First Steps</a> and enable the <strong>Grass Mode</strong> tickbox.</li>
+<li>Configure the options below (the defaults are good for most grass).</li>
+<li>Click <strong>Generate New Mesh</strong>.</li>
+</ol>
+<p>That's it. You can revert at any time with <strong>Restore Original Mesh</strong>.</p>
+<p><img src="../../images/grass-mode-inspector.png" alt="Grass Mode inspector"></p>
+<h2 id="options">Options</h2>
+<h3 id="apply-current-rotation">Apply Current Rotation</h3>
+<p>Applies the mesh's rotation in place, baking it into the mesh and resetting the transform rotation to <code>0, 0, 0</code>.</p>
+<p>This is useful when your grass is rotated <code>-90</code> or <code>+90</code> on the X axis (common for imported models) and you want to use it as a <strong>terrain detail</strong>, which expects an unrotated mesh.</p>
+<h3 id="ground-distance-ao-baker">Ground-Distance AO Baker</h3>
+<p>Grass Mode can bake ambient occlusion based on <strong>height</strong> — darkening the base of each blade where it meets the ground and fading to full brightness toward the tips.</p>
+<ul>
+<li><strong>Enable AO Baker</strong> — Turn the AO bake on or off.</li>
+<li><strong>Vertex Color Channel</strong> — Which vertex color channel (R, G, B, or A) the AO is written to. Choose the channel your shader reads for AO. (TVE uses Green by default.)</li>
+<li><strong>Ground AO Start Height</strong> — The height (as a percentage of the mesh bounds) where AO darkening begins. Below this height the mesh is at maximum occlusion.</li>
+<li><strong>Ground AO End Height</strong> — The height (as a percentage of the mesh bounds) where AO darkening ends. Above this height there is no occlusion.</li>
+<li><strong>Ground AO Darkening Amount</strong> — How strong the darkening is at the base.</li>
+</ul>
+<div class="NOTE">
+<h5>Note</h5>
+<p>For the baked AO to be visible, your shader must read the chosen vertex color channel. See <a href="vertex-color-ao-shaders.html">Vertex Color AO in Shaders</a>.</p>
+</div>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

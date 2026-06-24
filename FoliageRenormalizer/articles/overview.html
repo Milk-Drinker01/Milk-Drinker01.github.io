@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Overview | Ultimate Foliage Renormalizer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Overview | Ultimate Foliage Renormalizer ">
+      <meta name="description" content="Documentation for Ultimate Foliage Renormalizer.">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.png" alt="Ultimate Foliage Renormalizer">
+            Ultimate Foliage Renormalizer
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="overview">Overview</h1>
+
+<hr>
+<p><img src="../images/hero-before-after.png" alt="Foliage Renormalizer — before and after"></p>
+<h2 id="what-is-ultimate-foliage-renormalizer">What is Ultimate Foliage Renormalizer?</h2>
+<p>Ultimate Foliage Renormalizer is an editor tool that fixes the single biggest problem with real-time foliage: <strong>lighting</strong>. Most trees, bushes, and grass are built from flat cards and individual leaf meshes. Their vertex normals point straight out of each leaf, so when light hits them the foliage looks flat, noisy, and &quot;papery&quot; — nothing like the solid, rounded volume a real plant reads as.</p>
+<p>Foliage Renormalizer rebuilds those normals so your foliage catches light as a single cohesive volume. The result is dramatically better looking trees, bushes, and grass — in minutes, with no art rework.</p>
+<h2 id="how-it-works">How It Works</h2>
+<p>The tool wraps a smooth <strong>proxy mesh</strong> around your foliage and transfers that proxy's normals back onto your original mesh. Because the proxy is a clean, rounded shell of the whole plant, the leaves inherit &quot;canopy&quot; normals that point outward from the volume as a whole, rather than from each individual card.</p>
+<p>There are two workflows:</p>
+<ul>
+<li><strong><a href="guides/grass-mode.html">Grass Mode</a></strong> — For grass, clovers, and other small details. Normals are pushed smoothly upward in a single click. Fast and simple, with a big impact on quality.</li>
+<li><strong><a href="guides/general-mode.html">General Mode</a></strong> — For trees, bushes, and larger plants. You generate a proxy mesh, then transfer its normals onto your foliage. This gives you full control over the final look.</li>
+</ul>
+<p>As a bonus, the same proxy mesh is used to <strong>bake high-quality ambient occlusion</strong> into your mesh's vertex colors, adding natural shading depth to the interior of the canopy.</p>
+<h2 id="non-destructive">Non-Destructive</h2>
+<p>Foliage Renormalizer never overwrites your source assets. It generates new mesh assets to a save path of your choosing and keeps a reference to your original mesh, so you can <strong>restore the original at any time</strong> with a single button. None of the tool's components or data make it into a player build — it is purely an editor-time authoring tool.</p>
+<h2 id="compatibility">Compatibility</h2>
+<div class="NOTE">
+<h5>Note</h5>
+<p>Ultimate Foliage Renormalizer does <strong>not</strong> require you to use any included shader. It is compatible with any shader or rendering system (such as TVE). When baking AO into vertex color, just make sure to select a channel that your shader reads for vertex color AO (in TVE, for example, the Green channel is used by default).</p>
+</div>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Supported</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Unity Version</strong></td>
+<td>2021.3+ (ShaderGraph 2021.3+ for the Built-In demo)</td>
+</tr>
+<tr>
+<td><strong>Render Pipelines</strong></td>
+<td>Built-In (BIRP), Universal (URP), High Definition (HDRP)</td>
+</tr>
+<tr>
+<td><strong>Shaders</strong></td>
+<td>Any shader. The output is just a mesh with new normals and vertex colors.</td>
+</tr>
+<tr>
+<td><strong>Third-Party Foliage</strong></td>
+<td>Works alongside systems like The Vegetation Engine (TVE)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="where-to-start">Where to Start</h2>
+<ul>
+<li>New to the tool? Begin with <strong><a href="getting-started/index.html">Getting Started</a></strong> to import the package and set up the demo scenes.</li>
+<li>Ready to renormalize your own foliage? Jump straight to <strong><a href="guides/first-steps.html">First Steps</a></strong>.</li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

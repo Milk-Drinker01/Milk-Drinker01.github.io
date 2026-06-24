@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Proxy Mesh Generation | Ultimate Foliage Renormalizer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Proxy Mesh Generation | Ultimate Foliage Renormalizer ">
+      <meta name="description" content="Documentation for Ultimate Foliage Renormalizer.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="Ultimate Foliage Renormalizer">
+            Ultimate Foliage Renormalizer
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="proxy-mesh-generation">Proxy Mesh Generation</h1>
+
+<hr>
+<p>The first step in <a href="general-mode.html">General Mode</a> is generating the <strong>proxy mesh</strong> — a smooth shell that wraps around your foliage. Three main sliders control its shape. Configure them to your liking, then click <strong>Generate Proxy Mesh</strong>.</p>
+<p>You can preview the result at any time with <strong>Show Proxy Mesh</strong> (click again to stop showing it). The proxy is displayed with a normals-visualizer material so you can judge how smooth the surface is.</p>
+<h2 id="sdf-resolution">SDF Resolution</h2>
+<p>Controls how much detail is retained when generating the proxy mesh. Higher resolution generally leads to a <strong>tighter</strong> proxy mesh with <strong>less padding</strong> around the foliage. Lower resolution produces a smoother, blobbier shell.</p>
+<p><em>Range 8–256. Default 128.</em></p>
+<p><img src="../../images/proxy-sdf-resolution.png" alt="SDF Resolution comparison"></p>
+<h2 id="tightness">Tightness</h2>
+<p>Controls how &quot;tightly&quot; the proxy mesh follows the source mesh. It interpolates between:</p>
+<ul>
+<li><strong>0</strong> — a <strong>convex hull</strong> mesh (a smooth, blobby shape that ignores concavities).</li>
+<li><strong>1</strong> — a <strong>surface-hugging</strong> mesh that closely follows the foliage's detail.</li>
+</ul>
+<p><em>Range 0–1. Default 0.7.</em></p>
+<p><img src="../../images/proxy-tightness.png" alt="Tightness comparison"></p>
+<div class="IMPORTANT">
+<h5>Important</h5>
+<p>In some cases, if Tightness is close to <strong>1</strong> and the foliage has <strong>low density</strong>, the generated proxy mesh can develop undesired <strong>&quot;air pockets&quot;</strong> inside the model. Reduce Tightness until these are eliminated.</p>
+</div>
+<h2 id="sdf-blur-iterations">SDF Blur Iterations</h2>
+<p>Controls how many blur passes are applied to the SDF <em>before</em> the mesh is generated. Higher values produce a <strong>smoother output mesh and smoother normals</strong>, at the cost of slightly less retained detail.</p>
+<p><em>Range 0–5. Default 5.</em></p>
+<p><img src="../../images/proxy-blur-iterations.png" alt="SDF Blur Iterations comparison"></p>
+<h2 id="advanced-options">Advanced Options</h2>
+<p>Expand <strong>Advanced Options</strong> for post-processing controls. The defaults are good for almost all cases.</p>
+<ul>
+<li><strong>Weld Vertices</strong> — Merges coincident vertices in the generated proxy mesh. On by default.</li>
+<li><strong>Weld Epsilon</strong> — The distance threshold under which two vertices are considered the same and welded together.</li>
+</ul>
+<h2 id="next">Next</h2>
+<p>Once you're happy with the proxy mesh, move on to <strong><a href="normal-transfer-and-ao.html">Normal Transfer &amp; AO Bake →</a></strong>.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

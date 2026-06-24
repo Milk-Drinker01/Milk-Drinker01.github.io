@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Proxy Stealers | Ultimate Foliage Renormalizer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Proxy Stealers | Ultimate Foliage Renormalizer ">
+      <meta name="description" content="Documentation for Ultimate Foliage Renormalizer.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="Ultimate Foliage Renormalizer">
+            Ultimate Foliage Renormalizer
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="proxy-stealers">Proxy Stealers</h1>
+
+<hr>
+<blockquote>
+<p><em>This guide applies to separated models (e.g. separate trunk and leaf meshes) and LOD group setups. If your foliage is a single mesh, you can skip it.</em></p>
+</blockquote>
+<p>When your foliage is split across multiple renderers, you want them all to share <strong>one</strong> proxy mesh so their normals stay consistent. The <strong>Foliage Renormalizer Proxy Stealer</strong> component does exactly that: it uses the generated proxy mesh and mesh-generation settings of a selected <strong>Source</strong> <em>Foliage Renormalizer Utility</em> component.</p>
+<p>You set your main leaf renderer up with the Utility component (see <a href="first-steps.html">First Steps</a>), and every other renderer — additional LODs, the trunk, etc. — gets a Proxy Stealer pointing back at it.</p>
+<h2 id="adding-proxy-stealers-automatic">Adding Proxy Stealers (Automatic)</h2>
+<p>The easiest way. At the bottom of the <em>Foliage Renormalizer Utility</em> component, under <strong>Dependent Proxy Stealer Settings</strong>, the tool lists child renderers that aren't yet assigned. Click the button for each renderer you want to include to automatically add and wire up a Proxy Stealer component.</p>
+<p><img src="../../images/proxy-stealer-auto.png" alt="Adding proxy stealers automatically"></p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>It's fine to leave some child renderers unassigned — you may not want to renormalize everything (for example, impostor meshes).</p>
+</div>
+<h2 id="adding-proxy-stealers-manual">Adding Proxy Stealers (Manual)</h2>
+<p>If the automatic method doesn't work for your setup, you can add Proxy Stealers by hand:</p>
+<ol>
+<li>Add a <strong>Foliage Renormalizer Proxy Stealer</strong> component to the renderer.</li>
+<li>Press <strong>Try to Auto Find source Renormalizer Utility</strong>.</li>
+<li>If that fails, assign the <strong>Source</strong> Utility manually.</li>
+</ol>
+<p><img src="../../images/proxy-stealer-manual.png" alt="Adding proxy stealers manually"></p>
+<h2 id="submesh--material-mask-for-proxy-stealers">Submesh / Material Mask for Proxy Stealers</h2>
+<p>Only <strong>unique</strong> materials — ones that appear <em>only</em> on proxy stealers and not on the source renderer — need to be configured here. Expand <strong>Override Proxy Stealer Material / Submesh Selector</strong> and use the same selection rules as the submesh selection in <a href="first-steps.html">First Steps</a>: include the leaf submeshes, exclude trunks.</p>
+<p><img src="../../images/proxy-stealer-mask.png" alt="Proxy stealer submesh / material mask"></p>
+<h2 id="regenerating-proxy-stealer-meshes">Regenerating Proxy Stealer Meshes</h2>
+<p>After generating your main foliage mesh (in <a href="grass-mode.html">Grass Mode</a> or <a href="normal-transfer-and-ao.html">General Mode</a>), you must <strong>regenerate each Proxy Stealer's mesh</strong>. Double-check each stealer's submesh selection, then click its regenerate button.</p>
+<p><img src="../../images/proxy-stealer-regenerate.png" alt="Regenerating a proxy stealer mesh"></p>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

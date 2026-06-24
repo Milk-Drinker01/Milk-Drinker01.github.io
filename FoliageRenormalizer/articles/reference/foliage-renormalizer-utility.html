@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Foliage Renormalizer Utility | Ultimate Foliage Renormalizer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Foliage Renormalizer Utility | Ultimate Foliage Renormalizer ">
+      <meta name="description" content="Documentation for Ultimate Foliage Renormalizer.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="Ultimate Foliage Renormalizer">
+            Ultimate Foliage Renormalizer
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="foliage-renormalizer-utility">Foliage Renormalizer Utility</h1>
+
+<hr>
+<p>The <strong>Foliage Renormalizer Utility</strong> is the main component you add to your foliage. This page documents every section of its inspector. For step-by-step workflows, see the <a href="../guides/index.html">Guides</a>.</p>
+<blockquote>
+<p>The component is editor-only. Nothing it stores makes it into a player build, and removing it has no runtime effect. If you no longer want the renormalized result, click <strong>Restore Original Mesh</strong> <em>before</em> removing the component.</p>
+</blockquote>
+<h2 id="mesh-save-paths">Mesh Save Paths</h2>
+<p>Where generated meshes are written. Stored in Editor Prefs and shared across all instances in the project.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Source Mesh Asset Path?</strong></td>
+<td>Save generated meshes next to the source mesh instead of the explicit paths below.</td>
+</tr>
+<tr>
+<td><strong>Proxy Mesh Save Path</strong></td>
+<td>Folder for generated proxy meshes.</td>
+</tr>
+<tr>
+<td><strong>Foliage Mesh Save Path</strong></td>
+<td>Folder for generated (renormalized) foliage meshes.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="shared-settings">Shared Settings</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Target Renderer</strong></td>
+<td>The renderer used as the source for proxy generation. Should be the leaf mesh, and LOD 0 if using LODs. Auto-assigned on single-mesh GameObjects. See <a href="../guides/first-steps.html#2-set-your-target-renderer">First Steps</a>.</td>
+</tr>
+<tr>
+<td><strong>Target MeshFilter</strong></td>
+<td><em>(Read-only)</em> The mesh filter resolved from the target renderer.</td>
+</tr>
+<tr>
+<td><strong>Material / Submesh Selector</strong></td>
+<td>Choose which submeshes are included. Excluded submeshes don't receive new normals but still receive AO. See <a href="../guides/first-steps.html#4-select-your-submeshes">First Steps</a>.</td>
+</tr>
+<tr>
+<td><strong>Grass Mode</strong></td>
+<td>Switches between the <a href="../guides/grass-mode.html">Grass Mode</a> and <a href="../guides/general-mode.html">General Mode</a> workflows.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="grass-mode-panel">Grass Mode Panel</h2>
+<p>Shown when <strong>Grass Mode</strong> is enabled. See the <a href="../guides/grass-mode.html">Grass Mode</a> guide.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Apply Current Rotation</strong></td>
+<td>Bakes the transform rotation into the mesh and resets the transform to identity. Useful for terrain details.</td>
+</tr>
+<tr>
+<td><strong>Enable AO Baker</strong></td>
+<td>Toggles the height-based ground AO bake.</td>
+</tr>
+<tr>
+<td><strong>Vertex Color Channel</strong></td>
+<td>Channel (R/G/B/A) the AO is written into.</td>
+</tr>
+<tr>
+<td><strong>Ground AO Start / End Height</strong></td>
+<td>Height range (as a percentage of bounds) over which AO fades from dark to none.</td>
+</tr>
+<tr>
+<td><strong>Ground AO Darkening Amount</strong></td>
+<td>Strength of the darkening at the base.</td>
+</tr>
+<tr>
+<td><strong>Generate New Mesh</strong></td>
+<td>Generates the renormalized grass mesh.</td>
+</tr>
+<tr>
+<td><strong>Restore Original Mesh</strong></td>
+<td>Reverts to the original mesh (toggles with the last generated mesh).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="proxy-mesh-generation-settings">Proxy Mesh Generation Settings</h2>
+<p>Shown in General Mode. See <a href="../guides/proxy-mesh-generation.html">Proxy Mesh Generation</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Range</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SDF Resolution</strong></td>
+<td>8–256</td>
+<td>128</td>
+<td>Detail retained in the proxy mesh. Higher = tighter, less padding.</td>
+</tr>
+<tr>
+<td><strong>Tightness</strong></td>
+<td>0–1</td>
+<td>0.7</td>
+<td>0 = convex hull, 1 = surface-hugging. Reduce if air pockets appear.</td>
+</tr>
+<tr>
+<td><strong>SDF Blur Iterations</strong></td>
+<td>0–5</td>
+<td>5</td>
+<td>Blur passes on the SDF. Higher = smoother output.</td>
+</tr>
+<tr>
+<td><strong>Advanced &gt; Weld Vertices</strong></td>
+<td>—</td>
+<td>On</td>
+<td>Merge coincident vertices in the proxy.</td>
+</tr>
+<tr>
+<td><strong>Advanced &gt; Weld Epsilon</strong></td>
+<td>—</td>
+<td>1e-4</td>
+<td>Distance threshold for welding.</td>
+</tr>
+<tr>
+<td><strong>Generate Proxy Mesh</strong></td>
+<td>—</td>
+<td>—</td>
+<td>Builds the proxy mesh.</td>
+</tr>
+<tr>
+<td><strong>Show Proxy Mesh</strong></td>
+<td>—</td>
+<td>—</td>
+<td>Toggles a Scene-view preview of the proxy (with a normals material).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="foliage-remesher">Foliage Remesher</h2>
+<p>The normal transfer and AO bake stage in General Mode. See <a href="../guides/normal-transfer-and-ao.html">Normal Transfer &amp; AO Bake</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Range</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Foliage (receives)</strong></td>
+<td>—</td>
+<td>—</td>
+<td><em>(Read-only)</em> The mesh receiving new normals.</td>
+</tr>
+<tr>
+<td><strong>Proxy (source)</strong></td>
+<td>—</td>
+<td>—</td>
+<td><em>(Read-only)</em> The generated proxy supplying normals.</td>
+</tr>
+<tr>
+<td><strong>Debug Render Normals?</strong></td>
+<td>—</td>
+<td>Off</td>
+<td>Visualize vertex normals in the Scene. See <a href="debug-tools.html">Debug Tools</a>.</td>
+</tr>
+<tr>
+<td><strong>Enable Normal Transfer</strong></td>
+<td>—</td>
+<td>On</td>
+<td>Transfer proxy normals onto the foliage.</td>
+</tr>
+<tr>
+<td><strong>Proxy Normal Influence</strong></td>
+<td>0–1</td>
+<td>1.0</td>
+<td>Blend toward the proxy normal.</td>
+</tr>
+<tr>
+<td><strong>Normal Upward Bias</strong></td>
+<td>0–1</td>
+<td>0.25</td>
+<td>Blend the result toward world up.</td>
+</tr>
+<tr>
+<td><strong>Vertex Color Channel</strong></td>
+<td>R/G/B/A</td>
+<td>G</td>
+<td>Channel the AO is written into.</td>
+</tr>
+<tr>
+<td><strong>Debug Render Vertex Color</strong></td>
+<td>None/R/G/B/A</td>
+<td>None</td>
+<td>Preview a vertex color channel in the Scene.</td>
+</tr>
+<tr>
+<td><strong>Enable SDF AO Baker</strong></td>
+<td>—</td>
+<td>On</td>
+<td>Bake occlusion from depth inside the proxy.</td>
+</tr>
+<tr>
+<td><strong>AO Minimum Distance</strong></td>
+<td>0–0.5</td>
+<td>0.02</td>
+<td>Distance below which there is no AO.</td>
+</tr>
+<tr>
+<td><strong>AO Maximum Distance</strong></td>
+<td>0–0.5</td>
+<td>0.375</td>
+<td>Distance at which AO is maximum.</td>
+</tr>
+<tr>
+<td><strong>AO Darkening Amount</strong></td>
+<td>0–1</td>
+<td>0.8</td>
+<td>AO strength at/beyond max distance.</td>
+</tr>
+<tr>
+<td><strong>Ground-Distance AO &gt; Enable</strong></td>
+<td>—</td>
+<td>Off</td>
+<td>Optional second AO pass based on height.</td>
+</tr>
+<tr>
+<td><strong>Ground-Distance AO &gt; Start / End Height</strong></td>
+<td>0–1</td>
+<td>0 / 0.5</td>
+<td>Height range over which AO fades.</td>
+</tr>
+<tr>
+<td><strong>Ground-Distance AO &gt; Darkening Amount</strong></td>
+<td>0–1</td>
+<td>0.8</td>
+<td>Strength of the ground AO at the base.</td>
+</tr>
+<tr>
+<td><strong>Generate New Mesh</strong></td>
+<td>—</td>
+<td>—</td>
+<td>Generates the renormalized foliage mesh (requires a proxy mesh first).</td>
+</tr>
+<tr>
+<td><strong>Restore Original Mesh</strong></td>
+<td>—</td>
+<td>—</td>
+<td>Reverts to the original mesh (toggles with the last generated mesh).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="dependent-proxy-stealer-settings">Dependent Proxy Stealer Settings</h2>
+<p>Lists and manages <a href="proxy-stealer.html">Proxy Stealer</a> components on child renderers. See the <a href="../guides/proxy-stealers.html">Proxy Stealers</a> guide.</p>
+<h2 id="mesh-references">Mesh References</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Original Foliage Mesh</strong></td>
+<td><em>(Read-only)</em> The preserved original mesh, used by Restore.</td>
+</tr>
+<tr>
+<td><strong>Remeshed Foliage Mesh</strong></td>
+<td><em>(Read-only)</em> The most recently generated mesh.</td>
+</tr>
+</tbody>
+</table>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

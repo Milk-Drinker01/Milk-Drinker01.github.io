@@ -1,0 +1,525 @@
+{
+  "source_base_path": "E:/Desktop/asset store stuff/FoliageRenormalizerDocumentation",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Resource",
+      "output": {
+        "resource": {
+          "relative_path": "index.json"
+        }
+      }
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "README.md",
+      "output": {
+        ".html": {
+          "relative_path": "README.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/changelog.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/changelog.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting-started/demo-scenes.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting-started/demo-scenes.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting-started/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting-started/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting-started/installation.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting-started/installation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/guides/double-sided-rendering.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/guides/double-sided-rendering.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/guides/first-steps.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/guides/first-steps.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/guides/general-mode.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/guides/general-mode.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/guides/grass-mode.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/guides/grass-mode.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/guides/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/guides/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/guides/normal-transfer-and-ao.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/guides/normal-transfer-and-ao.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/guides/proxy-mesh-generation.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/guides/proxy-mesh-generation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/guides/proxy-stealers.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/guides/proxy-stealers.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/guides/vertex-color-ao-shaders.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/guides/vertex-color-ao-shaders.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/overview.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/overview.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/reference/debug-tools.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/reference/debug-tools.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/reference/foliage-renormalizer-utility.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/reference/foliage-renormalizer-utility.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/reference/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/reference/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/reference/proxy-stealer.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/reference/proxy-stealer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/support.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/support.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "articles/toc.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/toc.html"
+        },
+        ".json": {
+          "relative_path": "articles/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "favicon.ico",
+      "output": {
+        "resource": {
+          "relative_path": "favicon.ico"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/ao-baker-options.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/ao-baker-options.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/ao-shadergraph.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/ao-shadergraph.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/double-sided-birp.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/double-sided-birp.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/double-sided-hdrp.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/double-sided-hdrp.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/double-sided-tve.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/double-sided-tve.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/double-sided-urp.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/double-sided-urp.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/first-steps-scene.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/first-steps-scene.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/generate-new-mesh.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/generate-new-mesh.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/grass-mode-comparison.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/grass-mode-comparison.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/grass-mode-inspector.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/grass-mode-inspector.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/grass-mode-tickbox.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/grass-mode-tickbox.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/hero-before-after.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/hero-before-after.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/normal-transfer-options.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/normal-transfer-options.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/proxy-blur-iterations.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/proxy-blur-iterations.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/proxy-sdf-resolution.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/proxy-sdf-resolution.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/proxy-stealer-auto.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/proxy-stealer-auto.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/proxy-stealer-manual.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/proxy-stealer-manual.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/proxy-stealer-mask.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/proxy-stealer-mask.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/proxy-stealer-regenerate.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/proxy-stealer-regenerate.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/proxy-tightness.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/proxy-tightness.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/save-paths.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/save-paths.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/submesh-selection.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/submesh-selection.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/target-renderer.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/target-renderer.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/tree-before-after.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/tree-before-after.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/upward-bias-comparison.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/upward-bias-comparison.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "logo.png",
+      "output": {
+        "resource": {
+          "relative_path": "logo.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}
