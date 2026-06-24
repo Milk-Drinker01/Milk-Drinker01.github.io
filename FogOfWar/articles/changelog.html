@@ -44,7 +44,7 @@
       <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
         <div class="container-xxl flex-nowrap">
           <a class="navbar-brand" href="../index.html">
-            <img id="logo" class="svg" src="../logo.svg" alt="Pixel-Perfect Fog Of War">
+            <img id="logo" class="svg" src="../logo.png" alt="Pixel-Perfect Fog Of War">
             Pixel-Perfect Fog Of War
           </a>
           <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,6 +89,16 @@
 
 <hr>
 <p>Big thanks to everyone for your continued support of Pixel-Perfect Fog Of War. Your reviews and feedback make it possible to keep shipping new features and performance updates!</p>
+<h2 id="340--2026-06-23">3.4.0 — 2026-06-23</h2>
+<ul>
+<li>Reworked all Fog of War appearance shaders into a single shader</li>
+<li>Added a Shader Stripper ScriptableObject to reduce shader variants</li>
+<li>Added a Custom Appearance shader include, so you can easily write your own Fog of War shader</li>
+</ul>
+<div class="IMPORTANT">
+<h5>Important</h5>
+<p>Updating to 3.4 from an older version? Delete <code>FogOfWar/Shaders/Resources</code> and re-import to avoid shader import errors (the appearance shaders were merged into one).</p>
+</div>
 <h2 id="330--2026-05-14">3.3.0 — 2026-05-14</h2>
 <ul>
 <li>Reworked partial hiders to no longer require registration</li>
@@ -568,10 +578,6 @@
 </ul>
 <h2 id="original--2022-09-19">Original — 2022-09-19</h2>
 <p>Initial release.</p>
-<div class="NOTE">
-<h5>Note</h5>
-<p>Version history below 1.3.0 (the earliest 1.x releases) isn't reproduced here. The complete history is available on the <a href="https://assetstore.unity.com/packages/vfx/shaders/fullscreen-camera-effects/pixel-perfect-fog-of-war-229484?aid=1011lrDI9">Asset Store</a> listing.</p>
-</div>
 
 </article>
 

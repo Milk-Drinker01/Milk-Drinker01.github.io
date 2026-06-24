@@ -21,21 +21,21 @@
       "version": ""
     },
     {
-      "type": "Conceptual",
-      "source_relative_path": "articles/ai-reference.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/ai-reference.html"
-        }
-      },
-      "version": ""
-    },
-    {
       "type": "Resource",
       "source_relative_path": "articles/ai-reference.md",
       "output": {
         "resource": {
           "relative_path": "articles/ai-reference.md"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/ai-reference.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/ai-reference.html"
         }
       },
       "version": ""
@@ -272,6 +272,16 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/features/custom-fog-shader.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/custom-fog-shader.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/features/fog-appearance.md",
       "output": {
         ".html": {
@@ -316,6 +326,16 @@
       "output": {
         ".html": {
           "relative_path": "articles/features/minimap.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/partial-hiders.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/partial-hiders.html"
         }
       },
       "version": ""
@@ -446,6 +466,16 @@
       "output": {
         ".html": {
           "relative_path": "articles/optimization/occlusion-quality.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/optimization/shader-stripping.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/optimization/shader-stripping.html"
         }
       },
       "version": ""
@@ -835,10 +865,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "logo.svg",
+      "source_relative_path": "logo.png",
       "output": {
         "resource": {
-          "relative_path": "logo.svg"
+          "relative_path": "logo.png"
         }
       },
       "version": ""

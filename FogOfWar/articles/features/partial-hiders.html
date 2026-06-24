@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Hiders | Pixel-Perfect Fog Of War </title>
+      <title>Partial Hiders | Pixel-Perfect Fog Of War </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Hiders | Pixel-Perfect Fog Of War ">
+      <meta name="title" content="Partial Hiders | Pixel-Perfect Fog Of War ">
       <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
       
       <link rel="icon" href="../../favicon.ico">
@@ -85,49 +85,87 @@
         </div>
 
         <article data-uid="">
-<h1 id="hiders">Hiders</h1>
+<h1 id="partial-hiders">Partial Hiders</h1>
 
 <hr>
-<p>Hiders are objects that should be hidden whenever they fall outside of every revealer's line of sight — enemy units, loot, interactables, and so on.</p>
-<div style="display:flex; gap:1em; align-items:flex-start; flex-wrap:wrap;">
-  <figure style="margin:0;">
-    <img src="../../images/hider-revealed.png" alt="Hider revealed" style="height:260px; width:auto; max-width:100%;">
-    <figcaption><em>Hider in line of sight — revealed</em></figcaption>
-  </figure>
-  <figure style="margin:0;">
-    <img src="../../images/hider-missed.png" alt="Hider hidden" style="height:260px; width:auto; max-width:100%;">
-    <figcaption><em>Hider out of line of sight — hidden</em></figcaption>
-  </figure>
+<p>A <strong>Partial Hider</strong> is a shader-driven hider that fades out <strong>per-pixel</strong> at the edge of the fog, instead of toggling on and off as a whole. An object using a partial hider material is fully hidden deep in the fog, fully visible in clear line of sight, and <strong>smoothly faded</strong> right at the boundary.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>As of version 3.3.0, partial hiders require <strong>no component and no registration</strong> — they are entirely material/shader based. Just put a partial hider shader on the object's material.</p>
 </div>
-<h2 id="adding-a-hider">Adding a Hider</h2>
-<ol>
-<li>Add the <strong>Fog Of War Hider</strong> component to a GameObject.</li>
-<li>Add one of the <strong>Hider Behavior</strong> components (for example <strong>Hider Disable Objects</strong>) to control what actually happens when the object is hidden or revealed.</li>
-</ol>
-<p>The hider registers itself with the <a href="fog-of-war-world.html">Fog Of War World</a> automatically.</p>
-<h2 id="sample-points">Sample Points</h2>
-<p>A hider is tested for visibility at its <strong>Sample Points</strong>. You can add as many sample points as you like — the hider counts as visible if any one of them is seen. If no sample points are assigned, the object's own transform is used.</p>
+<h2 id="partial-hiders-vs-the-fog-of-war-hider-component">Partial Hiders vs the Fog Of War Hider component</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Partial Hider (shader)</th>
+<th><a href="../components/hider.html">Fog Of War Hider</a> (component)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Setup</td>
+<td>A shader on the material</td>
+<td>A component + a <a href="../components/hider-behaviors.html">Hider Behavior</a></td>
+</tr>
+<tr>
+<td>Granularity</td>
+<td>Per-pixel, smooth edge fade</td>
+<td>Whole-object show/hide</td>
+</tr>
+<tr>
+<td>Registration</td>
+<td>None</td>
+<td>Registered with the world</td>
+</tr>
+<tr>
+<td>Gameplay events</td>
+<td>No</td>
+<td>Yes (<a href="../api/events.html"><code>OnHiderVisibilityChanged</code></a>)</td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Many objects, soft edges, scenery</td>
+<td>Discrete units, logic on reveal/hide</td>
+</tr>
+</tbody>
+</table>
+<p>Use partial hiders for smooth visual fading and large numbers of objects; use the component when you need gameplay logic (events, enabling/disabling behavior) on reveal.</p>
+<h2 id="how-it-works">How It Works</h2>
+<p>A partial hider shader samples the fog visibility at each fragment's world position and multiplies the object's <strong>alpha</strong> by it. The object must therefore be rendered with a <strong>transparent or cutout</strong> (alpha-based) material.</p>
+<h2 id="using-the-included-shaders">Using the Included Shaders</h2>
+<p>The package ships ready-to-use partial hider shaders under <code>FogOfWar/Shaders/Partial Hiders/</code>:</p>
+<ul>
+<li><strong>2D</strong> — <code>FOW/2D/ASE/PartialHider2D</code></li>
+<li><strong>Built-In RP</strong> — Partial Hider <strong>Cutout</strong> and <strong>Transparent</strong> variants (Shader Graph and Amplify Shader Editor)</li>
+<li><strong>FOW Grid</strong> — a procedural grid example that renders as its own custom FOW plane</li>
+</ul>
+<p>Assign one of these shaders to your object's material and you're done.</p>
+<h2 id="adding-partial-hiding-to-your-own-shader">Adding Partial Hiding to Your Own Shader</h2>
+<p>You can add partial hiding to any custom shader by multiplying your final <strong>alpha</strong> by the fog visibility sample.</p>
+<h3 id="shader-graph">Shader Graph</h3>
+<p>Use the included <strong>PartialHiderLogic</strong> sub-graph, and multiply your shader's output alpha by its result.</p>
+<h3 id="amplify-shader-editor">Amplify Shader Editor</h3>
+<p>Use the included <strong>PartialHiderSubFunction</strong> node, and multiply your output alpha by its result.</p>
+<h3 id="hand-written-hlsl">Hand-written HLSL</h3>
+<p>Include the logic header and call the world-space sample function:</p>
+<pre><code class="lang-hlsl">#include &quot;Assets/FogOfWar/Shaders/FogOfWarLogic.hlsl&quot;
+
+// worldPos = the fragment's world position
+float fowVisibility;
+FOW_Sample_WS_float(worldPos, fowVisibility); // 0 = hidden, 1 = fully visible
+
+// multiply your output alpha by the visibility
+finalColor.a *= fowVisibility;
+</code></pre>
 <div class="TIP">
 <h5>Tip</h5>
-<p>If you use many hiders, keep the number of sample points low. Each sample point is an extra visibility test.</p>
+<p><code>FOW_Sample_WS_float</code> (and its <code>_half</code> variant) returns the fog visibility at a world position. <code>FOW_Sample_float(position2D, height, out result)</code> is also available if you already have a position on the fog plane.</p>
 </div>
-<h2 id="hider-behaviors">Hider Behaviors</h2>
-<p>The Fog Of War Hider component only detects visibility — a <strong>Hider Behavior</strong> decides what to do about it. Built-in behaviors:</p>
+<h2 id="related">Related</h2>
 <ul>
-<li><strong>Hider Disable Objects</strong> — enables/disables a set of GameObjects</li>
-<li><strong>Hider Disable Renderers</strong> — enables/disables a set of Renderers</li>
-<li><strong>Hider Toggle Objects</strong> — swaps one set of objects for another between the revealed and hidden states</li>
-</ul>
-<p>See <a href="../components/hider-behaviors.html">Hider Behaviors</a> for the full reference, and <a href="../api/custom-hider-behaviors.html">Custom Hider Behaviors</a> to write your own.</p>
-<h2 id="detecting-visibility-in-code">Detecting Visibility in Code</h2>
-<p>You can subscribe to a revealer's <code>OnHiderVisibilityChanged</code> event to react when a revealer sees or loses sight of a hider. A sample script, <code>DrawLineToHiderOnReveal.cs</code>, demonstrates this in <strong>Demo 01 (Pixel-Perfect)</strong> — enable the <code>SampleCharacter/Eye/Draw Line To Hider</code> GameObject to see it in action.</p>
-<p>See <a href="../api/events.html">Hider Visibility Events</a> for details.</p>
-<h2 id="permanently-reveal">Permanently Reveal</h2>
-<p>Enable <strong>Permanently Reveal</strong> on the hider to make it stay visible forever once it has been seen at least once — useful for discoverable map features.</p>
-<h2 id="next-steps">Next Steps</h2>
-<ul>
-<li><strong><a href="../components/hider-behaviors.html">Hider Behaviors</a></strong> — built-in behavior reference</li>
-<li><strong><a href="../api/custom-hider-behaviors.html">Custom Hider Behaviors</a></strong> — write your own</li>
+<li><a href="../components/hider.html">Hiders (component)</a></li>
+<li><a href="custom-fog-shader.html">Custom Fog Shader</a></li>
 </ul>
 
 </article>

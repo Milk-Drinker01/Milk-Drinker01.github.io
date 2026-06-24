@@ -44,7 +44,7 @@
       <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
         <div class="container-xxl flex-nowrap">
           <a class="navbar-brand" href="../../index.html">
-            <img id="logo" class="svg" src="../../logo.svg" alt="Pixel-Perfect Fog Of War">
+            <img id="logo" class="svg" src="../../logo.png" alt="Pixel-Perfect Fog Of War">
             Pixel-Perfect Fog Of War
           </a>
           <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
@@ -122,6 +122,23 @@ public class MinimapBinder : MonoBehaviour
     }
 }
 </code></pre>
+<h2 id="unit-icons">Unit Icons</h2>
+<p>You can draw icons on top of the minimap to track units — their positions update automatically each frame from their world positions.</p>
+<ol>
+<li>Add a <strong>Mini Map Icon Manager</strong> component to your map UI. Assign:
+<ul>
+<li><strong>Map Image Component</strong> — the UI <code>Image</code> the icons are parented to (your minimap).</li>
+<li><strong>Icon Prefab</strong> — a UI <code>Image</code> prefab used for each icon.</li>
+<li><strong>Initial Max Capacity</strong> — how many icons to pre-pool (auto-expands if exceeded).</li>
+</ul>
+</li>
+<li>Add a <strong>Mini Map Tracker Object</strong> component to any unit you want to appear on the map, and set its <strong>Icon Scale</strong>, <strong>Icon Color</strong>, and <strong>Icon Texture</strong>. The unit registers and unregisters itself automatically.</li>
+</ol>
+<div class="TIP">
+<h5>Tip</h5>
+<p><code>Mini Map Tracker Object</code> is a simple example you can replace with your own logic. To drive icons yourself, call <code>MiniMapIconManager.instance.TrackNewObject(transform, scale, color, sprite)</code> and <code>StopTrackingObject(transform)</code>.</p>
+</div>
+<p>There is also a small <strong>Set Mini Map Image</strong> helper component that assigns the fog texture to a UI <code>RawImage</code> on <code>Start</code>, if you'd rather not call <code>GetFOWRT()</code> yourself.</p>
 <h2 id="related">Related</h2>
 <ul>
 <li><a href="world-bounds.html">World Bounds</a></li>

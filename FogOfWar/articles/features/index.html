@@ -44,7 +44,7 @@
       <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
         <div class="container-xxl flex-nowrap">
           <a class="navbar-brand" href="../../index.html">
-            <img id="logo" class="svg" src="../../logo.svg" alt="Pixel-Perfect Fog Of War">
+            <img id="logo" class="svg" src="../../logo.png" alt="Pixel-Perfect Fog Of War">
             Pixel-Perfect Fog Of War
           </a>
           <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,6 +94,8 @@
 <p>Pixel-Perfect (per-pixel, unlimited world size), Texture Storage (enables regrow/memory), or Both.</p>
 <h4 id="fog-appearance"><a href="fog-appearance.html">Fog Appearance</a></h4>
 <p>Render the fog as Solid Color, Grayscale, Blur, Texture, or Outline — with tinting and more.</p>
+<h4 id="custom-fog-shader"><a href="custom-fog-shader.html">Custom Fog Shader</a></h4>
+<p>Write your own full-screen fog look in HLSL with the Custom appearance.</p>
 <h4 id="hard--soft-fog"><a href="hard-soft-fog.html">Hard &amp; Soft Fog</a></h4>
 <p>Crisp hard edges, or soft gradient edges with adjustable blur distance.</p>
 <h4 id="pixelation--dithering"><a href="pixelation-dithering.html">Pixelation &amp; Dithering</a></h4>
@@ -102,8 +104,10 @@
 <p>Render everything outside a defined world boundary as solid black.</p>
 <h4 id="fog-regrow--fading"><a href="regrow-and-fading.html">Fog Regrow &amp; Fading</a></h4>
 <p>Let explored areas fade back into fog over time, and fade revealer vision in and out. (Texture Storage mode.)</p>
+<h4 id="partial-hiders"><a href="partial-hiders.html">Partial Hiders</a></h4>
+<p>Shader-based hiders that fade out per-pixel at the fog edge — no component required.</p>
 <h4 id="minimap-generation"><a href="minimap.html">Minimap Generation</a></h4>
-<p>Generate a fog texture you can draw over a UI map to visualize explored areas and line of sight.</p>
+<p>Generate a fog texture you can draw over a UI map to visualize explored areas and line of sight, with optional unit-tracking icons.</p>
 <h4 id="saving--loading"><a href="saving-loading.html">Saving &amp; Loading</a></h4>
 <p>Save explored fog state to a byte array and restore it later.</p>
 

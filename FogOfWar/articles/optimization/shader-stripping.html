@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Hiders | Pixel-Perfect Fog Of War </title>
+      <title>Shader Stripping | Pixel-Perfect Fog Of War </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Hiders | Pixel-Perfect Fog Of War ">
+      <meta name="title" content="Shader Stripping | Pixel-Perfect Fog Of War ">
       <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
       
       <link rel="icon" href="../../favicon.ico">
@@ -85,49 +85,37 @@
         </div>
 
         <article data-uid="">
-<h1 id="hiders">Hiders</h1>
+<h1 id="shader-stripping">Shader Stripping</h1>
 
 <hr>
-<p>Hiders are objects that should be hidden whenever they fall outside of every revealer's line of sight — enemy units, loot, interactables, and so on.</p>
-<div style="display:flex; gap:1em; align-items:flex-start; flex-wrap:wrap;">
-  <figure style="margin:0;">
-    <img src="../../images/hider-revealed.png" alt="Hider revealed" style="height:260px; width:auto; max-width:100%;">
-    <figcaption><em>Hider in line of sight — revealed</em></figcaption>
-  </figure>
-  <figure style="margin:0;">
-    <img src="../../images/hider-missed.png" alt="Hider hidden" style="height:260px; width:auto; max-width:100%;">
-    <figcaption><em>Hider out of line of sight — hidden</em></figcaption>
-  </figure>
+<p>Pixel-Perfect Fog Of War compiles its full-screen fog into many shader <strong>variants</strong> — one combination per appearance look and feature keyword. The <strong>Shader Stripper</strong> lets you remove the variants you don't use from your builds, reducing build size and shader compile time.</p>
+<h2 id="the-shader-config-asset">The Shader Config Asset</h2>
+<p>Stripping is controlled by a <code>FOW_ShaderConfig</code> ScriptableObject. It is created automatically at <code>Assets/FogOfWar/FOW_ShaderConfig.asset</code> — select it in the Project window to edit its options.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>The shader config is <strong>editor-only</strong> — it lives in the editor assembly and never ships in your build, so it doesn't need to be a preloaded asset. Only one config is active at a time (toggle <strong>Is Active Asset</strong>); the active one is what the stripper reads at build time.</p>
 </div>
-<h2 id="adding-a-hider">Adding a Hider</h2>
-<ol>
-<li>Add the <strong>Fog Of War Hider</strong> component to a GameObject.</li>
-<li>Add one of the <strong>Hider Behavior</strong> components (for example <strong>Hider Disable Objects</strong>) to control what actually happens when the object is hidden or revealed.</li>
-</ol>
-<p>The hider registers itself with the <a href="fog-of-war-world.html">Fog Of War World</a> automatically.</p>
-<h2 id="sample-points">Sample Points</h2>
-<p>A hider is tested for visibility at its <strong>Sample Points</strong>. You can add as many sample points as you like — the hider counts as visible if any one of them is seen. If no sample points are assigned, the object's own transform is used.</p>
-<div class="TIP">
-<h5>Tip</h5>
-<p>If you use many hiders, keep the number of sample points low. Each sample point is an extra visibility test.</p>
-</div>
-<h2 id="hider-behaviors">Hider Behaviors</h2>
-<p>The Fog Of War Hider component only detects visibility — a <strong>Hider Behavior</strong> decides what to do about it. Built-in behaviors:</p>
+<h2 id="what-you-can-strip">What You Can Strip</h2>
+<p>Enable a toggle to strip variants matching that feature or look from builds.</p>
+<p><strong>Appearance Looks</strong> — strip any <a href="../features/fog-appearance.html">appearance</a> you never use:</p>
 <ul>
-<li><strong>Hider Disable Objects</strong> — enables/disables a set of GameObjects</li>
-<li><strong>Hider Disable Renderers</strong> — enables/disables a set of Renderers</li>
-<li><strong>Hider Toggle Objects</strong> — swaps one set of objects for another between the revealed and hidden states</li>
+<li>Solid Color, Grayscale, Blur, Texture Sample, Outline, Custom</li>
 </ul>
-<p>See <a href="../components/hider-behaviors.html">Hider Behaviors</a> for the full reference, and <a href="../api/custom-hider-behaviors.html">Custom Hider Behaviors</a> to write your own.</p>
-<h2 id="detecting-visibility-in-code">Detecting Visibility in Code</h2>
-<p>You can subscribe to a revealer's <code>OnHiderVisibilityChanged</code> event to react when a revealer sees or loses sight of a hider. A sample script, <code>DrawLineToHiderOnReveal.cs</code>, demonstrates this in <strong>Demo 01 (Pixel-Perfect)</strong> — enable the <code>SampleCharacter/Eye/Draw Line To Hider</code> GameObject to see it in action.</p>
-<p>See <a href="../api/events.html">Hider Visibility Events</a> for details.</p>
-<h2 id="permanently-reveal">Permanently Reveal</h2>
-<p>Enable <strong>Permanently Reveal</strong> on the hider to make it stay visible forever once it has been seen at least once — useful for discoverable map features.</p>
-<h2 id="next-steps">Next Steps</h2>
+<p><strong>Feature Variants:</strong></p>
 <ul>
-<li><strong><a href="../components/hider-behaviors.html">Hider Behaviors</a></strong> — built-in behavior reference</li>
-<li><strong><a href="../api/custom-hider-behaviors.html">Custom Hider Behaviors</a></strong> — write your own</li>
+<li>No Spatial Hashing, Pixelate, Dithering, Arc Leaking (Bleeding), Texture Blur, Realtime Sampling, 2D, Hard Fog, Soft Fog, Regrow</li>
+</ul>
+<p>It also holds the <strong>Custom Effect Hlsl</strong> reference used by the <a href="../features/custom-fog-shader.html">Custom Fog Shader</a>.</p>
+<h2 id="example">Example</h2>
+<p>If your game only ever uses <strong>Soft</strong> fog with the <strong>Solid Color</strong> look, you can strip the Hard Fog variant and every other appearance (Grayscale, Blur, Texture, Outline, Custom) to trim the build.</p>
+<div class="WARNING">
+<h5>Warning</h5>
+<p>Only strip variants you are certain you will never use <strong>at runtime</strong>. If you switch fog appearance or toggle features at runtime (for example via <a href="../api/fog-of-war-world.html#setfowappearance"><code>SetFowAppearance</code></a>), do <strong>not</strong> strip those variants — a stripped variant will fail to render in the player build.</p>
+</div>
+<h2 id="related">Related</h2>
+<ul>
+<li><a href="../features/fog-appearance.html">Fog Appearance</a></li>
+<li><a href="../features/custom-fog-shader.html">Custom Fog Shader</a></li>
 </ul>
 
 </article>

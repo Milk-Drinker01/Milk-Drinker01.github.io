@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Hiders | Pixel-Perfect Fog Of War </title>
+      <title>Custom Fog Shader | Pixel-Perfect Fog Of War </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Hiders | Pixel-Perfect Fog Of War ">
+      <meta name="title" content="Custom Fog Shader | Pixel-Perfect Fog Of War ">
       <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
       
       <link rel="icon" href="../../favicon.ico">
@@ -85,49 +85,54 @@
         </div>
 
         <article data-uid="">
-<h1 id="hiders">Hiders</h1>
+<h1 id="custom-fog-shader">Custom Fog Shader</h1>
 
 <hr>
-<p>Hiders are objects that should be hidden whenever they fall outside of every revealer's line of sight — enemy units, loot, interactables, and so on.</p>
-<div style="display:flex; gap:1em; align-items:flex-start; flex-wrap:wrap;">
-  <figure style="margin:0;">
-    <img src="../../images/hider-revealed.png" alt="Hider revealed" style="height:260px; width:auto; max-width:100%;">
-    <figcaption><em>Hider in line of sight — revealed</em></figcaption>
-  </figure>
-  <figure style="margin:0;">
-    <img src="../../images/hider-missed.png" alt="Hider hidden" style="height:260px; width:auto; max-width:100%;">
-    <figcaption><em>Hider out of line of sight — hidden</em></figcaption>
-  </figure>
-</div>
-<h2 id="adding-a-hider">Adding a Hider</h2>
+<p>The <strong>Custom</strong> <a href="fog-appearance.html">fog appearance</a> lets you write your own full-screen fog look in HLSL when none of the built-in appearances (Solid Color, Grayscale, Blur, Texture, Outline) fit your art direction.</p>
+<h2 id="overview">Overview</h2>
+<p>You implement a single function, <code>FOW_Shade_Custom</code>, in your own <code>.hlsl</code> file and point the system at it. The package keeps your effect wired up across updates by <strong>redirecting</strong> its internal <code>FowCustomInclude.hlsl</code> to your file — so your code lives outside the package folder and survives reimports.</p>
+<h2 id="setup">Setup</h2>
 <ol>
-<li>Add the <strong>Fog Of War Hider</strong> component to a GameObject.</li>
-<li>Add one of the <strong>Hider Behavior</strong> components (for example <strong>Hider Disable Objects</strong>) to control what actually happens when the object is hidden or revealed.</li>
+<li>Create an <code>.hlsl</code> file anywhere in your project that implements <code>FOW_Shade_Custom</code> (see below).</li>
+<li>Select the <code>FOW_ShaderConfig</code> asset in your project (auto-created at <code>Assets/FogOfWar/FOW_ShaderConfig.asset</code>).</li>
+<li>Assign your <code>.hlsl</code> file to the <strong>Custom Effect Hlsl</strong> field.</li>
+<li>On the <a href="../getting-started/fog-of-war-world.html">Fog Of War World</a>, set <strong>Fog Appearance</strong> to <strong>Custom</strong>.</li>
 </ol>
-<p>The hider registers itself with the <a href="fog-of-war-world.html">Fog Of War World</a> automatically.</p>
-<h2 id="sample-points">Sample Points</h2>
-<p>A hider is tested for visibility at its <strong>Sample Points</strong>. You can add as many sample points as you like — the hider counts as visible if any one of them is seen. If no sample points are assigned, the object's own transform is used.</p>
-<div class="TIP">
-<h5>Tip</h5>
-<p>If you use many hiders, keep the number of sample points low. Each sample point is an extra visibility test.</p>
+<div class="IMPORTANT">
+<h5>Important</h5>
+<p>Do <strong>not</strong> edit <code>FowCustomInclude.hlsl</code> directly — it is auto-generated. Assign your file to the shader config instead, and the system redirects the include to it automatically (it re-syncs whenever the config or project assets change).</p>
 </div>
-<h2 id="hider-behaviors">Hider Behaviors</h2>
-<p>The Fog Of War Hider component only detects visibility — a <strong>Hider Behavior</strong> decides what to do about it. Built-in behaviors:</p>
+<h2 id="the-fow_shade_custom-function">The <code>FOW_Shade_Custom</code> Function</h2>
+<pre><code class="lang-hlsl">float4 FOW_Shade_Custom(
+    float4 SceneColor,    // the current screen pixel color
+    float2 screenUV,      // screen-space UV
+    float4 sceneTexel,    // raw scene texel
+    float2 FowPosition,   // position on the fog plane
+    float  FowHeight,     // height at this pixel
+    float3 worldPos,      // reconstructed world position
+    float3 worldNormal,   // world normal
+    float  FowInfluence)  // 0 = fully fogged, 1 = fully visible
+{
+    // your custom look here — return the final pixel color
+}
+</code></pre>
+<p><code>FowInfluence</code> is the fog visibility for the pixel: blend between your fogged look and the unmodified <code>SceneColor</code> using it.</p>
+<h2 id="example">Example</h2>
+<p>This is the default template — a simple tinted fog that you can use as a starting point:</p>
+<pre><code class="lang-hlsl">float4 FOW_Shade_Custom(float4 SceneColor, float2 screenUV, float4 sceneTexel,
+                        float2 FowPosition, float FowHeight, float3 worldPos, float3 worldNormal,
+                        float FowInfluence)
+{
+    float3 fogColor = lerp(_fowColor.rgb, SceneColor.rgb * _fowColor.rgb, _fowColor.a);
+    return float4(lerp(fogColor, SceneColor.rgb, FowInfluence), SceneColor.a);
+}
+</code></pre>
+<p><code>_fowColor</code> is the <strong>Fog Color</strong> set on the Fog Of War World, available to your function.</p>
+<h2 id="related">Related</h2>
 <ul>
-<li><strong>Hider Disable Objects</strong> — enables/disables a set of GameObjects</li>
-<li><strong>Hider Disable Renderers</strong> — enables/disables a set of Renderers</li>
-<li><strong>Hider Toggle Objects</strong> — swaps one set of objects for another between the revealed and hidden states</li>
-</ul>
-<p>See <a href="../components/hider-behaviors.html">Hider Behaviors</a> for the full reference, and <a href="../api/custom-hider-behaviors.html">Custom Hider Behaviors</a> to write your own.</p>
-<h2 id="detecting-visibility-in-code">Detecting Visibility in Code</h2>
-<p>You can subscribe to a revealer's <code>OnHiderVisibilityChanged</code> event to react when a revealer sees or loses sight of a hider. A sample script, <code>DrawLineToHiderOnReveal.cs</code>, demonstrates this in <strong>Demo 01 (Pixel-Perfect)</strong> — enable the <code>SampleCharacter/Eye/Draw Line To Hider</code> GameObject to see it in action.</p>
-<p>See <a href="../api/events.html">Hider Visibility Events</a> for details.</p>
-<h2 id="permanently-reveal">Permanently Reveal</h2>
-<p>Enable <strong>Permanently Reveal</strong> on the hider to make it stay visible forever once it has been seen at least once — useful for discoverable map features.</p>
-<h2 id="next-steps">Next Steps</h2>
-<ul>
-<li><strong><a href="../components/hider-behaviors.html">Hider Behaviors</a></strong> — built-in behavior reference</li>
-<li><strong><a href="../api/custom-hider-behaviors.html">Custom Hider Behaviors</a></strong> — write your own</li>
+<li><a href="fog-appearance.html">Fog Appearance</a></li>
+<li><a href="partial-hiders.html">Partial Hiders</a></li>
+<li><a href="../optimization/shader-stripping.html">Shader Stripping</a></li>
 </ul>
 
 </article>
