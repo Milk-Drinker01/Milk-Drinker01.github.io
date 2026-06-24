@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Optimization | Pixel-Perfect Fog Of War </title>
+      <title>Shader Stripping | Pixel-Perfect Fog Of War </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Optimization | Pixel-Perfect Fog Of War ">
+      <meta name="title" content="Shader Stripping | Pixel-Perfect Fog Of War ">
       <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
       
       <link rel="icon" href="../../favicon.ico">
@@ -85,18 +85,22 @@
         </div>
 
         <article data-uid="">
-<h1 id="optimization">Optimization</h1>
+<h1 id="shader-stripping">Shader Stripping</h1>
 
 <hr>
-<p>Pixel-Perfect Fog Of War is built to scale. Line-of-sight raycasting runs on Burst-compiled jobs, and several systems let you trade accuracy for throughput so you can run anywhere from a handful to thousands of revealers.</p>
-<h4 id="fog-of-war-world-optimization"><a href="fog-of-war-world.html">Fog Of War World Optimization</a></h4>
-<p>The high-impact world settings — update timing, spatial acceleration, staged uploads, and buffer limits.</p>
-<h4 id="occlusion-quality"><a href="occlusion-quality.html">Occlusion Quality</a></h4>
-<p>Per-revealer preset tiers for raycast resolution and edge detection — or disable occlusion entirely for thousands of cheap revealers.</p>
-<h4 id="static-revealers"><a href="static-revealers.html">Static Revealers</a></h4>
-<p>Stop unmoving revealers from recalculating every frame.</p>
-<h4 id="shader-stripping"><a href="shader-stripping.html">Shader Stripping</a></h4>
-<p>Strip unused shader variants from builds to cut build size and compile time. Full reference under <a href="../configuration/shader-config/shader-stripping.html">Shader Config</a>.</p>
+<p>Fog Of War compiles its full-screen fog into many shader <strong>variants</strong> (one per appearance look and feature keyword). Stripping the variants you don't use trims <strong>build size</strong> and <strong>shader compile time</strong> — a worthwhile build-time optimization.</p>
+<p>Stripping is configured on the editor-only <code>FOW_ShaderConfig</code> asset: enable a toggle to strip that appearance look or feature variant from builds.</p>
+<div class="WARNING">
+<h5>Warning</h5>
+<p>Only strip variants you will never use <strong>at runtime</strong>. If you switch fog appearance or toggle features at runtime (e.g. via <a href="../api/fog-of-war-world.html#setfowappearance"><code>SetFowAppearance</code></a>), keep those variants — a stripped variant won't render in the player build.</p>
+</div>
+<p><strong>Full reference:</strong> <a href="../configuration/shader-config/shader-stripping.html">Configuration → Shader Config → Shader Stripping</a>.</p>
+<h2 id="related">Related</h2>
+<ul>
+<li><a href="../configuration/shader-config/index.html">Shader Config</a></li>
+<li><a href="../configuration/shader-config/custom-fog-shader.html">Custom Fog Shader</a></li>
+<li><a href="fog-of-war-world.html">Fog Of War World Optimization</a></li>
+</ul>
 
 </article>
 
