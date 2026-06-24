@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Extra Rendering | Pixel-Perfect Fog Of War </title>
+      <title>Custom Fog Shader | Pixel-Perfect Fog Of War </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Extra Rendering | Pixel-Perfect Fog Of War ">
+      <meta name="title" content="Custom Fog Shader | Pixel-Perfect Fog Of War ">
       <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
       
       <link rel="icon" href="../../../favicon.ico">
@@ -85,114 +85,56 @@
         </div>
 
         <article data-uid="">
-<h1 id="extra-rendering">Extra Rendering</h1>
+<h1 id="custom-fog-shader">Custom Fog Shader</h1>
 
 <hr>
-<p>The <strong>FOW Extra Rendering Options</strong> group of the <a href="index.html">Fog Of War World</a> inspector. Labels match the inspector; the code field name is noted where it differs.</p>
-<h2 id="pixelation">Pixelation</h2>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Pixelate Fog?</strong></td>
-<td>bool</td>
-<td>false</td>
-<td>Quantizes the fog into pixel blocks. Code: <code>PixelateFog</code>.</td>
-</tr>
-<tr>
-<td><strong>Use World Space?</strong></td>
-<td>bool</td>
-<td>false</td>
-<td>Pixelate in world space instead of revealer-local space. Code: <code>WorldSpacePixelate</code>.</td>
-</tr>
-<tr>
-<td><strong>Pixel Density</strong></td>
-<td>float</td>
-<td>2</td>
-<td>Pixel size (higher = finer).</td>
-</tr>
-<tr>
-<td><strong>Round Revealer Position?</strong></td>
-<td>bool</td>
-<td>false</td>
-<td>Snap revealers to the pixel grid. Code: <code>RoundRevealerPosition</code>.</td>
-</tr>
-<tr>
-<td><strong>Pixel Grid Offset</strong></td>
-<td>Vector2</td>
-<td>(0, 0)</td>
-<td>Offset of the pixel grid.</td>
-</tr>
-</tbody>
-</table>
-<p><img src="../../../images/fog-pixelated.png" alt="Pixelated fog"></p>
-<p>See <a href="../../features/pixelation-dithering.html">Pixelation &amp; Dithering</a>.</p>
-<h2 id="world-bounds-darkening">World Bounds Darkening</h2>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Type</th>
-<th>Range</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Darken Out-Of-World-Bounds Area?</strong></td>
-<td>bool</td>
-<td>—</td>
-<td>Renders everything outside the bounds as solid black. Code: <code>UseWorldBounds</code>.</td>
-</tr>
-<tr>
-<td><strong>World Bounds Soften Distance</strong></td>
-<td>float</td>
-<td>0 → 5</td>
-<td>Softens the boundary edge of the black-out. Code: <code>WorldBoundsSoftenDistance</code>.</td>
-</tr>
-<tr>
-<td><strong>World Bounds Influence</strong></td>
-<td>float</td>
-<td>0 → 1</td>
-<td>How strongly the black-out is applied. Code: <code>WorldBoundsInfluence</code>.</td>
-</tr>
-</tbody>
-</table>
-<p>The bounds volume itself (center / extents) is set under <a href="bounds.html">Bounds</a>. See <a href="../../features/world-bounds.html">World Bounds</a>.</p>
-<p><img src="../../../images/world-bounds-effect.png" alt="World Bounds black-out"></p>
-<h2 id="other">Other</h2>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Invert Fow Effect?</strong></td>
-<td>bool</td>
-<td>false</td>
-<td>Inverts the fog mask (fogs the seen areas instead of the unseen areas). Code: <code>InvertFowEffect</code>.</td>
-</tr>
-<tr>
-<td><strong>Add Slight Arc Leaking?</strong></td>
-<td>bool</td>
-<td>false</td>
-<td>Allows fog to leak slightly past obstacle edges in an arc shape. Works with soft fog. Code: <code>AllowBleeding</code>.</td>
-</tr>
-</tbody>
-</table>
-<p><img src="../../../images/arc-leaking.png" alt="Add Slight Arc Leaking"></p>
+<p>The <strong>Custom</strong> <a href="../../features/fog-appearance.html">fog appearance</a> lets you write your own full-screen fog look in HLSL when none of the built-in appearances (Solid Color, Gray Scale, Blur, Texture Color, Outline) fit your art direction.</p>
+<h2 id="overview">Overview</h2>
+<p>You implement a single function, <code>FOW_Shade_Custom</code>, in your own <code>.hlsl</code> file and point the <a href="index.html">Shader Config</a> at it. The package keeps your effect wired up across updates by <strong>redirecting</strong> its internal <code>FowCustomInclude.hlsl</code> to your file — so your code lives outside the package folder and survives reimports.</p>
+<h2 id="setup">Setup</h2>
+<ol>
+<li>Create an <code>.hlsl</code> file anywhere in your project that implements <code>FOW_Shade_Custom</code> (see below).</li>
+<li>Select the <a href="index.html"><code>FOW_ShaderConfig</code></a> asset (auto-created at <code>Assets/FogOfWar/FOW_ShaderConfig.asset</code>).</li>
+<li>Assign your <code>.hlsl</code> file to the <strong>Custom Effect Hlsl</strong> field.</li>
+<li>On the <a href="../fog-of-war-world/rendering.html#fog-appearance">Fog Of War World</a>, set <strong>Fog Shader</strong> to <strong>Custom</strong>.</li>
+</ol>
+<div class="IMPORTANT">
+<h5>Important</h5>
+<p>Do <strong>not</strong> edit <code>FowCustomInclude.hlsl</code> directly — it is auto-generated. Assign your file to the shader config instead, and the system redirects the include to it automatically (it re-syncs whenever the config or project assets change).</p>
+</div>
+<h2 id="the-fow_shade_custom-function">The <code>FOW_Shade_Custom</code> Function</h2>
+<pre><code class="lang-hlsl">float4 FOW_Shade_Custom(
+    float4 SceneColor,    // the current screen pixel color
+    float2 screenUV,      // screen-space UV
+    float4 sceneTexel,    // raw scene texel
+    float2 FowPosition,   // position on the fog plane
+    float  FowHeight,     // height at this pixel
+    float3 worldPos,      // reconstructed world position
+    float3 worldNormal,   // world normal
+    float  FowInfluence)  // 0 = fully fogged, 1 = fully visible
+{
+    // your custom look here — return the final pixel color
+}
+</code></pre>
+<p><code>FowInfluence</code> is the fog visibility for the pixel: blend between your fogged look and the unmodified <code>SceneColor</code> using it.</p>
+<h2 id="example">Example</h2>
+<p>This is the default template — a simple tinted fog that you can use as a starting point:</p>
+<pre><code class="lang-hlsl">float4 FOW_Shade_Custom(float4 SceneColor, float2 screenUV, float4 sceneTexel,
+                        float2 FowPosition, float FowHeight, float3 worldPos, float3 worldNormal,
+                        float FowInfluence)
+{
+    float3 fogColor = lerp(_fowColor.rgb, SceneColor.rgb * _fowColor.rgb, _fowColor.a);
+    return float4(lerp(fogColor, SceneColor.rgb, FowInfluence), SceneColor.a);
+}
+</code></pre>
+<p><code>_fowColor</code> is the <strong>Fow Color</strong> set on the Fog Of War World, available to your function.</p>
+<h2 id="related">Related</h2>
+<ul>
+<li><a href="index.html">Shader Config</a></li>
+<li><a href="shader-stripping.html">Shader Stripping</a></li>
+<li><a href="../../features/fog-appearance.html">Fog Appearance</a></li>
+<li><a href="../../features/partial-hiders.html">Partial Hiders</a></li>
+</ul>
 
 </article>
 

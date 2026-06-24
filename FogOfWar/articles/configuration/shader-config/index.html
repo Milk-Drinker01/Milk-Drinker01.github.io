@@ -2,18 +2,18 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Spatial Acceleration | Pixel-Perfect Fog Of War </title>
+      <title>Shader Config | Pixel-Perfect Fog Of War </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Spatial Acceleration | Pixel-Perfect Fog Of War ">
+      <meta name="title" content="Shader Config | Pixel-Perfect Fog Of War ">
       <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
       
-      <link rel="icon" href="../../favicon.ico">
-      <link rel="stylesheet" href="../../public/docfx.min.css">
-      <link rel="stylesheet" href="../../public/main.css">
-      <meta name="docfx:navrel" content="../../toc.html">
-      <meta name="docfx:tocrel" content="../toc.html">
+      <link rel="icon" href="../../../favicon.ico">
+      <link rel="stylesheet" href="../../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../../public/main.css">
+      <meta name="docfx:navrel" content="../../../toc.html">
+      <meta name="docfx:tocrel" content="../../toc.html">
       
-      <meta name="docfx:rel" content="../../">
+      <meta name="docfx:rel" content="../../../">
       
       
       
@@ -30,7 +30,7 @@
       <meta name="loc:copy" content="Copy">
       <meta name="loc:downloadPdf" content="Download PDF">
 
-      <script type="module" src="./../../public/docfx.min.js"></script>
+      <script type="module" src="./../../../public/docfx.min.js"></script>
 
       <script>
         const theme = localStorage.getItem('theme') || 'auto'
@@ -43,8 +43,8 @@
     <header class="bg-body border-bottom">
       <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
         <div class="container-xxl flex-nowrap">
-          <a class="navbar-brand" href="../../index.html">
-            <img id="logo" class="svg" src="../../logo.png" alt="Pixel-Perfect Fog Of War">
+          <a class="navbar-brand" href="../../../index.html">
+            <img id="logo" class="svg" src="../../../logo.png" alt="Pixel-Perfect Fog Of War">
             Pixel-Perfect Fog Of War
           </a>
           <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,58 +85,21 @@
         </div>
 
         <article data-uid="">
-<h1 id="spatial-acceleration">Spatial Acceleration</h1>
+<h1 id="shader-config">Shader Config</h1>
 
 <hr>
-<p>Spatial acceleration (added in 3.0) uses a <strong>spatial hash grid</strong> to make revealer and hider queries fast, so the system scales to large worlds and many objects. It is enabled by default.</p>
-<h2 id="settings">Settings</h2>
-<p>On the <a href="../getting-started/fog-of-war-world.html">Fog Of War World</a> component:</p>
-<p>Under <strong>Configuration and Optimizations</strong>. (Labels match the inspector; the code field name is noted where it differs.)</p>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Use Spatial Acceleration?</strong></td>
-<td>bool</td>
-<td>true</td>
-<td>Enables the spatial hash grid. Code: <code>UseSpatialAcceleration</code>.</td>
-</tr>
-<tr>
-<td><strong>Grid Size</strong></td>
-<td>int</td>
-<td>32</td>
-<td>The size of each spatial hash bucket, in world units. Code: <code>SpatialHashGridSize</code>.</td>
-</tr>
-<tr>
-<td><strong>Table Capacity</strong></td>
-<td>int</td>
-<td>1024</td>
-<td>How many buckets the hash table can hold. More buckets = fewer collisions. Code: <code>NumSpatialHashBuckets</code>.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="tuning-grid-size">Tuning Grid Size</h2>
-<p>The ideal <strong>Grid Size</strong> is roughly <strong>2× your average revealer's radius</strong> (including its soften distance).</p>
-<h2 id="tuning-bucket-count">Tuning Bucket Count</h2>
-<p>The bucket count is the maximum number of grid buckets the system creates.</p>
+<p>The <strong><code>FOW_ShaderConfig</code></strong> is an editor-only ScriptableObject that controls Fog Of War's shaders at build time. It does two things: it lets you write a <strong><a href="custom-fog-shader.html">Custom Fog Shader</a></strong>, and it lets you <strong><a href="shader-stripping.html">strip unused shader variants</a></strong> from your builds.</p>
+<h2 id="the-config-asset">The Config Asset</h2>
 <ul>
-<li>If the count is <strong>too low</strong>, different parts of the world can share the same grid hash ID (&quot;collisions&quot;). This still works correctly but can hurt performance.</li>
-<li>A <strong>higher</strong> count uses more memory.</li>
-<li>The <strong>larger your world</strong> (or the <strong>smaller your grid size</strong>), the more buckets you need.</li>
+<li><strong>Auto-created</strong> at <code>Assets/FogOfWar/FOW_ShaderConfig.asset</code> — select it in the Project window to edit.</li>
+<li><strong>Editor-only.</strong> It lives in the editor assembly and never ships in a build, so it doesn't need to be a preloaded asset.</li>
+<li><strong>One active at a time.</strong> Toggle <strong>Is Active Asset</strong>; the active config is the one the shader stripper reads at build time. Enabling it on one asset automatically disables it on the others.</li>
 </ul>
-<p>You can toggle spatial acceleration at runtime with <a href="../api/fog-of-war-world.html#switchspatialaccelerationmode"><code>SwitchSpatialAccelerationMode</code></a>.</p>
-<h2 id="related">Related</h2>
-<ul>
-<li><a href="update-modes.html">Revealer Update Modes</a></li>
-<li><a href="occlusion-quality.html">Occlusion Quality</a></li>
-</ul>
+<h2 id="subsections">Subsections</h2>
+<h4 id="custom-fog-shader"><a href="custom-fog-shader.html">Custom Fog Shader</a></h4>
+<p>Write your own full-screen fog look in HLSL (the <strong>Custom</strong> appearance), via the config's <strong>Custom Effect Hlsl</strong> field.</p>
+<h4 id="shader-stripping"><a href="shader-stripping.html">Shader Stripping</a></h4>
+<p>Strip the appearance looks and feature variants you don't use from builds, to cut build size and shader compile time.</p>
 
 </article>
 

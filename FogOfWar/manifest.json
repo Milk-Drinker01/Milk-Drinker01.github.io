@@ -21,21 +21,21 @@
       "version": ""
     },
     {
-      "type": "Resource",
-      "source_relative_path": "articles/ai-reference.md",
-      "output": {
-        "resource": {
-          "relative_path": "articles/ai-reference.md"
-        }
-      },
-      "version": ""
-    },
-    {
       "type": "Conceptual",
       "source_relative_path": "articles/ai-reference.md",
       "output": {
         ".html": {
           "relative_path": "articles/ai-reference.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "articles/ai-reference.md",
+      "output": {
+        "resource": {
+          "relative_path": "articles/ai-reference.md"
         }
       },
       "version": ""
@@ -282,20 +282,40 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "articles/debugging.md",
+      "source_relative_path": "articles/configuration/shader-config/custom-fog-shader.md",
       "output": {
         ".html": {
-          "relative_path": "articles/debugging.html"
+          "relative_path": "articles/configuration/shader-config/custom-fog-shader.html"
         }
       },
       "version": ""
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "articles/features/custom-fog-shader.md",
+      "source_relative_path": "articles/configuration/shader-config/index.md",
       "output": {
         ".html": {
-          "relative_path": "articles/features/custom-fog-shader.html"
+          "relative_path": "articles/configuration/shader-config/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/shader-config/shader-stripping.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/shader-config/shader-stripping.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/debugging.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/debugging.html"
         }
       },
       "version": ""
@@ -496,16 +516,6 @@
       "output": {
         ".html": {
           "relative_path": "articles/optimization/occlusion-quality.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "articles/optimization/shader-stripping.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/optimization/shader-stripping.html"
         }
       },
       "version": ""

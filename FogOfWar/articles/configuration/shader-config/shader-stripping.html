@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Appearance | Pixel-Perfect Fog Of War </title>
+      <title>Shader Stripping | Pixel-Perfect Fog Of War </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Appearance | Pixel-Perfect Fog Of War ">
+      <meta name="title" content="Shader Stripping | Pixel-Perfect Fog Of War ">
       <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
       
       <link rel="icon" href="../../../favicon.ico">
@@ -85,157 +85,31 @@
         </div>
 
         <article data-uid="">
-<h1 id="appearance">Appearance</h1>
+<h1 id="shader-stripping">Shader Stripping</h1>
 
 <hr>
-<p>The <strong>Fog Appearance</strong> group of the <a href="index.html">Fog Of War World</a> inspector. See <a href="../../features/fog-appearance.html">Fog Appearance</a> for a conceptual overview. Labels match the inspector; the code field name is noted where it differs.</p>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Fog Shader</strong></td>
-<td>enum</td>
-<td>Solid Color</td>
-<td>The render style: Solid Color, Gray Scale, Blur, Texture Color, Outline, None, or Custom. Change at runtime with <a href="../../api/fog-of-war-world.html#setfowappearance"><code>SetFowAppearance</code></a>. Code: <code>FogAppearance</code>.</td>
-</tr>
-<tr>
-<td><strong>Fow Color</strong></td>
-<td>Color</td>
-<td>(0.35, 0.35, 0.35)</td>
-<td>The fog color (shown unless Fog Shader is None). RGB sets the tint; alpha controls opacity. For Gray Scale/Blur it acts as a color pre-multiplier.</td>
-</tr>
-</tbody>
-</table>
-<p><img src="../../../images/fog-appearance-dropdown.png" alt="Fog Appearance dropdown"></p>
-<div class="NOTE">
-<h5>Note</h5>
-<p>In the current version, the <strong>Outline</strong> look is labelled <em>&quot;Temporarily non-functional&quot;</em> in the inspector while it is being reworked.</p>
+<p>Pixel-Perfect Fog Of War compiles its full-screen fog into many shader <strong>variants</strong> — one combination per appearance look and feature keyword. Shader stripping lets you remove the variants you don't use from your builds, reducing build size and shader compile time.</p>
+<p>Stripping is controlled by the <a href="index.html"><code>FOW_ShaderConfig</code></a> asset. Enable a toggle to strip variants matching that feature or look from builds.</p>
+<h2 id="what-you-can-strip">What You Can Strip</h2>
+<p><strong>Appearance Looks</strong> — strip any <a href="../../features/fog-appearance.html">appearance</a> you never use:</p>
+<ul>
+<li>Solid Color, Gray Scale, Blur, Texture Sample, Outline, Custom</li>
+</ul>
+<p><strong>Feature Variants:</strong></p>
+<ul>
+<li>No Spatial Hashing, Pixelate, Dithering, Arc Leaking (Bleeding), Texture Blur, Realtime Sampling, 2D, Hard Fog, Soft Fog, Regrow</li>
+</ul>
+<h2 id="example">Example</h2>
+<p>If your game only ever uses <strong>Soft</strong> fog with the <strong>Solid Color</strong> look, you can strip the Hard Fog variant and every other appearance (Gray Scale, Blur, Texture, Outline, Custom) to trim the build.</p>
+<div class="WARNING">
+<h5>Warning</h5>
+<p>Only strip variants you are certain you will never use <strong>at runtime</strong>. If you switch fog appearance or toggle features at runtime (for example via <a href="../../api/fog-of-war-world.html#setfowappearance"><code>SetFowAppearance</code></a>), do <strong>not</strong> strip those variants — a stripped variant will fail to render in the player build.</p>
 </div>
-<h2 id="gray-scale">Gray Scale</h2>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Type</th>
-<th>Range</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Unknown Area Saturation Strength</strong></td>
-<td>float</td>
-<td>0 → 1</td>
-<td>How strongly color is removed in unexplored areas. Code: <code>SaturationStrength</code>.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="blur">Blur</h2>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Type</th>
-<th>Range</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Unknown Area Blur Strength</strong></td>
-<td>float</td>
-<td>-1 → 1</td>
-<td>Blur intensity. Code: <code>BlurStrength</code>.</td>
-</tr>
-<tr>
-<td><strong>Min Screen Percent</strong></td>
-<td>float</td>
-<td>0 → 2</td>
-<td>Minimum screen-space blur offset. Code: <code>BlurDistanceScreenPercentMin</code>.</td>
-</tr>
-<tr>
-<td><strong>Max Screen Percent</strong></td>
-<td>float</td>
-<td>0 → 2</td>
-<td>Maximum screen-space blur offset. Code: <code>BlurDistanceScreenPercentMax</code>.</td>
-</tr>
-<tr>
-<td><strong>Num Blur Samples</strong></td>
-<td>int</td>
-<td>6 → 18</td>
-<td>Number of blur samples (higher = smoother, more expensive). Code: <code>BlurSamples</code>.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="texture-color">Texture Color</h2>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Fog Of War Texture</strong></td>
-<td>Texture2D</td>
-<td>—</td>
-<td>Texture used to render the fog. Code: <code>FogTexture</code>.</td>
-</tr>
-<tr>
-<td><strong>Use Triplanar Sampling?</strong></td>
-<td>bool</td>
-<td>true</td>
-<td>Triplanar projection for the texture (3D). Disable for single-axis projection. Code: <code>UseTriplanar</code>.</td>
-</tr>
-<tr>
-<td><strong>Texture Tiling</strong></td>
-<td>Vector2</td>
-<td>(1, 1)</td>
-<td>Texture tiling scale. Code: <code>FogTextureTiling</code>.</td>
-</tr>
-<tr>
-<td><strong>Texture Scroll Speed</strong></td>
-<td>Vector2</td>
-<td>(1, 1)</td>
-<td>Texture scroll animation speed. Code: <code>FogScrollSpeed</code>.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="outline">Outline</h2>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Outline Thickness</strong></td>
-<td>float</td>
-<td>0.1</td>
-<td>Thickness of the outline drawn at the fog boundary. Code: <code>OutlineThickness</code>.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="custom">Custom</h2>
-<p>The <strong>Custom</strong> look runs your own HLSL shader. See <a href="../../features/custom-fog-shader.html">Custom Fog Shader</a>.</p>
 <h2 id="related">Related</h2>
 <ul>
+<li><a href="index.html">Shader Config</a></li>
+<li><a href="custom-fog-shader.html">Custom Fog Shader</a></li>
 <li><a href="../../features/fog-appearance.html">Fog Appearance</a></li>
-<li><a href="../../features/custom-fog-shader.html">Custom Fog Shader</a></li>
 </ul>
 
 </article>
