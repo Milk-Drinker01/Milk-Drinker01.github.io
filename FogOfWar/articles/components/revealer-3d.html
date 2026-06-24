@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Fog Of War Revealer 3D | Pixel-Perfect Fog Of War </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Fog Of War Revealer 3D | Pixel-Perfect Fog Of War ">
+      <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.svg" alt="Pixel-Perfect Fog Of War">
+            Pixel-Perfect Fog Of War
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="fog-of-war-revealer-3d">Fog Of War Revealer 3D</h1>
+
+<hr>
+<p>Reveals the fog around a GameObject using <strong>3D physics</strong> raycasts to determine line of sight. Add it to any object that should see (the player, units, light sources, etc.). The revealer registers itself with the <a href="fog-of-war-world.html">Fog Of War World</a> automatically.</p>
+<p>For 2D projects use the <a href="revealer-2d.html">Fog Of War Revealer 2D</a> instead.</p>
+<h2 id="adding-a-revealer">Adding a Revealer</h2>
+<p>See <a href="../getting-started/revealers.html">Getting Started: Revealers</a> for a walkthrough of adding a revealer and setting the obstacle mask.</p>
+<h2 id="settings">Settings</h2>
+<p>The revealer's inspector is organized into <strong>Vision Range</strong>, <strong>Customization</strong>, <strong>Hider</strong>, and <strong>Occlusion</strong> sections. Every property is documented, with figures, in the configuration reference:</p>
+<blockquote>
+<p><strong><a href="../configuration/revealers.html">Configuration → Revealers</a></strong></p>
+</blockquote>
+<p>The most important settings to start with are <strong>View Radius</strong>, <strong>View Angle</strong>, <strong>Vision Height</strong>, <strong>Opacity</strong>, and the <strong>Obstacle Mask</strong> (the layers that block vision).</p>
+<h2 id="occlusion-quality">Occlusion Quality</h2>
+<p>A revealer's raycast accuracy is set with the <strong>Occlusion Quality</strong> preset, or disabled entirely with <strong>Use Occlusion</strong> for thousands of cheap non-blocking revealers. See <a href="../optimization/occlusion-quality.html">Occlusion Quality</a>.</p>
+<h2 id="debugging">Debugging</h2>
+<p>In the editor, the revealer exposes debug-draw toggles (<strong>Debug Mode</strong>, <strong>Draw Initial Rays</strong>, <strong>Draw Expected Next Points</strong>, <strong>Draw Edge Resolve Rays</strong>, <strong>Draw Hider Samples</strong>, and more) for visualizing line-of-sight calculation. See <a href="../debugging.html">Debugging</a>.</p>
+<h2 id="scripting">Scripting</h2>
+<p>See the <a href="../api/revealer.html">Revealer API</a> for runtime properties, events, and methods such as <code>SetRevealerAsStatic</code> and <code>ManualCalculateLineOfSight</code>.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

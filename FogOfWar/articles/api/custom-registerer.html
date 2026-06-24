@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Custom Registerer | BRG Instanced Renderer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Custom Registerer | BRG Instanced Renderer ">
+      <meta name="description" content="Documentation for BRG Instanced Renderer.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.svg" alt="BRG Instanced Renderer">
+            BRG Instanced Renderer
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="custom-registerer">Custom Registerer</h1>
+
+<hr>
+<blockquote>
+<p>Before reading this page, make sure you've read <a href="system-overview.html">System Overview</a> to understand how prototypes, render signatures, chunks, and pools work together.</p>
+</blockquote>
+<p><code>BRGRegisterer</code> is an abstract MonoBehaviour base class for building your own instance registration components. It wraps a <a href="registration-tracker.html"><code>BRGRegistrationTracker</code></a> internally, which handles the BRG singleton lifecycle, prototype reference counting, chunk tracking with automatic cleanup, overflow management, and editor support — so your subclass only needs to focus on <em>what</em> to register and <em>where</em>.</p>
+<p>For non-MonoBehaviour usage (ECS, static managers, etc.), use <a href="registration-tracker.html"><code>BRGRegistrationTracker</code></a> directly.</p>
+<p>Both built-in registerers (<a href="../components/brg-gameobject-group.html">BRG GameObject Group</a> and <a href="../components/brg-terrain-registerer.html">BRG Terrain Registerer</a>) extend this class.</p>
+<p>For a working example, see <a href="registerer-example.html">Registerer Example</a>.</p>
+<h2 id="creating-a-custom-registerer">Creating a Custom Registerer</h2>
+<p>Extend <code>BRGRegisterer</code> and implement two methods:</p>
+<pre><code class="lang-csharp">using Unity.Collections;
+using Unity.Mathematics;
+using UnityEngine;
+
+namespace BRGInstancedRenderer
+{
+    public class MyRegisterer : BRGRegisterer
+    {
+        [SerializeField] GameObject _prefab;
+
+        int _protoIndex = -1;
+        ChunkLink _chunk;
+
+        protected override void OnInitialize()
+        {
+            // 1. Register your render signature
+            _protoIndex = RegisterRenderSignatureFromPrefab(_prefab);
+            if (_protoIndex &lt; 0) return;
+
+            // 2. Allocate a chunk
+            _chunk = AllocChunk();
+            if (!_chunk.IsValid) return;
+
+            // 3. Build instance data
+            var instances = new NativeArray&lt;InstanceData&gt;(100, Allocator.TempJob);
+            for (int i = 0; i &lt; 100; i++)
+            {
+                instances[i] = new InstanceData
+                {
+                    position = new float3(i * 2f, 0f, 0f),
+                    rotation = quaternion.identity,
+                    scale = new float3(1f),
+                    signatureIndex = _protoIndex,
+                    color = new Color32(255, 255, 255, 255)
+                };
+            }
+
+            // 4. Write to the chunk
+            var bounds = new Bounds(Vector3.zero, new Vector3(200f, 10f, 10f));
+            WriteChunk(_chunk, instances, bounds);
+            instances.Dispose();
+        }
+
+        protected override void OnShutdown()
+        {
+            // Clean up local state only.
+            // Do NOT free chunks or unregister render signatures - the base class does that.
+            _chunk = ChunkLink.Invalid;
+            _protoIndex = -1;
+        }
+    }
+}
+</code></pre>
+<p>The base class automatically:</p>
+<ul>
+<li>Acquires the <code>BRGRenderer</code> singleton</li>
+<li>Calls <code>OnInitialize()</code> on enable, <code>OnShutdown()</code> on disable</li>
+<li>Frees all chunks allocated via <code>AllocChunk()</code> on shutdown</li>
+<li>Unregisters all render signatures registered via <code>RegisterRenderSignatureFromPrefab()</code> on shutdown</li>
+<li>Handles editor lifecycle (<code>[ExecuteAlways]</code> with deferred initialization)</li>
+</ul>
+<h2 id="structs">Structs</h2>
+<p>See <a href="registration-tracker.html#structs">BRGRegistrationTracker / Structs</a> for full documentation of <code>InstanceData</code>, <code>PrototypeData</code>, <code>RenderSignature</code>, <code>ChunkLink</code>, and <code>InstanceLink</code>.</p>
+<h2 id="properties">Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Access</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>BRGSystem</strong></td>
+<td>protected</td>
+<td>BRGRenderer</td>
+<td>Reference to the singleton. Set before <code>OnInitialize()</code> is called, cleared after <code>OnShutdown()</code> returns. Use it freely during those methods.</td>
+</tr>
+<tr>
+<td><strong>Registration</strong></td>
+<td>public</td>
+<td>BRGRegistrationTracker</td>
+<td>The underlying tracker. Created lazily on first access — available before <code>Initialize()</code>.</td>
+</tr>
+<tr>
+<td><strong>_registered</strong></td>
+<td>protected</td>
+<td>bool</td>
+<td><code>true</code> while the registerer is initialized. Check this before performing operations.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="manual-lifecycle">Manual Lifecycle</h2>
+<p>By default, <code>BRGRegisterer</code> initializes on <code>OnEnable</code> and shuts down on <code>OnDisable</code>. If you need manual control (e.g., a button-driven workflow), override <code>OnEnable</code>/<code>OnDisable</code> and call these methods directly:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>void Initialize()</code></td>
+<td>Acquire the singleton and call <code>OnInitialize()</code>. Safe to call multiple times — does nothing if already registered.</td>
+</tr>
+<tr>
+<td><code>void Shutdown()</code></td>
+<td>Call <code>OnShutdown()</code>, free all tracked chunks and prototypes, and release the singleton.</td>
+</tr>
+</tbody>
+</table>
+<p>See the <a href="registerer-example.html">Registerer Example</a> for a working example of manual lifecycle using <code>_autoRegister</code>.</p>
+<h2 id="api">API</h2>
+<p>These methods are forwarded to the underlying <code>BRGRegistrationTracker</code>. For full descriptions of each method (parameters, edge cases, etc.), see the <a href="registration-tracker.html">BRGRegistrationTracker</a> page.</p>
+<p>Lifecycle methods (<code>Register*</code>, <code>AllocChunk</code>, <code>WriteChunk</code>, <code>ReleaseChunk</code>, <code>AddInstance*</code>, <code>Get*</code>, and the <code>OnChunkWritten</code> callback) are <strong>protected</strong> — intended to be used from within your subclass. Visibility controls (<code>SetChunkEnabled</code>, <code>SetRenderEnabled</code>) and the <code>Stage*</code> / <code>*Unsafe</code> modification methods are <strong>public</strong>, so other code can drive instance updates after the registerer is initialized.</p>
+<h3 id="render-signature-registration">Render Signature Registration</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RenderSignature ExtractRenderSignature(GameObject)</code></td>
+<td>Extract without registering — useful for modifying settings before registration.</td>
+</tr>
+<tr>
+<td><code>int RegisterRenderSignatureFromPrefab(GameObject)</code></td>
+<td>Register a single signature from a prefab. Tracked.</td>
+</tr>
+<tr>
+<td><code>int[] RegisterRenderSignaturesFromPrefab(GameObject)</code></td>
+<td>Register multiple signatures from a multi-renderer prefab. Tracked.</td>
+</tr>
+<tr>
+<td><code>int RegisterRenderSignature(RenderSignature)</code></td>
+<td>Register an explicit signature. Tracked.</td>
+</tr>
+<tr>
+<td><code>void UnregisterRenderSignature(int globalIdx)</code></td>
+<td>Manually unregister a prototype.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="chunk-management">Chunk Management</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>int MaxInstancesPerChunk</code></td>
+<td>Maximum instances per chunk (driven by <strong>Max Pools Per Chunk</strong> × 64).</td>
+</tr>
+<tr>
+<td><code>ChunkLink AllocChunk()</code></td>
+<td>Allocate a new chunk. Tracked.</td>
+</tr>
+<tr>
+<td><code>void WriteChunk(ChunkLink, NativeArray&lt;InstanceData&gt;, Bounds, float cullDistance, float instanceCullDistance)</code></td>
+<td>Write instances. Auto-overflows.</td>
+</tr>
+<tr>
+<td><code>void ReleaseChunk(ChunkLink)</code></td>
+<td>Free a chunk and all its overflows.</td>
+</tr>
+<tr>
+<td><code>void RecalculateChunkBounds(ChunkLink, Bounds)</code></td>
+<td>Update chunk culling bounds.</td>
+</tr>
+<tr>
+<td><code>void SetChunkEnabled(ChunkLink, bool)</code></td>
+<td>Enable/disable a chunk for rendering.</td>
+</tr>
+<tr>
+<td><code>bool GetChunkEnabled(ChunkLink)</code></td>
+<td>Check chunk enabled state.</td>
+</tr>
+<tr>
+<td><code>void SetRenderEnabled(bool)</code></td>
+<td>Enable/disable rendering for ALL chunks this registerer owns.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="instance-lifecycle">Instance Lifecycle</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>InstanceLink AddInstance(ChunkLink, InstanceData)</code></td>
+<td>Add a single instance, with automatic overflow.</td>
+</tr>
+<tr>
+<td><code>InstanceLink[] AddInstances(ChunkLink, NativeArray&lt;InstanceData&gt;, int count)</code></td>
+<td>Add multiple.</td>
+</tr>
+<tr>
+<td><code>InstanceLink MoveInstanceToChunk(InstanceLink source, ChunkLink dest, InstanceData)</code></td>
+<td>Move between chunks.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="lookups">Lookups</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>InstanceLink GetInstanceLink(ChunkLink, int localIndex)</code></td>
+<td>Resolve a logical index (spanning primary + overflow) into a current <code>InstanceLink</code>.</td>
+</tr>
+<tr>
+<td><code>int GetTotalChunkInstanceCount(ChunkLink)</code></td>
+<td>Sum across primary + overflow chunks.</td>
+</tr>
+<tr>
+<td><code>int GetOverflowChunkCount(ChunkLink)</code></td>
+<td>Number of overflow chunks attached.</td>
+</tr>
+<tr>
+<td><code>void GetPerChunkInstanceCounts(ChunkLink, List&lt;int&gt;)</code></td>
+<td>Counts per sub-chunk.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tracked-staging">Tracked Staging</h3>
+<p>The <code>Stage*</code> methods buffer per-slot writes and merge updates to the same instance within a frame into a single GPU write. <strong>This is the recommended path for runtime modifications.</strong> See <a href="registration-tracker.html#tracked-staging">Tracked Staging</a> for the full list.</p>
+<p>Both <code>InstanceLink</code> and <code>int globalSlot</code> overloads are provided for every staging method.</p>
+<h3 id="unsafe-direct-modification">Unsafe Direct Modification</h3>
+<p>The <code>*Unsafe</code> methods skip the staging buffer and write directly to <code>BRGRenderer</code>. Use only when you've already deduplicated writes yourself or need writes to land immediately. See <a href="registration-tracker.html#unsafe-direct-modification">Unsafe Direct Modification</a>.</p>
+<blockquote>
+<p>Mixing staged and unsafe writes on the same slot within a frame is undefined — pick one path per slot.</p>
+</blockquote>
+<h3 id="callbacks">Callbacks</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>virtual void OnChunkWritten(int chunkId)</code></td>
+<td>Override to react when a primary chunk and all of its overflows have finished writing to GPU. Useful for caching <code>InstanceLink</code> handles after <code>WriteChunk</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>Always use <code>RegisterRenderSignature*</code> / <code>AllocChunk</code> / <code>ReleaseChunk</code> instead of calling <code>BRGSystem.RegisterPrototype</code> / <code>BRGSystem.AllocateChunk</code> / <code>BRGSystem.FreeChunk</code> directly. The base class tracks these for automatic cleanup.</li>
+<li>Do <strong>not</strong> free chunks or unregister prototypes in <code>OnShutdown()</code>. The base class handles all BRG resource cleanup after <code>OnShutdown()</code> returns.</li>
+<li>The <code>BRGSystem</code> property is set before <code>OnInitialize()</code> and cleared after <code>OnShutdown()</code>. Use it freely during those methods.</li>
+<li><code>BRGRegisterer</code> is marked <code>[ExecuteAlways]</code>, so it works in the editor outside of play mode.</li>
+<li>When a <code>WriteChunk</code> exceeds <code>MaxInstancesPerChunk</code>, overflow chunks are allocated automatically and share the primary chunk's bounds. All queries (<code>GetInstanceLink</code>, <code>GetTotalChunkInstanceCount</code>, etc.) span primary + overflows transparently.</li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

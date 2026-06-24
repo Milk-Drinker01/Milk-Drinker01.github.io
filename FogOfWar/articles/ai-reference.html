@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>AI Reference | Pixel-Perfect Fog Of War </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="AI Reference | Pixel-Perfect Fog Of War ">
+      <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="Pixel-Perfect Fog Of War">
+            Pixel-Perfect Fog Of War
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="ai-reference">AI Reference</h1>
+
+<hr>
+<p><button id="copy-ai-docs" class="copy-ai-docs-btn" onclick="copyAIDocs(this)">Copy contents to clipboard</button></p>
+<script>
+function copyAIDocs(btn) {
+  fetch('ai-reference.md')
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+    .then(t => navigator.clipboard.writeText(t))
+    .then(() => {
+      const original = btn.textContent;
+      btn.textContent = 'Copied!';
+      btn.disabled = true;
+      setTimeout(() => { btn.textContent = original; btn.disabled = false; }, 1500);
+    })
+    .catch(err => {
+      btn.textContent = 'Copy failed';
+      setTimeout(() => { btn.textContent = 'Copy contents to clipboard'; }, 1500);
+      console.error('AI docs copy failed:', err);
+    });
+}
+</script>
+<p>A condensed router for AI tools working with <strong>Pixel-Perfect Fog Of War</strong>. All types live in the <code>FOW</code> namespace. The package manager is the <code>FogOfWarWorld</code> singleton, accessed via <code>FogOfWarWorld.instance</code>. There is exactly one in the scene.</p>
+<h2 id="core-model">Core model</h2>
+<ul>
+<li><strong><code>FogOfWarWorld</code></strong> — singleton manager. Owns all global fog settings, drives revealer/hider updates, renders the fog. Access via <code>FogOfWarWorld.instance</code>.</li>
+<li><strong><code>FogOfWarRevealer</code></strong> — abstract base. Concrete components are <strong><code>FogOfWarRevealer3D</code></strong> (3D physics) and <strong><code>FogOfWarRevealer2D</code></strong> (2D physics), both via <code>RaycastRevealer</code>. Revealers carve line of sight using Burst-jobified raycasting.</li>
+<li><strong><code>FogOfWarHider</code></strong> — marks an object hidden when outside all lines of sight. Pair with a <strong><code>HiderBehavior</code></strong> subclass (<code>HiderDisableObjects</code>, <code>HiderDisableRenderers</code>, <code>HiderToggleObjects</code>).</li>
+<li>Built-In RP draws fog via <strong><code>FowImageEffectOpaque</code></strong> (3D) / <strong><code>FowImageEffect</code></strong> (2D). URP/HDRP use a render feature / volume.</li>
+</ul>
+<h2 id="where-to-look-source">Where to look (source)</h2>
+<p>Paths are inside <code>Assets/FogOfWar/</code> in the Unity project.</p>
+<table>
+<thead>
+<tr>
+<th>What you need</th>
+<th>Read</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All global settings + every enum (<code>FogSampleMode</code>, <code>FogOfWarAppearance</code>, <code>FogOfWarType</code>, <code>FogOfWarFadeType</code>, <code>FogOfWarBlendMode</code>, <code>RevealerUpdateMethod</code>, <code>FowUpdateMethod</code>, <code>GamePlane</code>) + full public API</td>
+<td><code>Scripts/FogOfWarWorld.cs</code></td>
+</tr>
+<tr>
+<td>Revealer base properties, events, static/manual control</td>
+<td><code>Scripts/Revealers/FogOfWarRevealer.cs</code></td>
+</tr>
+<tr>
+<td>Raycast revealer settings + <code>RaycastRevealerOcclusionQualityPreset</code> enum</td>
+<td><code>Scripts/Revealers/RaycastRevealer.cs</code></td>
+</tr>
+<tr>
+<td>3D / 2D revealer specifics</td>
+<td><code>Scripts/Revealers/FogOfWarRevealer3D.cs</code>, <code>FogOfWarRevealer2D.cs</code></td>
+</tr>
+<tr>
+<td>Hider properties, observers, <code>OnActiveChanged</code></td>
+<td><code>Scripts/Hiders/FogOfWarHider.cs</code></td>
+</tr>
+<tr>
+<td>Hider behavior base (<code>OnReveal</code>/<code>OnHide</code>)</td>
+<td><code>Scripts/Hiders/HiderBehavior.cs</code></td>
+</tr>
+<tr>
+<td>Built-in hider behaviors</td>
+<td><code>Scripts/Hiders/HiderDisableObjects.cs</code>, <code>HiderDisableRenderers.cs</code>, <code>HiderToggleObjects.cs</code></td>
+</tr>
+<tr>
+<td>Built-In RP image effects</td>
+<td><code>Scripts/Built-In (legacy) RP/FowImageEffect.cs</code>, <code>FowImageEffectOpaque.cs</code></td>
+</tr>
+<tr>
+<td>Fog appearance / logic shaders</td>
+<td><code>Shaders/FogOfWarAppearance.hlsl</code>, <code>Shaders/FogOfWarLogic.hlsl</code>, <code>Shaders/Resources/FOW_Fog.shader</code>, <code>FOW_RT.shader</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="non-obvious-concepts">Non-obvious concepts</h2>
+<ul>
+<li><strong>Sample mode gates features.</strong> <code>Pixel_Perfect</code> is per-pixel and supports unlimited world size, but <strong>cannot</strong> do temporal effects (regrow/memory). <code>Texture</code> is render-texture backed, <strong>enables regrow</strong>, but is resolution-bound and needs <strong>World Bounds</strong> set. <code>Both</code> runs both.</li>
+<li><strong>World Bounds are required</strong> for: Texture sampling, the minimap, and the world-bounds black-out — independently of each other.</li>
+<li><strong>Two ways to test visibility in code:</strong> <code>FogOfWarWorld.TestPointVisibility(point)</code> queries revealers directly (works in Pixel-Perfect). <code>FogOfWarWorld.SampleFogTextureAtPoint(point)</code> samples the fog texture (Texture mode, needs World Bounds).</li>
+<li><strong>Hiders detect; behaviors act.</strong> <code>FogOfWarHider</code> only raises visibility changes. A <code>HiderBehavior</code> (or the <code>OnActiveChanged</code> event) does the showing/hiding. For <em>per-revealer</em> sightings, use <code>FogOfWarRevealer.OnHiderVisibilityChanged</code> (<code>Action&lt;FogOfWarHider,bool&gt;</code>).</li>
+<li><strong>Static revealers</strong> stop auto-recalculating. Set via <code>StartRevealerAsStatic</code> (inspector) or <code>SetRevealerAsStatic(bool)</code>; force a one-off update with <code>ManualCalculateLineOfSight()</code>.</li>
+<li><strong>Update modes:</strong> <code>RevealerUpdateMode</code> = <code>Every_Frame</code> / <code>N_Per_Frame</code> (uses <code>MaxNumRevealersPerFrame</code>) / <code>Controlled_ElseWhere</code> (you call updates). <code>UpdateMethod</code> controls <em>where</em> in the frame (Update / LateUpdate / StartInUpdateFinishInLateUpdate).</li>
+<li><strong>Buffer limits are pre-sized:</strong> <code>MaxPossibleRevealers</code>, <code>MaxPossibleSegmentsPerRevealer</code>, <code>MaxPossibleHiders</code>. Exceeding segments throws a console error telling you to raise the limit.</li>
+<li><strong>Occlusion quality</strong> is a per-revealer preset (<code>RaycastRevealerOcclusionQualityPreset</code>: ExtraLargeScaleRTS → OverkillResolution, or Custom). Disable <code>UseOcclusion</code> for thousands of cheap non-blocking revealers.</li>
+<li><strong>Save/load</strong> uses <code>GetFowTextureSaveData()</code> → <code>byte[]</code> (PNG) and <code>LoadFowTextureData(byte[])</code> (Texture mode only). <code>ClearFowTexture()</code> resets exploration. <code>GetFOWRT()</code> returns the fog RenderTexture (minimap).</li>
+<li><strong>Game plane:</strong> 3D fog is computed on <code>GamePlaneOrientation</code> (XZ default / XY / ZY). 2D uses <code>is2D</code> and the XY plane.</li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

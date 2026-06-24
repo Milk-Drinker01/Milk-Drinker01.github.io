@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Fog Of War World | Pixel-Perfect Fog Of War </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Fog Of War World | Pixel-Perfect Fog Of War ">
+      <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.svg" alt="Pixel-Perfect Fog Of War">
+            Pixel-Perfect Fog Of War
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="fog-of-war-world">Fog Of War World</h1>
+
+<hr>
+<p>The <strong>Fog Of War World</strong> component is the heart of the system. There should be exactly one in your scene, and it owns every global fog setting, drives revealer updates, and renders the fog.</p>
+<h2 id="adding-the-component">Adding the Component</h2>
+<ol>
+<li>Create a new empty GameObject in your scene. Name it <strong>Fog Of War</strong> (or similar).</li>
+<li>Add the <strong>Fog Of War World</strong> component to it.</li>
+</ol>
+<h2 id="essential-settings">Essential Settings</h2>
+<p>A few values must be set sensibly to avoid runtime errors. They are fixed-size because resizing GPU buffers at runtime is slow, so the buffers are pre-allocated from these limits.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Max Possible Revealers</strong></td>
+<td>The maximum number of revealers that can be active at once. The GPU buffer is sized from this value.</td>
+</tr>
+<tr>
+<td><strong>Max Possible Segments Per Revealer</strong></td>
+<td>The maximum number of sight &quot;segments&quot; a single revealer can produce. A segment is one edge of the revealer's line-of-sight polygon. Setting this too low causes errors — leave it at a reasonable value. Enable <strong>Debug Mode</strong> on a revealer to visualize these segments.</td>
+</tr>
+<tr>
+<td><strong>Max Possible Hiders</strong></td>
+<td>The maximum number of hiders. This will auto-resize if exceeded, but that causes a one-time hitch — size it appropriately up front.</td>
+</tr>
+</tbody>
+</table>
+<div class="IMPORTANT">
+<h5>Important</h5>
+<p>If a revealer needs more segments than <strong>Max Possible Segments Per Revealer</strong> allows, you will get a console error telling you to raise the value. See <a href="../debugging.html">Debugging</a>.</p>
+</div>
+<p>Each edge a revealer sees adds two segments — enabling <strong>Debug Mode</strong> on a revealer draws them:</p>
+<p><img src="../../images/revealer-segments.png" alt="Revealer sight segments"></p>
+<h2 id="2d-projects">2D Projects</h2>
+<p>If your project is 2D, enable the <strong>Is 2D?</strong> checkbox. See <a href="2d-setup.html">2D Setup</a> for the full walkthrough.</p>
+<h2 id="game-plane-orientation">Game Plane Orientation</h2>
+<p>For 3D projects, <strong>Game Plane Orientation</strong> controls which world plane the fog is calculated on:</p>
+<ul>
+<li><strong>XZ</strong> — the standard horizontal ground plane (top-down / most 3D games)</li>
+<li><strong>XY</strong> — a vertical plane</li>
+<li><strong>ZY</strong> — a vertical plane</li>
+</ul>
+<h2 id="choosing-a-fog-sample-mode">Choosing a Fog Sample Mode</h2>
+<p>The <strong>Fog Sample Mode</strong> determines how fog is sampled and which features are available (regrow, minimap, etc.). This is an important early decision — see <a href="../features/fog-sample-modes.html">Fog Sample Modes</a>.</p>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><strong><a href="render-pipelines.html">Render Pipeline Setup</a></strong> — render the fog in your pipeline</li>
+<li><strong><a href="../configuration/index.html">Configuration</a></strong> — full reference for every Fog Of War World property</li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

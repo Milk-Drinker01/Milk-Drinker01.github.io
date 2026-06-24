@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Revealer API | Pixel-Perfect Fog Of War </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Revealer API | Pixel-Perfect Fog Of War ">
+      <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.svg" alt="Pixel-Perfect Fog Of War">
+            Pixel-Perfect Fog Of War
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="revealer-api">Revealer API</h1>
+
+<hr>
+<p><code>FogOfWarRevealer</code> (namespace <code>FOW</code>) is the abstract base for <a href="../components/revealer-3d.html">Revealer 3D</a> and <a href="../components/revealer-2d.html">Revealer 2D</a>. Raycast-based revealers also expose the additional properties from <code>RaycastRevealer</code>.</p>
+<h2 id="properties">Properties</h2>
+<p>All of these are runtime get/set properties — setting one re-applies the revealer's data to the GPU.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ViewRadius</code></td>
+<td>float</td>
+<td>Sight range.</td>
+</tr>
+<tr>
+<td><code>SoftenDistance</code></td>
+<td>float</td>
+<td>Outer edge softening.</td>
+</tr>
+<tr>
+<td><code>InnerSoftenAngle</code></td>
+<td>float</td>
+<td>Inner cone softening.</td>
+</tr>
+<tr>
+<td><code>UnobscuredRadius</code></td>
+<td>float</td>
+<td>Always-lit radius.</td>
+</tr>
+<tr>
+<td><code>UnobscuredSoftenDistance</code></td>
+<td>float</td>
+<td>Unobscured radius softening.</td>
+</tr>
+<tr>
+<td><code>VisionHeight</code></td>
+<td>float</td>
+<td>Vision height (3D).</td>
+</tr>
+<tr>
+<td><code>VisionHeightSoftenDistance</code></td>
+<td>float</td>
+<td>Vision height softening.</td>
+</tr>
+<tr>
+<td><code>ViewAngle</code></td>
+<td>float</td>
+<td>Vision cone angle (1–360).</td>
+</tr>
+<tr>
+<td><code>Opacity</code></td>
+<td>float</td>
+<td>Reveal strength (0–1).</td>
+</tr>
+<tr>
+<td><code>RevealHiderInFadeOutZonePercentage</code></td>
+<td>float</td>
+<td>Hider reveal threshold in the soften zone.</td>
+</tr>
+<tr>
+<td><code>UseOcclusion</code></td>
+<td>bool</td>
+<td>Whether obstacles block vision.</td>
+</tr>
+<tr>
+<td><code>AddCorners</code></td>
+<td>bool</td>
+<td>Add object corners as segments.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Raycast revealer (3D/2D) additions:</strong> <code>RaycastResolution</code>, <code>NumExtraIterations</code>, <code>NumExtraRaysOnIteration</code>, <code>ResolveEdge</code>, <code>MaxEdgeResolveIterations</code>, <code>EdgeDstThreshold</code>, <code>DoubleHitMaxAngleDelta</code>, <code>OcclusionQuality</code>. See <a href="../optimization/occlusion-quality.html">Occlusion Quality</a>.</p>
+<p><strong>Public fields:</strong> <code>EyeOffset</code>, <code>ShaderEyeOffset</code>, <code>StartRevealerAsStatic</code>.</p>
+<p><strong>Read-only:</strong> <code>CurrentlyStaticRevealer</code> (bool), <code>TotalRevealerRadius</code> (float), <code>RevealerArrayPosition</code> (int), <code>RevealerGPUDataPosition</code> (int).</p>
+<h2 id="methods">Methods</h2>
+<h3 id="setrevealerasstatic">SetRevealerAsStatic</h3>
+<pre><code class="lang-csharp">public void SetRevealerAsStatic(bool isStatic)
+</code></pre>
+<p>Marks the revealer as <a href="../optimization/static-revealers.html">static</a> (or not). A static revealer stops recalculating line of sight automatically.</p>
+<h3 id="manualcalculatelineofsight">ManualCalculateLineOfSight</h3>
+<pre><code class="lang-csharp">public void ManualCalculateLineOfSight()
+</code></pre>
+<p>Forces a full line-of-sight recalculation now. Use this for static revealers whose surroundings changed, or with the <strong>Controlled Elsewhere</strong> <a href="../optimization/update-modes.html">update mode</a>.</p>
+<h3 id="testpoint">TestPoint</h3>
+<pre><code class="lang-csharp">public bool TestPoint(float3 point)
+</code></pre>
+<p>Returns <code>true</code> if the given point is within <strong>this</strong> revealer's line of sight.</p>
+<h3 id="registerrevealer--deregisterrevealer">RegisterRevealer / DeregisterRevealer</h3>
+<pre><code class="lang-csharp">public void RegisterRevealer()
+public void DeregisterRevealer()
+</code></pre>
+<p>Manually add or remove the revealer from the system. This normally happens automatically in <code>OnEnable</code> / <code>OnDisable</code>.</p>
+<h2 id="events">Events</h2>
+<h3 id="onhidervisibilitychanged">OnHiderVisibilityChanged</h3>
+<pre><code class="lang-csharp">public event Action&lt;FogOfWarHider, bool&gt; OnHiderVisibilityChanged
+</code></pre>
+<p>Raised when this revealer gains or loses sight of a hider. See <a href="events.html">Hider Visibility Events</a>.</p>
+<h2 id="example">Example</h2>
+<pre><code class="lang-csharp">using FOW;
+using UnityEngine;
+
+public class RevealerControl : MonoBehaviour
+{
+    FogOfWarRevealer revealer;
+
+    void Awake() =&gt; revealer = GetComponent&lt;FogOfWarRevealer&gt;();
+
+    public void Blind()  =&gt; revealer.ViewRadius = 0;
+    public void Freeze() =&gt; revealer.SetRevealerAsStatic(true);
+}
+</code></pre>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

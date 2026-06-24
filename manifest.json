@@ -11,6 +11,16 @@
       }
     },
     {
+      "type": "Resource",
+      "source_relative_path": "DemoDownloads/FOW_Demo.zip",
+      "output": {
+        "resource": {
+          "relative_path": "DemoDownloads/FOW_Demo.zip"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "Conceptual",
       "source_relative_path": "README.md",
       "output": {
@@ -76,16 +86,6 @@
       "output": {
         "resource": {
           "relative_path": "images/Renormalizer-Icon.png"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Resource",
-      "source_relative_path": "images/Scopes-Icon.png",
-      "output": {
-        "resource": {
-          "relative_path": "images/Scopes-Icon.png"
         }
       },
       "version": ""

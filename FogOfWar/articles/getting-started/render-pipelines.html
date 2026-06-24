@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Render Pipeline Setup | Pixel-Perfect Fog Of War </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Render Pipeline Setup | Pixel-Perfect Fog Of War ">
+      <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.svg" alt="Pixel-Perfect Fog Of War">
+            Pixel-Perfect Fog Of War
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="render-pipeline-setup">Render Pipeline Setup</h1>
+
+<hr>
+<p>Pixel-Perfect Fog Of War renders as a full-screen camera effect. How that effect is injected depends on your render pipeline. Follow the section for the pipeline your project uses.</p>
+<h2 id="built-in-render-pipeline">Built-In Render Pipeline</h2>
+<p>Add a Fog of War image effect component to your <strong>main camera</strong>:</p>
+<ul>
+<li>Use <strong>FOW Image Effect Opaque</strong> in most cases for 3D. (This was the only option before update 3.0.)</li>
+<li>Use <strong>FOW Image Effect</strong> for 2D.</li>
+</ul>
+<p>See the <a href="../components/image-effect.html">FOW Image Effect</a> component reference for details.</p>
+<h2 id="universal-render-pipeline-urp">Universal Render Pipeline (URP)</h2>
+<ol>
+<li><p>Import <code>FogOfWar/FOW-URP</code> (see <a href="installation.html">Installation</a>).</p>
+</li>
+<li><p>Add the <strong>Fog Of War</strong> render feature to your <strong>Renderer Data</strong> asset.</p>
+<p><img src="../../images/urp-render-feature.png" alt="Fog Of War URP render feature"></p>
+</li>
+<li><p>Ensure <strong>Depth Texture</strong> is enabled on your URP assets.</p>
+<p><img src="../../images/urp-depth-texture.png" alt="URP Depth Texture enabled"></p>
+</li>
+</ol>
+<div class="IMPORTANT">
+<h5>Important</h5>
+<p>Add the render feature to <strong>all</strong> of your Renderer Data assets — including the ones referenced in both your <strong>Graphics</strong> settings and your <strong>Quality</strong> settings.</p>
+</div>
+<h2 id="high-definition-render-pipeline-hdrp">High Definition Render Pipeline (HDRP)</h2>
+<ol>
+<li>Import <code>FogOfWar/FOW-HDRP</code> (see <a href="installation.html">Installation</a>).</li>
+<li>HDRP is supported through the <strong>Volume Framework</strong>. First, add the effect to the <strong>After Opaque and Sky</strong> section of <strong>Custom Post Process Orders</strong> in <strong>Project Settings &gt; HDRP Default Settings</strong>.</li>
+<li>Add the <strong>Fog Of War</strong> effect to your <strong>Default Volume Profile</strong> asset, or to a <strong>Volume</strong> component in your scene.</li>
+</ol>
+<p><img src="../../images/hdrp-setup.png" alt="HDRP Fog Of War setup"></p>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><strong><a href="revealers.html">Revealers</a></strong> — start carving line of sight out of the fog</li>
+<li><strong><a href="../features/fog-appearance.html">Fog Appearance</a></strong> — choose how the fog looks</li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

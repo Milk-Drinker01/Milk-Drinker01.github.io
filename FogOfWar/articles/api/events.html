@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Hider Visibility Events | Pixel-Perfect Fog Of War </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Hider Visibility Events | Pixel-Perfect Fog Of War ">
+      <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.svg" alt="Pixel-Perfect Fog Of War">
+            Pixel-Perfect Fog Of War
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="hider-visibility-events">Hider Visibility Events</h1>
+
+<hr>
+<p>To run gameplay logic when a revealer sees or loses sight of a hider, subscribe to the revealer's <code>OnHiderVisibilityChanged</code> event.</p>
+<h2 id="onhidervisibilitychanged">OnHiderVisibilityChanged</h2>
+<pre><code class="lang-csharp">public event Action&lt;FogOfWarHider, bool&gt; OnHiderVisibilityChanged
+</code></pre>
+<p>On a <a href="revealer.html"><code>FogOfWarRevealer</code></a>. The first parameter is the hider in question; the second is its new visibility (<code>true</code> = now seen, <code>false</code> = lost). The event fires from the perspective of <strong>that specific revealer</strong>.</p>
+<h2 id="example">Example</h2>
+<pre><code class="lang-csharp">using FOW;
+using UnityEngine;
+
+[RequireComponent(typeof(FogOfWarRevealer))]
+public class SightReporter : MonoBehaviour
+{
+    FogOfWarRevealer revealer;
+
+    void OnEnable()
+    {
+        revealer = GetComponent&lt;FogOfWarRevealer&gt;();
+        revealer.OnHiderVisibilityChanged += HandleVisibility;
+    }
+
+    void OnDisable()
+    {
+        revealer.OnHiderVisibilityChanged -= HandleVisibility;
+    }
+
+    void HandleVisibility(FogOfWarHider hider, bool isVisible)
+    {
+        if (isVisible)
+            Debug.Log($&quot;{name} spotted {hider.name}&quot;);
+        else
+            Debug.Log($&quot;{name} lost sight of {hider.name}&quot;);
+    }
+}
+</code></pre>
+<h2 id="sample-script">Sample Script</h2>
+<p>A ready-made example, <code>DrawLineToHiderOnReveal.cs</code>, ships with the package and demonstrates this event by drawing a line from a revealer to each hider it sees. See it in <strong>Demo 01 (Pixel-Perfect)</strong> — enable the <code>SampleCharacter/Eye/Draw Line To Hider</code> GameObject.</p>
+<h2 id="hider-side-events">Hider-Side Events</h2>
+<p>To react to a hider's <strong>overall</strong> visibility (across all revealers) instead, use the hider's <a href="hider.html#onactivechanged"><code>OnActiveChanged</code></a> event, or attach a <a href="../components/hider-behaviors.html">Hider Behavior</a>.</p>
+<h2 id="related">Related</h2>
+<ul>
+<li><a href="revealer.html">Revealer API</a></li>
+<li><a href="custom-hider-behaviors.html">Custom Hider Behaviors</a></li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

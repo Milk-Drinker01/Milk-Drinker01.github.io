@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Debugging | Pixel-Perfect Fog Of War </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Debugging | Pixel-Perfect Fog Of War ">
+      <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="Pixel-Perfect Fog Of War">
+            Pixel-Perfect Fog Of War
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="debugging">Debugging</h1>
+
+<hr>
+<p>Pixel-Perfect Fog Of War includes built-in debug visualization and a few common fixes.</p>
+<h2 id="revealer-debug-visualization">Revealer Debug Visualization</h2>
+<p>Enable <strong>Debug Mode</strong> on a <a href="components/revealer-3d.html">Revealer 3D / 2D</a> to draw its line-of-sight calculation in the scene view. Additional toggles let you isolate each stage:</p>
+<table>
+<thead>
+<tr>
+<th>Toggle</th>
+<th>Draws</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Draw Initial Rays</strong></td>
+<td>The first pass of raycasts.</td>
+</tr>
+<tr>
+<td><strong>Draw Expected Next Points</strong></td>
+<td>The predicted next point for each ray.</td>
+</tr>
+<tr>
+<td><strong>Draw Iterative Rays</strong></td>
+<td>The extra refinement rays around edges.</td>
+</tr>
+<tr>
+<td><strong>Draw Edge Resolve Rays</strong></td>
+<td>The binary-search rays used to pin down obstacle edges.</td>
+</tr>
+<tr>
+<td><strong>Draw Extra Cast Lines</strong></td>
+<td>All additional cast lines.</td>
+</tr>
+<tr>
+<td><strong>Draw Hider Samples</strong></td>
+<td>The visibility samples taken against hiders.</td>
+</tr>
+<tr>
+<td><strong>Debug Log Hider Blocker Name</strong></td>
+<td>Logs the name of whatever blocked a hider sample.</td>
+</tr>
+</tbody>
+</table>
+<p>The sight <strong>segments</strong> drawn in debug mode also help you size <strong>Max Possible Segments Per Revealer</strong> on the <a href="getting-started/fog-of-war-world.html">Fog Of War World</a>.</p>
+<h2 id="common-issues">Common Issues</h2>
+<h3 id="my-revealer-misses-some-edges">My revealer misses some edges</h3>
+<p>Increase the number of refinement iterations: set <strong>Occlusion Quality</strong> to <strong>Custom</strong> and raise <strong>Num Extra Iterations</strong>. See <a href="optimization/occlusion-quality.html">Occlusion Quality</a>.</p>
+<h3 id="sight-segment-buffer-is-full-error">&quot;Sight Segment buffer is full&quot; error</h3>
+<p>A revealer produced more segments than allowed. Increase <strong>Max Possible Segments Per Revealer</strong> on the <a href="getting-started/fog-of-war-world.html">Fog Of War World</a>.</p>
+<h3 id="errors-mentioning-max-possible-revealers--hiders">Errors mentioning Max Possible Revealers / Hiders</h3>
+<p>You exceeded the pre-sized buffers. Raise <strong>Max Possible Revealers</strong> or <strong>Max Possible Hiders</strong> on the Fog Of War World.</p>
+<h3 id="fog-isnt-rendering-older-unity-versions">Fog isn't rendering (older Unity versions)</h3>
+<p>On some older Unity versions, shader keyword variants may not be picked up automatically. If fog fails to render, copy the <code>#pragma multi_compile_local</code> lines from <code>FogOfWarLogic.hlsl</code> into your Fog Of War fog shader, below the <code>#include &quot;FogOfWarLogic.hlsl&quot;</code> line.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>This workaround predates the current merged-shader setup. If you hit a rendering issue on an older Unity version, reach out on the <a href="support.html">Discord</a> and we'll help confirm the right fix for your version.</p>
+</div>
+<h3 id="nothing-reveals-at-all">Nothing reveals at all</h3>
+<ul>
+<li>Confirm there is exactly one <a href="getting-started/fog-of-war-world.html">Fog Of War World</a> in the scene.</li>
+<li>Confirm the fog effect is hooked into your render pipeline. See <a href="getting-started/render-pipelines.html">Render Pipeline Setup</a>.</li>
+<li>Confirm your <strong>Obstacle Mask</strong> and revealer <strong>View Radius</strong> are set sensibly.</li>
+</ul>
+<h2 id="still-stuck">Still Stuck?</h2>
+<p>Join the <a href="support.html">Discord</a> for help.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

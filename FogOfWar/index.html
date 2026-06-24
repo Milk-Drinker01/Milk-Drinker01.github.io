@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Pixel-Perfect Fog Of War | Pixel-Perfect Fog Of War </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Pixel-Perfect Fog Of War | Pixel-Perfect Fog Of War ">
+      <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
+      
+      <link rel="icon" href="favicon.ico">
+      <link rel="stylesheet" href="public/docfx.min.css">
+      <link rel="stylesheet" href="public/main.css">
+      <meta name="docfx:navrel" content="toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="landing" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="index.html">
+            <img id="logo" class="svg" src="logo.svg" alt="Pixel-Perfect Fog Of War">
+            Pixel-Perfect Fog Of War
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+
+      <div class="content">
+        <div class="actionbar">
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+
+<div class="hero-section">
+<h1>Pixel-Perfect Fog Of War</h1>
+<p class="tagline">Dynamic, ultra-sharp line-of-sight Fog of War for Unity. Pixel-perfect rendering at any world size, GPU-accelerated reveal, and a deep customization toolset — works in 2D and 3D, across every render pipeline.</p>
+<div class="hero-buttons">
+<a href="articles/getting-started/installation.html" class="btn-primary-custom">Get Started</a>
+<a href="articles/overview.html" class="btn-secondary-custom">Learn More</a>
+</div>
+</div>
+<div class="badge-row">
+<span class="badge-item">Unity 2019+</span>
+<span class="badge-item">Built-In</span>
+<span class="badge-item">URP</span>
+<span class="badge-item">HDRP</span>
+<span class="badge-item">2D &amp; 3D</span>
+<span class="badge-item">Burst Jobs</span>
+</div>
+<div class="section-header">
+<h2>Features</h2>
+<p>Everything you need to add crisp, performant Fog of War to your game.</p>
+</div>
+<div class="features-grid">
+<div class="feature-card">
+<div class="card-icon">&#128302;</div>
+<h3>Pixel-Perfect Rendering</h3>
+<p>Per-pixel screen-space fog with no resolution limits. Stays razor-sharp at any world size, with zero grid artifacts.</p>
+</div>
+<div class="feature-card">
+<div class="card-icon">&#128065;</div>
+<h3>Raycast Line of Sight</h3>
+<p>Burst-accelerated raycasting computes true line of sight with accurate edge detection, corners, and occlusion.</p>
+</div>
+<div class="feature-card">
+<div class="card-icon">&#127912;</div>
+<h3>Deep Customization</h3>
+<p>Solid, grayscale, blur, texture, and outline fog styles. Pixelate, dither, soften, invert, and tint to taste.</p>
+</div>
+<div class="feature-card">
+<div class="card-icon">&#129496;</div>
+<h3>Hiders</h3>
+<p>Hide units and objects outside line of sight. Built-in behaviors, custom hooks, and per-revealer visibility events.</p>
+</div>
+<div class="feature-card">
+<div class="card-icon">&#9889;</div>
+<h3>Built for Scale</h3>
+<p>Spatial acceleration, time-sliced updates, static revealers, and staged GPU uploads keep thousands of revealers fast.</p>
+</div>
+<div class="feature-card">
+<div class="card-icon">&#128506;</div>
+<h3>Minimap &amp; Memory</h3>
+<p>Generate a minimap texture, regrow explored fog over time, and save/load exploration state to disk.</p>
+</div>
+</div>
+<div class="section-header">
+<h2>Documentation</h2>
+<p>Jump to the section you need.</p>
+</div>
+<div class="features-grid">
+<div class="feature-card">
+<h3>Overview</h3>
+<p>Feature summary, supported pipelines, and requirements.</p>
+<a href="articles/overview.html">Read more &rarr;</a>
+</div>
+<div class="feature-card">
+<h3>Getting Started</h3>
+<p>Install the package, set up the Fog Of War World, and add your first revealer.</p>
+<a href="articles/getting-started/installation.html">Read more &rarr;</a>
+</div>
+<div class="feature-card">
+<h3>Features</h3>
+<p>Sample modes, fog appearance, regrow, minimap, and more — explained.</p>
+<a href="articles/features/index.html">Read more &rarr;</a>
+</div>
+<div class="feature-card">
+<h3>Components</h3>
+<p>Full reference for every component and inspector property.</p>
+<a href="articles/components/index.html">Read more &rarr;</a>
+</div>
+</div>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

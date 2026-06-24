@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Hider API | Pixel-Perfect Fog Of War </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Hider API | Pixel-Perfect Fog Of War ">
+      <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.svg" alt="Pixel-Perfect Fog Of War">
+            Pixel-Perfect Fog Of War
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="hider-api">Hider API</h1>
+
+<hr>
+<p><code>FogOfWarHider</code> (namespace <code>FOW</code>) marks an object to be hidden when it falls outside line of sight.</p>
+<h2 id="properties">Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SamplePoints</code></td>
+<td><code>Transform[]</code></td>
+<td>Points tested for visibility.</td>
+</tr>
+<tr>
+<td><code>PermanentlyReveal</code></td>
+<td>bool</td>
+<td>Stay visible forever once seen.</td>
+</tr>
+<tr>
+<td><code>NumObservers</code></td>
+<td>int (read-only)</td>
+<td>How many revealers currently see this hider.</td>
+</tr>
+<tr>
+<td><code>CurrentObservers</code></td>
+<td><code>List&lt;HiderRevealer&gt;</code> (read-only)</td>
+<td>The revealer &quot;seekers&quot; currently observing this hider.</td>
+</tr>
+<tr>
+<td><code>CachedTransform</code></td>
+<td><code>Transform</code> (read-only)</td>
+<td>The hider's cached transform.</td>
+</tr>
+<tr>
+<td><code>CachedPosition</code></td>
+<td><code>float2</code> (read-only)</td>
+<td>The hider's cached position on the fog plane.</td>
+</tr>
+<tr>
+<td><code>HiderArrayPosition</code></td>
+<td>int (read-only)</td>
+<td>Index in <code>FogOfWarWorld.ActiveHiders</code>.</td>
+</tr>
+<tr>
+<td><code>HiderPermanantID</code></td>
+<td>int (read-only)</td>
+<td>Stable id for the hider's lifetime.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="methods">Methods</h2>
+<h3 id="registerhider--deregisterhider">RegisterHider / DeregisterHider</h3>
+<pre><code class="lang-csharp">public void RegisterHider()
+public void DeregisterHider()
+</code></pre>
+<p>Manually add or remove the hider from the system. Normally handled automatically in <code>OnEnable</code> / <code>OnDisable</code>.</p>
+<h3 id="updatebuckets">UpdateBuckets</h3>
+<pre><code class="lang-csharp">public void UpdateBuckets()
+</code></pre>
+<p>Refreshes the hider's spatial-hash buckets from its current sample position. Called by the system during updates.</p>
+<h2 id="events">Events</h2>
+<h3 id="onactivechanged">OnActiveChanged</h3>
+<pre><code class="lang-csharp">public delegate void OnChangeActive(bool isActive);
+public event OnChangeActive OnActiveChanged;
+</code></pre>
+<p>Raised when the hider's visibility state changes (<code>true</code> = revealed, <code>false</code> = hidden). This is the event that <a href="../components/hider-behaviors.html">Hider Behaviors</a> subscribe to.</p>
+<div class="TIP">
+<h5>Tip</h5>
+<p>To react when a <strong>specific revealer</strong> sees a hider (rather than the hider's overall state), use the revealer's <a href="events.html"><code>OnHiderVisibilityChanged</code></a> event instead.</p>
+</div>
+<h2 id="related">Related</h2>
+<ul>
+<li><a href="../components/hider-behaviors.html">Hider Behaviors</a></li>
+<li><a href="custom-hider-behaviors.html">Custom Hider Behaviors</a></li>
+<li><a href="events.html">Hider Visibility Events</a></li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

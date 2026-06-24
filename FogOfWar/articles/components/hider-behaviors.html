@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Hider Behaviors | Pixel-Perfect Fog Of War </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Hider Behaviors | Pixel-Perfect Fog Of War ">
+      <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.svg" alt="Pixel-Perfect Fog Of War">
+            Pixel-Perfect Fog Of War
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="hider-behaviors">Hider Behaviors</h1>
+
+<hr>
+<p>A <strong>Hider Behavior</strong> decides what happens when its <a href="hider.html">Fog Of War Hider</a> is hidden or revealed. A behavior requires a Fog Of War Hider on the same GameObject. Three behaviors ship with the package, and you can <a href="../api/custom-hider-behaviors.html">write your own</a>.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>A behavior calls <strong>On Hide</strong> once on <code>Awake</code>, so objects start in their hidden state until a revealer sees them.</p>
+</div>
+<h2 id="hider-disable-objects">Hider Disable Objects</h2>
+<p>Enables or disables a set of GameObjects.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Objects To Hide</strong></td>
+<td>GameObject[]</td>
+<td>Disabled when hidden, enabled when revealed.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Method:</strong></p>
+<pre><code class="lang-csharp">// swap the hidden objects at runtime
+public void ModifyHiddenObjects(GameObject[] newObjectsToHide)
+</code></pre>
+<h2 id="hider-disable-renderers">Hider Disable Renderers</h2>
+<p>Enables or disables a set of Renderers. Use this instead of <em>Disable Objects</em> when you want to keep the GameObjects active (scripts, colliders) but hide only the visuals.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Objects To Hide</strong></td>
+<td>Renderer[]</td>
+<td><code>Renderer.enabled</code> is set false when hidden, true when revealed.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Method:</strong></p>
+<pre><code class="lang-csharp">// swap the hidden renderers at runtime
+public void ModifyHiddenRenderers(Renderer[] newObjectsToHide)
+</code></pre>
+<h2 id="hider-toggle-objects">Hider Toggle Objects</h2>
+<p>Swaps one set of objects for another between the revealed and hidden states — for example, showing a &quot;?&quot; marker while hidden and the real unit while revealed.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Revealed Objects</strong></td>
+<td>GameObject[]</td>
+<td>Visible while in line of sight.</td>
+</tr>
+<tr>
+<td><strong>Hidden Objects</strong></td>
+<td>GameObject[]</td>
+<td>Visible while out of line of sight.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="writing-your-own">Writing Your Own</h2>
+<p>Subclass <code>HiderBehavior</code> and implement <code>OnReveal()</code> / <code>OnHide()</code>. See <a href="../api/custom-hider-behaviors.html">Custom Hider Behaviors</a>.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

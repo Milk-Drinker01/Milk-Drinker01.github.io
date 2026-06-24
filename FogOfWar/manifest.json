@@ -1,0 +1,865 @@
+{
+  "source_base_path": "E:/Desktop/asset store stuff/FogOfWarDocumentation",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Resource",
+      "output": {
+        "resource": {
+          "relative_path": "index.json"
+        }
+      }
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "README.md",
+      "output": {
+        ".html": {
+          "relative_path": "README.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/ai-reference.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/ai-reference.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "articles/ai-reference.md",
+      "output": {
+        "resource": {
+          "relative_path": "articles/ai-reference.md"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/api/custom-hider-behaviors.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/api/custom-hider-behaviors.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/api/events.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/api/events.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/api/fog-of-war-world.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/api/fog-of-war-world.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/api/hider.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/api/hider.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/api/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/api/revealer.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/api/revealer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/changelog.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/changelog.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/components/fog-of-war-world.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/components/fog-of-war-world.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/components/hider-behaviors.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/components/hider-behaviors.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/components/hider.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/components/hider.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/components/image-effect.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/components/image-effect.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/components/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/components/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/components/revealer-2d.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/components/revealer-2d.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/components/revealer-3d.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/components/revealer-3d.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/appearance.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/appearance.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/hiders.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/hiders.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/regrow.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/regrow.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/rendering.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/rendering.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/revealers.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/revealers.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/sampling-mode.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/sampling-mode.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/world-bounds.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/world-bounds.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/debugging.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/debugging.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/fog-appearance.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/fog-appearance.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/fog-sample-modes.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/fog-sample-modes.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/hard-soft-fog.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/hard-soft-fog.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/minimap.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/minimap.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/pixelation-dithering.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/pixelation-dithering.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/regrow-and-fading.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/regrow-and-fading.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/saving-loading.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/saving-loading.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/world-bounds.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/world-bounds.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting-started/2d-setup.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting-started/2d-setup.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting-started/fog-of-war-world.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting-started/fog-of-war-world.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting-started/hiders.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting-started/hiders.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting-started/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting-started/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting-started/installation.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting-started/installation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting-started/render-pipelines.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting-started/render-pipelines.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting-started/revealers.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting-started/revealers.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/optimization/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/optimization/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/optimization/occlusion-quality.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/optimization/occlusion-quality.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/optimization/spatial-acceleration.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/optimization/spatial-acceleration.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/optimization/staged-uploads.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/optimization/staged-uploads.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/optimization/static-revealers.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/optimization/static-revealers.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/optimization/update-modes.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/optimization/update-modes.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/overview.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/overview.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/support.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/support.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "articles/toc.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/toc.html"
+        },
+        ".json": {
+          "relative_path": "articles/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "favicon.ico",
+      "output": {
+        "resource": {
+          "relative_path": "favicon.ico"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/arc-leaking.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/arc-leaking.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/customizing-fog.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/customizing-fog.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/fog-appearance-dropdown.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/fog-appearance-dropdown.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/fog-dithered.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/fog-dithered.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/fog-hard.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/fog-hard.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/fog-pixelated.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/fog-pixelated.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/fog-soft.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/fog-soft.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/fow-hero.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/fow-hero.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/hdrp-setup.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/hdrp-setup.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/hider-basics.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/hider-basics.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/hider-missed.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/hider-missed.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/hider-revealed.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/hider-revealed.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/minimap-generation.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/minimap-generation.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/occlusion-extra-iterations-0.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/occlusion-extra-iterations-0.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/occlusion-extra-iterations-1.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/occlusion-extra-iterations-1.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/occlusion-quality-dropdown.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/occlusion-quality-dropdown.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/revealer-add-corners-off.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/revealer-add-corners-off.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/revealer-add-corners-on.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/revealer-add-corners-on.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/revealer-obstacle-height.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/revealer-obstacle-height.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/revealer-opacity.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/revealer-opacity.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/revealer-segments.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/revealer-segments.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/revealer-unobscured-radius-1.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/revealer-unobscured-radius-1.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/revealer-unobscured-radius-2.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/revealer-unobscured-radius-2.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/revealer-view-angle-360.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/revealer-view-angle-360.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/revealer-view-angle-90.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/revealer-view-angle-90.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/revealer-vision-height.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/revealer-vision-height.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/urp-depth-texture.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/urp-depth-texture.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/urp-render-feature.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/urp-render-feature.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/world-bounds-effect.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/world-bounds-effect.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "logo.svg",
+      "output": {
+        "resource": {
+          "relative_path": "logo.svg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

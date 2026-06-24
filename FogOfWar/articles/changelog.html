@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Changelog | Pixel-Perfect Fog Of War </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Changelog | Pixel-Perfect Fog Of War ">
+      <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="Pixel-Perfect Fog Of War">
+            Pixel-Perfect Fog Of War
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="changelog">Changelog</h1>
+
+<hr>
+<p>Big thanks to everyone for your continued support of Pixel-Perfect Fog Of War. Your reviews and feedback make it possible to keep shipping new features and performance updates!</p>
+<h2 id="330--2026-05-14">3.3.0 — 2026-05-14</h2>
+<ul>
+<li>Reworked partial hiders to no longer require registration</li>
+<li>Optimized system initialization</li>
+<li>Reduced number of shader variants</li>
+</ul>
+<h2 id="324">3.2.4</h2>
+<ul>
+<li>Reworked deferred registration system — prevents registrations between updates</li>
+<li>Fixed divide-by-zero error when there are no dynamic revealers (thanks myroslav!)</li>
+<li>Fixed invalid render graph input when using a 2D URP project (thanks myroslav!)</li>
+</ul>
+<h2 id="323">3.2.3</h2>
+<ul>
+<li>Fixed build errors caused by the last update</li>
+<li>Fixed errors in the URP and HDRP packages caused by the last update</li>
+<li>Added asmdef for demo scripts</li>
+<li>Fixed render texture memory leak when using regrow</li>
+<li>Fixed revealer sight buffer memory leak</li>
+</ul>
+<h2 id="322">3.2.2</h2>
+<ul>
+<li>Removed &quot;URP Compatibility Mode&quot; fallback for Unity 6.4+</li>
+<li>Added Assembly Definitions</li>
+</ul>
+<h2 id="321">3.2.1</h2>
+<ul>
+<li>Fixed jobs error when using a low number of revealers per frame</li>
+<li>Clamped num revealers per frame to a minimum of 1</li>
+<li>Improved sight segment overflow log</li>
+<li>Fixed revealer debugs to work on all axes</li>
+</ul>
+<h2 id="320">3.2.0</h2>
+<ul>
+<li><strong>New optimization: Staged Buffer Uploads.</strong> Greatly reduces the time FOW spends uploading data to the GPU</li>
+<li>Added Gaussian weights to &quot;Constant Blur&quot;</li>
+<li>Slight shader optimizations</li>
+<li>Other misc optimizations</li>
+<li>Fixed some console warnings</li>
+</ul>
+<h2 id="314">3.1.4</h2>
+<ul>
+<li>Fixed build error</li>
+</ul>
+<h2 id="313">3.1.3</h2>
+<ul>
+<li>Fixed errors that happen when using &quot;recompile and continue playing&quot; script change mode</li>
+</ul>
+<h2 id="312">3.1.2</h2>
+<ul>
+<li>Fixed crash on newer Unity versions when spatial hash data is uninitialized</li>
+<li>Added safety checks to FogOfWarHider sample points</li>
+</ul>
+<h2 id="311">3.1.1</h2>
+<ul>
+<li>Added a system to draw icons on top of the minimap, which can be used to track units</li>
+</ul>
+<h2 id="310">3.1.0</h2>
+<ul>
+<li>Overhauled minimap frustum generation — completely re-written from the ground up</li>
+<li>Minimap frustum is now generated directly in the minimap UI shader</li>
+<li>Added a softness feather for the lines</li>
+<li>Optionally clamp the lines to the borders of the texture</li>
+</ul>
+<h2 id="304">3.0.4</h2>
+<ul>
+<li>Fixed &quot;Hiders use fog texture&quot; option on the Metal graphics API</li>
+<li>Micro optimization for &quot;Texture Storage&quot; fog mode</li>
+</ul>
+<h2 id="303">3.0.3</h2>
+<ul>
+<li>Added threshold slider for required opacity when revealing hiders using the FOW texture</li>
+</ul>
+<h2 id="302">3.0.2</h2>
+<ul>
+<li>Fixed bug with Fog Of War Hiders not being hidden when using spatial acceleration if teleported far away</li>
+<li>Tiny micro optimizations to reduce branches in C# jobs</li>
+<li>Fixed issues when toggling &quot;hiders use fog texture?&quot; during runtime</li>
+</ul>
+<h2 id="301">3.0.1</h2>
+<ul>
+<li>Fixed small bug with Fog Of War Hiders when the &quot;Permanently Reveal&quot; checkbox was ticked</li>
+</ul>
+<h2 id="300--major-overhaul-and-optimization-update">3.0.0 — Major overhaul and optimization update</h2>
+<h3 id="new-features--content">New Features / Content</h3>
+<ul>
+<li>Occlusion is now optional on revealers. Disabling occlusion allows for tens of thousands of revealers with minimal performance cost</li>
+<li>Hiders can now be revealed by sampling Texture Storage fog</li>
+<li>The inner-edge soften angle can now be configured per-revealer</li>
+<li>The unobscured softening distance can now be configured per-revealer</li>
+<li>New Fog Of War World update method: <strong>Start in Update, Finish in Late Update</strong> — gives the C# job for the first iteration longer to complete on its own</li>
+<li>Made gradual reveal fade in/out separate options when using Fog Regrow / Memory</li>
+<li>You can now set the global fog strength (<code>FogOfWarWorld.SetFowEffectStrength()</code>)</li>
+<li>New API to subscribe to when a revealer sees or loses sight of a hider</li>
+<li>2 new demo scenes:
+<ul>
+<li>Demo 08: 1,000 revealers + 1,000 hiders (large-scale RTS occlusion quality)</li>
+<li>Demo 09: 10,000 revealers (no occlusion)</li>
+</ul>
+</li>
+</ul>
+<h3 id="inspector-cleanup">Inspector Cleanup</h3>
+<ul>
+<li>Categorized the revealer inspector</li>
+<li>Renamed &quot;Allow Bleeding&quot; to &quot;Add Slight Arc Leaking&quot;, and made it work with soft fog</li>
+<li>Renamed hider sample options on the revealer for clarity</li>
+</ul>
+<h3 id="optimizations">Optimizations</h3>
+<ul>
+<li>Complete rewrite of the shader logic for significantly optimized GPU performance</li>
+<li>New Spatial Hash Grid sampling system — allows tens of thousands of revealers with minimal GPU impact</li>
+<li>Hiders are significantly faster</li>
+<li>Optimized 3D revealer projection math</li>
+<li>Optimized GPU bandwidth — only changed revealer info is uploaded to the fog shader, and the total amount of data needed on the GPU is reduced</li>
+<li>Optimized job scheduling for revealers</li>
+<li>Optimized and cached more repeated revealer calculations</li>
+<li>Significantly reduced the memory size of the fog texture</li>
+</ul>
+<h3 id="bug-fixes">Bug Fixes</h3>
+<ul>
+<li>Fixed tooltips not showing on revealers</li>
+<li>Fixed microscopic leaks that could occur when two sight segments are very close together</li>
+<li>Fixed URP shaders in Unity 6.3</li>
+<li>Fixed duplicate shader defines in partial hider shaders</li>
+</ul>
+<h2 id="290">2.9.0</h2>
+<ul>
+<li><strong>New feature: Revealer quality presets!</strong>
+<ul>
+<li>Extra Large Scale RTS, Large Scale RTS, Medium Scale RTS, Small Scale RTS, High Resolution, Overkill Resolution</li>
+</ul>
+</li>
+<li>Substantial optimization to the C# side of revealers (~30% faster on the developer's system)</li>
+<li>Fixed bugs and inconsistencies with revealers</li>
+<li>Fixed GL.End error</li>
+<li>Various other improvements and fixes</li>
+</ul>
+<h2 id="283">2.8.3</h2>
+<ul>
+<li>Added more summaries for revealer methods</li>
+<li>Re-ordered options on FOW World</li>
+<li>Cleaned up some code in FOW World</li>
+</ul>
+<h2 id="282">2.8.2</h2>
+<ul>
+<li>Fixed issue with emissive decals in HDRP</li>
+</ul>
+<h2 id="281">2.8.1</h2>
+<ul>
+<li>Fixed issue with render graph in URP</li>
+</ul>
+<h2 id="280">2.8.0</h2>
+<ul>
+<li>Changed FOW scroll speed to a Vector2</li>
+<li>FOW shader refactor — much faster on mobile and much cleaner</li>
+</ul>
+<h2 id="270">2.7.0</h2>
+<ul>
+<li>Added new system for saving and loading FOW</li>
+<li>Added a new partial hider sample for a procedural grid that can exist as a custom FOW plane</li>
+<li>Fixed errors related to undo during runtime</li>
+</ul>
+<h2 id="261">2.6.1</h2>
+<ul>
+<li>Fixed revealers not getting registered when disabling and enabling FOW</li>
+</ul>
+<h2 id="260">2.6.0</h2>
+<ul>
+<li>Render graph support for URP in Unity 6+</li>
+</ul>
+<h2 id="252">2.5.2</h2>
+<ul>
+<li>Job scheduling performance improvements</li>
+<li>Fixed error on some platforms related to jobs</li>
+</ul>
+<h2 id="251">2.5.1</h2>
+<ul>
+<li>Added option to disable triplanar with the &quot;Texture Sample&quot; fog sample mode</li>
+<li>Fixed blit warning in FogOfWarWorld</li>
+</ul>
+<h2 id="250">2.5.0</h2>
+<ul>
+<li><strong>New regrow option: Revealer fade in.</strong> On top of fading out a revealer's sight, you can now fade it in</li>
+<li>Optimized Texture Storage fog shader</li>
+</ul>
+<h2 id="242">2.4.2</h2>
+<ul>
+<li>Added option to a revealer to calculate hiders from the hider's height (good for revealing hiders on high ledges)</li>
+<li>Added a new demo scene to show hiders at different heights</li>
+<li>Added debug mode to draw the hider sample ray</li>
+</ul>
+<h2 id="241">2.4.1</h2>
+<ul>
+<li>Fixed some shader warnings that appeared in the partial hider shaders</li>
+</ul>
+<h2 id="240">2.4.0</h2>
+<ul>
+<li><strong>New long-awaited major feature: Partial Hiders</strong>
+<ul>
+<li>A new type of hider that doesn't require the hider component</li>
+<li>Hiders on the edge of FOW can be partially revealed</li>
+<li>More performant when using many hiders</li>
+<li>Includes shader examples for both Amplify Shader Editor and Shader Graph</li>
+</ul>
+</li>
+<li>Added option to switch between Update and Late Update on FOW World</li>
+<li>Added a &quot;Max Hiders Sampled Per Frame&quot; field to the revealer</li>
+<li>Unobscured radius now reveals hiders</li>
+<li>Major shader restructure and cleanup</li>
+<li>Fixed shader issues on the Metal graphics API</li>
+</ul>
+<h2 id="230">2.3.0</h2>
+<ul>
+<li><strong>New major feature: Invert FOW effect</strong> — useful for highlighting &quot;guard&quot; unit vision</li>
+<li>Added &quot;World Space Offset&quot; for FOW pixelation mode</li>
+<li>Improved rendering of Soft FOW</li>
+<li>Fixed build error related to the Unity bug workaround class</li>
+</ul>
+<h2 id="223">2.2.3</h2>
+<ul>
+<li>Added a namespace to the Unity bug workaround</li>
+</ul>
+<h2 id="222">2.2.2</h2>
+<ul>
+<li>Added option to apply &quot;revealer eye offset&quot; only in the shader</li>
+<li>Fixed FOW sometimes turning off in the editor</li>
+</ul>
+<h2 id="221">2.2.1</h2>
+<ul>
+<li>Added option to pixelate fog in revealer-space</li>
+<li>Slight optimizations to the soft fog shader</li>
+</ul>
+<h2 id="220">2.2.0</h2>
+<ul>
+<li><strong>New major feature: FOW dithering</strong>
+<ul>
+<li>Dithering done in world space</li>
+<li>Dither size is adjustable</li>
+</ul>
+</li>
+<li>Added option to snap revealer sample position to the grid when using &quot;Pixelate Fog&quot;</li>
+</ul>
+<h2 id="211">2.1.1</h2>
+<ul>
+<li>Fixed rare 1-pixel gap that could appear in FOW under certain conditions</li>
+</ul>
+<h2 id="210">2.1.0</h2>
+<ul>
+<li><strong>New major feature: option to pixelate fog rendering</strong></li>
+<li>Fixed FogOfWarWorld undo bugs</li>
+</ul>
+<h2 id="208">2.0.8</h2>
+<ul>
+<li>Fixed FOW not properly rendering on the latest versions of Unity 6 beta and 2023.2</li>
+</ul>
+<h2 id="207">2.0.7</h2>
+<ul>
+<li>Added method to clear the FOW regrow texture</li>
+</ul>
+<h2 id="206">2.0.6</h2>
+<ul>
+<li>Significant shader optimizations for soft fog</li>
+<li>Added <code>[FormerlySerializedAs]</code> for FOW hider properties</li>
+<li>Fixed minimap frustum GL error</li>
+</ul>
+<h2 id="205">2.0.5</h2>
+<ul>
+<li>Significant hider performance improvements</li>
+<li>Fixed errors when the Fog Of War World is disabled</li>
+<li>Cleaned up the revealer inspector</li>
+<li>Renamed various methods and variables on the hider script</li>
+<li>Added method to clear the regrow render texture</li>
+</ul>
+<h2 id="204">2.0.4</h2>
+<ul>
+<li>Added softening option for edges</li>
+<li>Made revealer opacity work with soft fog</li>
+<li>Allowed the HiderDisableRenderers array to be changed</li>
+</ul>
+<h2 id="203">2.0.3</h2>
+<ul>
+<li>Fixed extra iterations and edge resolve not working in XY mode</li>
+<li>Fixed ZY plane</li>
+<li>Fixed debug mode to work with other planes &amp; 2D FOW</li>
+</ul>
+<h2 id="202">2.0.2</h2>
+<ul>
+<li>Fixed hiders not working properly with the XY plane selected</li>
+<li>Fixed revealer direction in 2D FOW</li>
+<li>Fixed hiders not working properly with 2D FOW</li>
+</ul>
+<h2 id="201">2.0.1</h2>
+<ul>
+<li>Further improved performance of the new revealer class</li>
+<li>Switched to QueryParameter for RaycastCommands in 2022.2+</li>
+<li>Fixed revealer register bug when the FOW World doesn't exist</li>
+<li>Fixed revealer rotation when using FOW plane XY</li>
+<li>Fixed URP demo scene materials</li>
+</ul>
+<h2 id="200">2.0.0</h2>
+<ul>
+<li>Significant performance improvements (and a foundation for more to come)</li>
+<li><strong>Complete revealer rewrite.</strong> The new algorithm is up to 2x as fast for single revealers and up to 3x as fast for multiple. It uses C# Jobs and the Burst compiler, and produces more accurate results with fewer calculations</li>
+<li>Shaders rewritten to significantly reduce the number of variants</li>
+<li>Improvements to Texture Sample mode — significantly increased performance, and it now works with 2D rendering</li>
+<li>World Bounds now works with 2D rendering</li>
+<li>Added an option for revealer opacity</li>
+<li>World Bounds can now be smoothed out</li>
+<li>Demo scenes remade &amp; converged</li>
+<li>Draw camera rect onto the minimap (beta)</li>
+</ul>
+<h2 id="167">1.6.7</h2>
+<ul>
+<li>Fixed FOW World not saving the selected appearance type</li>
+</ul>
+<h2 id="166">1.6.6</h2>
+<ul>
+<li>Added method for changing the FOW render type at runtime</li>
+<li>Fixed URP renderer feature for Unity 2023+</li>
+<li>Fixed errors when toggling revealers with the FOW World disabled</li>
+</ul>
+<h2 id="165">1.6.5</h2>
+<ul>
+<li>Added Outline mode (preview)</li>
+<li>Improved + fixed FOW rendering logic</li>
+<li>Reduced number of shader variants</li>
+<li>Slight performance increase</li>
+<li>Fixed crash on import on Unity 2022</li>
+</ul>
+<h2 id="164">1.6.4</h2>
+<ul>
+<li>Added option for opaque solid color rendering</li>
+<li>Fixed &quot;Texture&quot; fog mode requiring &quot;Use World Bounds&quot; enabled</li>
+<li>Fixed fog not rendering on the edge of bounds in Texture mode</li>
+<li>Fixed extreme compilation times</li>
+<li>Fixed fog scene-view rendering in BIRP</li>
+<li>Fixed logic issue in rendering that caused streaks</li>
+</ul>
+<h2 id="163">1.6.3</h2>
+<ul>
+<li>Fixed &quot;Every Frame&quot; revealer mode not revealing hiders</li>
+</ul>
+<h2 id="162">1.6.2</h2>
+<ul>
+<li>Added &quot;Toggle Hider Objects&quot; hider behavior</li>
+<li>Fixed some &quot;Enter Playmode Options&quot; errors</li>
+<li>Fixed some console warnings</li>
+</ul>
+<h2 id="161">1.6.1</h2>
+<ul>
+<li>Added bounds field to the FOW World component</li>
+<li>Fixed bounds not showing up with only Texture Sample mode enabled</li>
+</ul>
+<h2 id="160">1.6.0</h2>
+<ul>
+<li><strong>Added new Fog Sample options:</strong>
+<ul>
+<li><strong>Pixel-Perfect</strong> — the fog sample type used pre-1.6. Perfect for large-scale worlds due to no reliance on textures; calculates fog per-pixel for perfect quality</li>
+<li><strong>Texture Storage</strong> — closer to traditional FOW implementations, relying on a texture to store data. Allows temporal effects (such as fog regrow) and constant blur of the FOW mask. Not suitable for open worlds, since a huge texture would be needed</li>
+</ul>
+</li>
+<li><strong>Added &quot;Fog Regrow&quot; option for the new Texture fog sample mode:</strong>
+<ul>
+<li>Control the initial exploration value</li>
+<li>Control the regrow speed</li>
+<li>Control the max amount of regrow (so previously explored areas remain partially explored)</li>
+</ul>
+</li>
+<li>Added a new demo scene for fog regrow</li>
+<li>Cleaned up the inspector for the FOW World component</li>
+</ul>
+<h2 id="151">1.5.1</h2>
+<ul>
+<li>Decoupled hider logic from line-of-sight logic</li>
+</ul>
+<h2 id="150">1.5.0</h2>
+<ul>
+<li><strong>New major features and improvements:</strong>
+<ul>
+<li>Minimap texture generation</li>
+<li>FOW World Bounds</li>
+<li>Greatly improved quality of FOW smoothing</li>
+<li>&quot;Smooth Step&quot; smooth type — similar to but less extreme than &quot;Smoother&quot;</li>
+<li>Added a static parameter to revealers to make them not update unless manually told to</li>
+</ul>
+</li>
+<li>Reworked FOW shaders for improved readability + performance</li>
+<li>Fixed bug where hiders would be broken if initially hidden</li>
+<li>Removed &quot;No Bleed Soft&quot; and &quot;No Bleed&quot; fog types — replaced with a checkbox to allow bleeding</li>
+<li>Created / adjusted demo scenes</li>
+<li>Official URP support for Unity 2022</li>
+<li>Texture Sample mode in URP no longer requires an extra pass</li>
+<li>Improved quality of triplanar rendering for Texture Sample mode</li>
+<li>Improved performance of the Fog Of War World</li>
+<li>Added a workaround for a Unity bug that would break FOW in the editor</li>
+<li>Reworked FOW initialization to make enabling/disabling easier and faster</li>
+<li>Fixed miscellaneous small bugs</li>
+</ul>
+<h2 id="149">1.4.9</h2>
+<ul>
+<li>Added new &quot;Maximum&quot; and &quot;Additive&quot; blend modes</li>
+<li>Fixed FogOfWarWorld custom inspector</li>
+</ul>
+<h2 id="148">1.4.8</h2>
+<ul>
+<li>Improved FOW stability</li>
+<li>Created a workaround for a Unity bug that broke FOW when the asset database was refreshed</li>
+</ul>
+<h2 id="147">1.4.7</h2>
+<ul>
+<li>Once again fixed rendering on mobile</li>
+</ul>
+<h2 id="146">1.4.6</h2>
+<ul>
+<li>Further optimized rendering speed of FOW</li>
+<li>Fixed inner-edge softening bug when using 360-degree revealers</li>
+<li>Fixed rendering issue with the Metal graphics API</li>
+</ul>
+<h2 id="145">1.4.5</h2>
+<ul>
+<li>Optimized rendering speed of FOW</li>
+<li>Added value to fade out height on revealers</li>
+<li>Added soften distance override on revealers</li>
+</ul>
+<h2 id="144">1.4.4</h2>
+<ul>
+<li>Updated Texture mode to support scrolling!</li>
+</ul>
+<h2 id="143">1.4.3</h2>
+<ul>
+<li>Updated inner-edge softening (beta) to work with more edge cases</li>
+</ul>
+<h2 id="142">1.4.2</h2>
+<ul>
+<li>Fixed build errors</li>
+</ul>
+<h2 id="141">1.4.1</h2>
+<ul>
+<li>Added &quot;Smoother&quot; fade type</li>
+</ul>
+<h2 id="140">1.4.0</h2>
+<ul>
+<li>Updated inner-edge softening (beta)</li>
+<li>Complete rewrite of the logic shader</li>
+<li>Massively improved code structure + readability</li>
+<li>Support for 2D renderers</li>
+<li>Abstracted hider class for custom effects</li>
+<li>Added Max Fog Distance option</li>
+<li>Various optimizations and bug fixes</li>
+</ul>
+<h2 id="133">1.3.3</h2>
+<ul>
+<li>Fixed hiders being revealed outside of vision height</li>
+</ul>
+<h2 id="132">1.3.2</h2>
+<ul>
+<li>Fixed hider bug when enabling/disabling the component</li>
+<li>Added teams demo</li>
+</ul>
+<h2 id="131">1.3.1</h2>
+<ul>
+<li>Fixed player build failure</li>
+</ul>
+<h2 id="130">1.3.0</h2>
+<ul>
+<li><strong>New features:</strong>
+<ul>
+<li>Physics2D support</li>
+<li>Axis selection (select the FOW plane)</li>
+<li>Color pre-multiply for grayscale fog</li>
+<li>Improved blur fog mode</li>
+<li>FOW can now render on mobile</li>
+<li>Controllable vision height</li>
+</ul>
+</li>
+<li>Many other improvements and optimizations</li>
+</ul>
+<h2 id="original--2022-09-19">Original — 2022-09-19</h2>
+<p>Initial release.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>Version history below 1.3.0 (the earliest 1.x releases) isn't reproduced here. The complete history is available on the <a href="https://assetstore.unity.com/packages/vfx/shaders/fullscreen-camera-effects/pixel-perfect-fog-of-war-229484?aid=1011lrDI9">Asset Store</a> listing.</p>
+</div>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

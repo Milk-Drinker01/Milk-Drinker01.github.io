@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Fog Appearance | Pixel-Perfect Fog Of War </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Fog Appearance | Pixel-Perfect Fog Of War ">
+      <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.svg" alt="Pixel-Perfect Fog Of War">
+            Pixel-Perfect Fog Of War
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="fog-appearance">Fog Appearance</h1>
+
+<hr>
+<p>The <strong>Fog Appearance</strong> (set on <a href="../getting-started/fog-of-war-world.html">Fog Of War World</a>) controls how unexplored areas are rendered. Several render styles are available, each with its own options.</p>
+<p>You can change the appearance at runtime with <a href="../api/fog-of-war-world.html#setfowappearance"><code>SetFowAppearance</code></a>.</p>
+<h2 id="solid-color">Solid Color</h2>
+<p>The basic render mode. Unexplored areas are filled with a flat color.</p>
+<ul>
+<li><strong>Fog Color (RGB)</strong> sets the color.</li>
+<li><strong>Fog Color (Alpha)</strong> controls fog opacity.</li>
+</ul>
+<h2 id="grayscale">Grayscale</h2>
+<p>Turns unexplored areas of your scene black and white, leaving explored areas in full color.</p>
+<ul>
+<li><strong>Saturation Strength</strong> controls how strongly color is removed.</li>
+<li>The <strong>Fog Color</strong> acts as a color pre-multiplier over the grayscaled result.</li>
+</ul>
+<h2 id="blur">Blur</h2>
+<p>Blurs the unexplored parts of your scene.</p>
+<ul>
+<li><strong>Blur Strength</strong> controls the blur intensity.</li>
+<li><strong>Blur Distance (Min/Max)</strong> set the screen-space blur offset range.</li>
+<li><strong>Blur Samples</strong> controls quality (more samples = smoother, more expensive).</li>
+<li>The <strong>Fog Color</strong> acts as a color pre-multiplier.</li>
+</ul>
+<h2 id="texture">Texture</h2>
+<p>Renders the fog using a supplied texture — great for a stylized &quot;cloud&quot; or &quot;parchment&quot; look.</p>
+<ul>
+<li><strong>Fog Texture</strong> is the texture to render.</li>
+<li><strong>Fog Color (RGB)</strong> applies a color filter to the texture.</li>
+<li><strong>Fog Color (Alpha)</strong> controls the texture's opacity.</li>
+<li><strong>Use Triplanar</strong> projects the texture using triplanar mapping (3D). Disable for a single-axis projection.</li>
+<li><strong>Fog Texture Tiling</strong> scales the texture.</li>
+<li><strong>Fog Scroll Speed</strong> animates the texture, for drifting clouds/mist.</li>
+</ul>
+<h2 id="outline">Outline</h2>
+<p>Draws an outline at the boundary between explored and unexplored areas.</p>
+<ul>
+<li><strong>Outline Thickness</strong> controls the line thickness.</li>
+</ul>
+<h2 id="none">None</h2>
+<p>Disables the fog effect entirely (the camera image passes through untouched). Useful for toggling the effect off without removing the system.</p>
+<h2 id="custom">Custom</h2>
+<p>Lets you drive the fog look with your own shader logic via <code>FowCustomInclude.hlsl</code>. Use this when none of the built-in appearances fit your art direction.</p>
+<h2 id="related">Related</h2>
+<ul>
+<li><a href="hard-soft-fog.html">Hard &amp; Soft Fog</a></li>
+<li><a href="pixelation-dithering.html">Pixelation &amp; Dithering</a></li>
+<li><a href="../configuration/appearance.html">Configuration: Appearance</a></li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
