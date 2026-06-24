@@ -2,18 +2,18 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Revealer Update Modes | Pixel-Perfect Fog Of War </title>
+      <title>Configuration &amp; Optimizations | Pixel-Perfect Fog Of War </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Revealer Update Modes | Pixel-Perfect Fog Of War ">
+      <meta name="title" content="Configuration &amp; Optimizations | Pixel-Perfect Fog Of War ">
       <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
       
-      <link rel="icon" href="../../favicon.ico">
-      <link rel="stylesheet" href="../../public/docfx.min.css">
-      <link rel="stylesheet" href="../../public/main.css">
-      <meta name="docfx:navrel" content="../../toc.html">
-      <meta name="docfx:tocrel" content="../toc.html">
+      <link rel="icon" href="../../../favicon.ico">
+      <link rel="stylesheet" href="../../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../../public/main.css">
+      <meta name="docfx:navrel" content="../../../toc.html">
+      <meta name="docfx:tocrel" content="../../toc.html">
       
-      <meta name="docfx:rel" content="../../">
+      <meta name="docfx:rel" content="../../../">
       
       
       
@@ -30,7 +30,7 @@
       <meta name="loc:copy" content="Copy">
       <meta name="loc:downloadPdf" content="Download PDF">
 
-      <script type="module" src="./../../public/docfx.min.js"></script>
+      <script type="module" src="./../../../public/docfx.min.js"></script>
 
       <script>
         const theme = localStorage.getItem('theme') || 'auto'
@@ -43,8 +43,8 @@
     <header class="bg-body border-bottom">
       <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
         <div class="container-xxl flex-nowrap">
-          <a class="navbar-brand" href="../../index.html">
-            <img id="logo" class="svg" src="../../logo.png" alt="Pixel-Perfect Fog Of War">
+          <a class="navbar-brand" href="../../../index.html">
+            <img id="logo" class="svg" src="../../../logo.png" alt="Pixel-Perfect Fog Of War">
             Pixel-Perfect Fog Of War
           </a>
           <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,12 +85,40 @@
         </div>
 
         <article data-uid="">
-<h1 id="revealer-update-modes">Revealer Update Modes</h1>
+<h1 id="configuration--optimizations">Configuration &amp; Optimizations</h1>
 
 <hr>
-<p>You control when revealers calculate line of sight on the <a href="../getting-started/fog-of-war-world.html">Fog Of War World</a> component, under <strong>Configuration and Optimizations</strong>. (Labels below match the inspector; the code field name is noted where it differs.)</p>
+<p>The <strong>Configuration and Optimizations</strong> group of the <a href="index.html">Fog Of War World</a> inspector — settings that control <em>when</em> and <em>how</em> revealers are processed. Labels match the inspector; the code field name is noted where it differs. For the broader tuning guide, see <a href="../../optimization/index.html">Optimization</a>.</p>
+<h2 id="update-method">Update Method</h2>
+<p>Controls <em>where</em> in the frame the fog work happens.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Update</strong></td>
+<td>Work happens in <code>Update</code>.</td>
+</tr>
+<tr>
+<td><strong>Late Update</strong></td>
+<td>Work happens in <code>LateUpdate</code>. (Default.)</td>
+</tr>
+<tr>
+<td><strong>Start In Update, Finish in Late Update</strong></td>
+<td>Jobs start in <code>Update</code> and complete in <code>LateUpdate</code>, giving the Burst line-of-sight jobs the most time to run before being forced to finish.</td>
+</tr>
+</tbody>
+</table>
+<div class="TIP">
+<h5>Tip</h5>
+<p><strong>Start In Update, Finish in Late Update</strong> is often the fastest, because it lets the multithreaded line-of-sight jobs run across the frame instead of blocking.</p>
+</div>
 <h2 id="revealer-update-timing">Revealer Update Timing</h2>
-<p>The <strong>Revealer Update Timing</strong> field (code: <code>RevealerUpdateMode</code>) controls how often revealers recalculate:</p>
+<p>(Code: <code>RevealerUpdateMode</code>) Controls how often revealers recalculate.</p>
 <table>
 <thead>
 <tr>
@@ -101,15 +129,15 @@
 <tbody>
 <tr>
 <td><strong>Every Frame</strong></td>
-<td>Every revealer recalculates line of sight every frame. Most accurate, most expensive.</td>
+<td>Every revealer recalculates every frame. Most accurate, most expensive.</td>
 </tr>
 <tr>
 <td><strong>Time Spliced</strong></td>
-<td>Revealers take turns. Only <strong>Num Revealers Per Frame</strong> recalculate each frame — fewer per frame means more performance. (Default.)</td>
+<td>Revealers take turns — only <strong>Num Revealers Per Frame</strong> recalculate each frame. (Default.)</td>
 </tr>
 <tr>
 <td><strong>Manual Updates</strong></td>
-<td>No revealer recalculates automatically. You drive updates yourself in code (see below).</td>
+<td>No revealer recalculates automatically; you drive updates in code with <code>revealer.ManualCalculateLineOfSight()</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -131,43 +159,73 @@
 </tr>
 </tbody>
 </table>
-<h2 id="update-method">Update Method</h2>
-<p><strong>Update Method</strong> controls <em>where</em> in the frame the fog work happens:</p>
+<h2 id="spatial-acceleration">Spatial Acceleration</h2>
+<p>A spatial hash grid that keeps revealer/hider queries fast in large worlds.</p>
 <table>
 <thead>
 <tr>
-<th>Option</th>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Update</strong></td>
-<td>Work happens in <code>Update</code>.</td>
+<td><strong>Use Spatial Acceleration?</strong></td>
+<td>bool</td>
+<td>true</td>
+<td>Enables the spatial hash grid. Code: <code>UseSpatialAcceleration</code>.</td>
 </tr>
 <tr>
-<td><strong>Late Update</strong></td>
-<td>Work happens in <code>LateUpdate</code>. (Default.)</td>
+<td><strong>Grid Size</strong></td>
+<td>int</td>
+<td>32</td>
+<td>Size of each hash bucket, in world units. Ideal value ≈ 2× your average revealer radius. Code: <code>SpatialHashGridSize</code>.</td>
 </tr>
 <tr>
-<td><strong>Start In Update, Finish in Late Update</strong></td>
-<td>Line-of-sight jobs are kicked off in <code>Update</code> and completed in <code>LateUpdate</code>, giving the Burst jobs the maximum time to run before being forced to complete.</td>
+<td><strong>Table Capacity</strong></td>
+<td>int</td>
+<td>1024</td>
+<td>Maximum number of buckets. More = fewer collisions but more memory. Larger worlds / smaller grid sizes need more. Code: <code>NumSpatialHashBuckets</code>.</td>
 </tr>
 </tbody>
 </table>
-<div class="TIP">
-<h5>Tip</h5>
-<p><strong>Start In Update, Finish in Late Update</strong> is often the best choice for performance, because it lets the multithreaded line-of-sight jobs run across the frame instead of blocking.</p>
+<h2 id="staged-gpu-uploads">Staged GPU Uploads</h2>
+<p>Batches revealer GPU data and uploads it once at the end of the frame.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Staged GPU Uploads?</strong></td>
+<td>bool</td>
+<td>true</td>
+<td>Defer revealer GPU uploads to the end of the frame and submit them in one batch. Code: <code>UseStagedGPUUploads</code>.</td>
+</tr>
+<tr>
+<td><strong>Scatter Compute Shader</strong></td>
+<td>ComputeShader</td>
+<td>(auto-assigned)</td>
+<td>The compute shader that scatters staged revealer data on the GPU. Code: <code>ScatterRevealersShader</code>.</td>
+</tr>
+</tbody>
+</table>
+<div class="IMPORTANT">
+<h5>Important</h5>
+<p>When <strong>Use Staged GPU Uploads?</strong> is on, the <strong>Scatter Compute Shader</strong> must be assigned, or the system warns and falls back to the slower per-revealer path. It is auto-assigned by default.</p>
 </div>
-<h2 id="driving-updates-manually">Driving Updates Manually</h2>
-<p>With <strong>Manual Updates</strong>, recalculate a revealer yourself:</p>
-<pre><code class="lang-csharp">revealer.ManualCalculateLineOfSight();
-</code></pre>
-<p>See the <a href="../api/revealer.html">Revealer API</a>.</p>
 <h2 id="related">Related</h2>
 <ul>
-<li><a href="static-revealers.html">Static Revealers</a></li>
-<li><a href="spatial-acceleration.html">Spatial Acceleration</a></li>
+<li><a href="../../optimization/index.html">Optimization</a></li>
+<li><a href="../../optimization/static-revealers.html">Static Revealers</a></li>
+<li><a href="utility-options.html">Utility Options</a></li>
 </ul>
 
 </article>

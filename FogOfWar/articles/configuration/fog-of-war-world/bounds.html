@@ -2,18 +2,18 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Hiders | Pixel-Perfect Fog Of War </title>
+      <title>Bounds | Pixel-Perfect Fog Of War </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Hiders | Pixel-Perfect Fog Of War ">
+      <meta name="title" content="Bounds | Pixel-Perfect Fog Of War ">
       <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
       
-      <link rel="icon" href="../../favicon.ico">
-      <link rel="stylesheet" href="../../public/docfx.min.css">
-      <link rel="stylesheet" href="../../public/main.css">
-      <meta name="docfx:navrel" content="../../toc.html">
-      <meta name="docfx:tocrel" content="../toc.html">
+      <link rel="icon" href="../../../favicon.ico">
+      <link rel="stylesheet" href="../../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../../public/main.css">
+      <meta name="docfx:navrel" content="../../../toc.html">
+      <meta name="docfx:tocrel" content="../../toc.html">
       
-      <meta name="docfx:rel" content="../../">
+      <meta name="docfx:rel" content="../../../">
       
       
       
@@ -30,7 +30,7 @@
       <meta name="loc:copy" content="Copy">
       <meta name="loc:downloadPdf" content="Download PDF">
 
-      <script type="module" src="./../../public/docfx.min.js"></script>
+      <script type="module" src="./../../../public/docfx.min.js"></script>
 
       <script>
         const theme = localStorage.getItem('theme') || 'auto'
@@ -43,8 +43,8 @@
     <header class="bg-body border-bottom">
       <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
         <div class="container-xxl flex-nowrap">
-          <a class="navbar-brand" href="../../index.html">
-            <img id="logo" class="svg" src="../../logo.png" alt="Pixel-Perfect Fog Of War">
+          <a class="navbar-brand" href="../../../index.html">
+            <img id="logo" class="svg" src="../../../logo.png" alt="Pixel-Perfect Fog Of War">
             Pixel-Perfect Fog Of War
           </a>
           <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,63 +85,41 @@
         </div>
 
         <article data-uid="">
-<h1 id="hiders">Hiders</h1>
+<h1 id="bounds">Bounds</h1>
 
 <hr>
-<p>Every setting on the <a href="../components/hider.html">Fog Of War Hider</a> component. For how to add a hider, see <a href="../getting-started/hiders.html">Getting Started: Hiders</a>.</p>
-<p>A hider is hidden whenever all of its sample points fall outside of every revealer's line of sight, and revealed when any sample point is seen. A <a href="../components/hider-behaviors.html">Hider Behavior</a> decides what actually happens on hide/reveal.</p>
-<div style="display:flex; gap:1em; align-items:flex-start; flex-wrap:wrap;">
-  <figure style="margin:0;">
-    <img src="../../images/hider-revealed.png" alt="Hider revealed" style="height:260px; width:auto; max-width:100%;">
-    <figcaption><em>Hider in line of sight — revealed</em></figcaption>
-  </figure>
-  <figure style="margin:0;">
-    <img src="../../images/hider-missed.png" alt="Hider hidden" style="height:260px; width:auto; max-width:100%;">
-    <figcaption><em>Hider out of line of sight — hidden</em></figcaption>
-  </figure>
-</div>
-<p><img src="../../images/hider-basics.png" alt="Hider basics"></p>
-<h2 id="inspector-properties">Inspector Properties</h2>
+<p>The <strong>FOW Bounds</strong> group of the <a href="index.html">Fog Of War World</a> inspector. This section appears whenever bounds are required — when <strong>Darken Out-Of-World-Bounds Area?</strong> is on (see <a href="rendering.html#world-bounds-darkening">Rendering Options</a>), when using <a href="../../features/minimap.html">Minimap Generation</a>, or when <strong>Fog Sample Mode</strong> is <strong>Texture Storage</strong>.</p>
 <table>
 <thead>
 <tr>
 <th>Property</th>
 <th>Type</th>
-<th>Default</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Sample Points</strong></td>
-<td>Transform[]</td>
-<td>(empty)</td>
-<td>The points tested for visibility. The hider counts as visible if <strong>any</strong> sample point is seen. If left empty, the object's own transform is used.</td>
+<td><strong>Center</strong></td>
+<td>Vector3</td>
+<td>Center of the world bounds volume. Code: <code>WorldBounds.center</code>.</td>
 </tr>
 <tr>
-<td><strong>Permanently Reveal</strong></td>
-<td>bool</td>
-<td>false</td>
-<td>Once revealed, the hider stays visible forever and stops being tested.</td>
+<td><strong>Extents</strong></td>
+<td>Vector3</td>
+<td>Extents of the world bounds volume. Code: <code>WorldBounds.extents</code>.</td>
 </tr>
 </tbody>
 </table>
-<div class="TIP">
-<h5>Tip</h5>
-<p>If you use many hiders, keep the number of sample points low — each one is an extra visibility test.</p>
+<p>You can also drag the box gizmo in the Scene view to set the bounds, or update them at runtime with <a href="../../api/fog-of-war-world.html#updateworldbounds"><code>UpdateWorldBounds</code></a>.</p>
+<div class="WARNING">
+<h5>Warning</h5>
+<p>If the bounds are left at their default size, the inspector warns <em>&quot;Make sure to actually set your world bounds!&quot;</em></p>
 </div>
-<h2 id="hider-behaviors">Hider Behaviors</h2>
-<p>The Fog Of War Hider only <strong>detects</strong> visibility. Attach a <a href="../components/hider-behaviors.html">Hider Behavior</a> to act on it:</p>
+<h2 id="related">Related</h2>
 <ul>
-<li><strong>Hider Disable Objects</strong> — enable/disable a set of GameObjects</li>
-<li><strong>Hider Disable Renderers</strong> — enable/disable a set of Renderers</li>
-<li><strong>Hider Toggle Objects</strong> — swap revealed/hidden object sets</li>
+<li><a href="../../features/world-bounds.html">World Bounds (feature)</a></li>
+<li><a href="rendering.html">Rendering Options</a></li>
 </ul>
-<p>To write your own, see <a href="../api/custom-hider-behaviors.html">Custom Hider Behaviors</a>.</p>
-<h2 id="sampling-hiders-via-the-fog-texture">Sampling Hiders via the Fog Texture</h2>
-<p>When using the <strong>Texture</strong> <a href="fog-of-war-world/sampling-mode.html">sampling mode</a>, hiders can be revealed by sampling the fog texture instead of a revealer's direct line of sight (<strong>Hiders use Fog Texture?</strong> on the Fog Of War World). The opacity threshold is set by <strong>Hider Seen Threshold for Fog Texture</strong>. See <a href="fog-of-war-world/texture-options.html">Texture Options</a>.</p>
-<h2 id="scripting">Scripting</h2>
-<p>See the <a href="../api/hider.html">Hider API</a>.</p>
 
 </article>
 

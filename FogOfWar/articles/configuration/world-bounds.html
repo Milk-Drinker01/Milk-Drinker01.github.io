@@ -88,46 +88,52 @@
 <h1 id="world-bounds">World Bounds</h1>
 
 <hr>
-<p>World bounds options on the <a href="../getting-started/fog-of-war-world.html">Fog Of War World</a> component. See <a href="../features/world-bounds.html">World Bounds</a> for a conceptual overview.</p>
+<p>World bounds options on the <a href="../getting-started/fog-of-war-world.html">Fog Of War World</a> component. The black-out toggle lives under <strong>FOW Extra Rendering Options</strong>, and the bounds volume itself under the <strong>FOW Bounds</strong> section (shown when bounds are needed). See <a href="../features/world-bounds.html">World Bounds</a> for a conceptual overview. (Labels below match the inspector; the code field name is noted where it differs.)</p>
 <table>
 <thead>
 <tr>
 <th>Property</th>
 <th>Type</th>
-<th>Default</th>
+<th>Range</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>World Bounds</strong></td>
-<td>Bounds</td>
-<td>center (0,0,0), size (1,1,1)</td>
-<td>The rectangular extent of your world on the fog plane. Edit with the scene gizmo or numerically.</td>
-</tr>
-<tr>
-<td><strong>Use World Bounds</strong></td>
+<td><strong>Darken Out-Of-World-Bounds Area?</strong></td>
 <td>bool</td>
-<td>false</td>
-<td>Renders everything outside the bounds as solid black.</td>
+<td>—</td>
+<td>Renders everything outside the bounds as solid black. Code: <code>UseWorldBounds</code>.</td>
 </tr>
 <tr>
 <td><strong>World Bounds Soften Distance</strong></td>
 <td>float</td>
-<td>1</td>
-<td>Softens the boundary edge of the black-out.</td>
+<td>0 → 5</td>
+<td>Softens the boundary edge of the black-out. Code: <code>WorldBoundsSoftenDistance</code>.</td>
 </tr>
 <tr>
 <td><strong>World Bounds Influence</strong></td>
 <td>float</td>
-<td>1</td>
-<td>How strongly the black-out is applied.</td>
+<td>0 → 1</td>
+<td>How strongly the black-out is applied. Code: <code>WorldBoundsInfluence</code>.</td>
+</tr>
+<tr>
+<td><strong>Center</strong></td>
+<td>Vector3</td>
+<td>—</td>
+<td>Center of the bounds volume. Code: <code>WorldBounds.center</code>.</td>
+</tr>
+<tr>
+<td><strong>Extents</strong></td>
+<td>Vector3</td>
+<td>—</td>
+<td>Extents of the bounds volume. Edit with the scene gizmo or numerically. Code: <code>WorldBounds.extents</code>.</td>
 </tr>
 </tbody>
 </table>
 <div class="NOTE">
 <h5>Note</h5>
-<p>World Bounds are also required (independent of the <strong>Use World Bounds</strong> black-out feature) when using <a href="../features/minimap.html">Minimap Generation</a> or the <strong>Texture</strong> <a href="sampling-mode.html">sampling mode</a>.</p>
+<p>The <strong>FOW Bounds</strong> section (Center / Extents) appears whenever bounds are required — when <strong>Darken Out-Of-World-Bounds Area?</strong> is on, when using <a href="../features/minimap.html">Minimap Generation</a>, or when <strong>Fog Sample Mode</strong> is <strong>Texture Storage</strong>. You can also drag the box gizmo in the Scene view.</p>
 </div>
 <p>You can update bounds at runtime with <a href="../api/fog-of-war-world.html#updateworldbounds"><code>UpdateWorldBounds</code></a>.</p>
 <h2 id="related">Related</h2>

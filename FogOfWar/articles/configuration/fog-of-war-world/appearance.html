@@ -2,18 +2,18 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Sampling Mode | Pixel-Perfect Fog Of War </title>
+      <title>Appearance | Pixel-Perfect Fog Of War </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Sampling Mode | Pixel-Perfect Fog Of War ">
+      <meta name="title" content="Appearance | Pixel-Perfect Fog Of War ">
       <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
       
-      <link rel="icon" href="../../favicon.ico">
-      <link rel="stylesheet" href="../../public/docfx.min.css">
-      <link rel="stylesheet" href="../../public/main.css">
-      <meta name="docfx:navrel" content="../../toc.html">
-      <meta name="docfx:tocrel" content="../toc.html">
+      <link rel="icon" href="../../../favicon.ico">
+      <link rel="stylesheet" href="../../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../../public/main.css">
+      <meta name="docfx:navrel" content="../../../toc.html">
+      <meta name="docfx:tocrel" content="../../toc.html">
       
-      <meta name="docfx:rel" content="../../">
+      <meta name="docfx:rel" content="../../../">
       
       
       
@@ -30,7 +30,7 @@
       <meta name="loc:copy" content="Copy">
       <meta name="loc:downloadPdf" content="Download PDF">
 
-      <script type="module" src="./../../public/docfx.min.js"></script>
+      <script type="module" src="./../../../public/docfx.min.js"></script>
 
       <script>
         const theme = localStorage.getItem('theme') || 'auto'
@@ -43,8 +43,8 @@
     <header class="bg-body border-bottom">
       <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
         <div class="container-xxl flex-nowrap">
-          <a class="navbar-brand" href="../../index.html">
-            <img id="logo" class="svg" src="../../logo.png" alt="Pixel-Perfect Fog Of War">
+          <a class="navbar-brand" href="../../../index.html">
+            <img id="logo" class="svg" src="../../../logo.png" alt="Pixel-Perfect Fog Of War">
             Pixel-Perfect Fog Of War
           </a>
           <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,11 +85,10 @@
         </div>
 
         <article data-uid="">
-<h1 id="sampling-mode">Sampling Mode</h1>
+<h1 id="appearance">Appearance</h1>
 
 <hr>
-<p>Sampling options on the <a href="../getting-started/fog-of-war-world.html">Fog Of War World</a> component, under the <strong>FOW Sampling Mode</strong> and <strong>FOW Texture Options</strong> inspector sections. See <a href="../features/fog-sample-modes.html">Fog Sample Modes</a> for a conceptual overview. (Labels below match the inspector; the code field name is noted where it differs.)</p>
-<h2 id="fog-sample-mode">Fog Sample Mode</h2>
+<p>The <strong>Fog Appearance</strong> group of the <a href="index.html">Fog Of War World</a> inspector. See <a href="../../features/fog-appearance.html">Fog Appearance</a> for a conceptual overview. Labels match the inspector; the code field name is noted where it differs.</p>
 <table>
 <thead>
 <tr>
@@ -101,19 +100,25 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>Fog Sample Mode</strong></td>
+<td><strong>Fog Shader</strong></td>
 <td>enum</td>
-<td>Pixel-Perfect</td>
-<td>How fog is sampled in the full-screen shader: <strong>Pixel-Perfect</strong> (per-pixel, unlimited world size) or <strong>Texture Storage</strong> (render-texture backed, enables regrow). Code: <code>FOWSamplingMode</code>.</td>
+<td>Solid Color</td>
+<td>The render style: Solid Color, Gray Scale, Blur, Texture Color, Outline, None, or Custom. Change at runtime with <a href="../../api/fog-of-war-world.html#setfowappearance"><code>SetFowAppearance</code></a>. Code: <code>FogAppearance</code>.</td>
+</tr>
+<tr>
+<td><strong>Fow Color</strong></td>
+<td>Color</td>
+<td>(0.35, 0.35, 0.35)</td>
+<td>The fog color (shown unless Fog Shader is None). RGB sets the tint; alpha controls opacity. For Gray Scale/Blur it acts as a color pre-multiplier.</td>
 </tr>
 </tbody>
 </table>
+<p><img src="../../../images/fog-appearance-dropdown.png" alt="Fog Appearance dropdown"></p>
 <div class="NOTE">
 <h5>Note</h5>
-<p>The inspector only exposes <strong>Pixel-Perfect</strong> and <strong>Texture Storage</strong>. A third <code>Both</code> mode exists in the API/enum but is not selectable from the inspector.</p>
+<p>In the current version, the <strong>Outline</strong> look is labelled <em>&quot;Temporarily non-functional&quot;</em> in the inspector while it is being reworked.</p>
 </div>
-<h2 id="texture-storage-sampling-options">Texture Storage Sampling Options</h2>
-<p>Shown when <strong>Fog Sample Mode</strong> is <strong>Texture Storage</strong>.</p>
+<h2 id="gray-scale">Gray Scale</h2>
 <table>
 <thead>
 <tr>
@@ -125,82 +130,112 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>Use Blur?</strong></td>
-<td>bool</td>
-<td>—</td>
-<td>Applies a constant blur when sampling the fog texture, smoothing out grid cells. Code: <code>UseConstantBlur</code>.</td>
-</tr>
-<tr>
-<td><strong>Texture Blur Quality</strong></td>
-<td>int</td>
-<td>1 → 6</td>
-<td>Blur quality. Code: <code>ConstantTextureBlurQuality</code>.</td>
-</tr>
-<tr>
-<td><strong>Texture Blur Amount</strong></td>
-<td>float</td>
-<td>0 → 5</td>
-<td>Blur amount. Code: <code>ConstantTextureBlurAmount</code>.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="fow-texture-options">FOW Texture Options</h2>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Type</th>
-<th>Range</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Force Render Fow Texture (For Mini-Map)</strong></td>
-<td>bool</td>
-<td>—</td>
-<td>Forces the fog render texture to be generated, for the <a href="../features/minimap.html">minimap</a>. Code: <code>UseMiniMap</code>.</td>
-</tr>
-<tr>
-<td><strong>Texture Resolution X</strong></td>
-<td>int</td>
-<td>128 → 4096</td>
-<td>Fog texture width. Code: <code>FowResX</code>.</td>
-</tr>
-<tr>
-<td><strong>Texture Resolution Y</strong></td>
-<td>int</td>
-<td>128 → 4096</td>
-<td>Fog texture height. Code: <code>FowResY</code>.</td>
-</tr>
-<tr>
-<td><strong>Hiders use Fog Texture?</strong></td>
-<td>bool</td>
-<td>—</td>
-<td>When true, hiders are revealed by sampling the fog texture instead of a revealer's direct line of sight. Code: <code>HidersUseFogTexture</code>.</td>
-</tr>
-<tr>
-<td><strong>Hider Seen Threshold for Fog Texture</strong></td>
+<td><strong>Unknown Area Saturation Strength</strong></td>
 <td>float</td>
 <td>0 → 1</td>
-<td>The fog-texture value at which a hider counts as seen. Code: <code>HiderSeenThreshold</code>.</td>
-</tr>
-<tr>
-<td><strong>Enable Async Readback Of Fog Texture?</strong></td>
-<td>bool</td>
-<td>—</td>
-<td>Reads the fog texture back to the CPU asynchronously, making CPU fog sampling much faster. Keep this on if you sample the fog texture from code frequently. Code: <code>AsyncReadbackFogDataToCpu</code>.</td>
+<td>How strongly color is removed in unexplored areas. Code: <code>SaturationStrength</code>.</td>
 </tr>
 </tbody>
 </table>
-<div class="NOTE">
-<h5>Note</h5>
-<p>The texture options appear when <strong>Force Render Fow Texture</strong> is enabled or <strong>Fog Sample Mode</strong> is <strong>Texture Storage</strong>. Texture sampling and the minimap also require <a href="world-bounds.html">World Bounds</a>.</p>
-</div>
+<h2 id="blur">Blur</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Range</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Unknown Area Blur Strength</strong></td>
+<td>float</td>
+<td>-1 → 1</td>
+<td>Blur intensity. Code: <code>BlurStrength</code>.</td>
+</tr>
+<tr>
+<td><strong>Min Screen Percent</strong></td>
+<td>float</td>
+<td>0 → 2</td>
+<td>Minimum screen-space blur offset. Code: <code>BlurDistanceScreenPercentMin</code>.</td>
+</tr>
+<tr>
+<td><strong>Max Screen Percent</strong></td>
+<td>float</td>
+<td>0 → 2</td>
+<td>Maximum screen-space blur offset. Code: <code>BlurDistanceScreenPercentMax</code>.</td>
+</tr>
+<tr>
+<td><strong>Num Blur Samples</strong></td>
+<td>int</td>
+<td>6 → 18</td>
+<td>Number of blur samples (higher = smoother, more expensive). Code: <code>BlurSamples</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="texture-color">Texture Color</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Fog Of War Texture</strong></td>
+<td>Texture2D</td>
+<td>—</td>
+<td>Texture used to render the fog. Code: <code>FogTexture</code>.</td>
+</tr>
+<tr>
+<td><strong>Use Triplanar Sampling?</strong></td>
+<td>bool</td>
+<td>true</td>
+<td>Triplanar projection for the texture (3D). Disable for single-axis projection. Code: <code>UseTriplanar</code>.</td>
+</tr>
+<tr>
+<td><strong>Texture Tiling</strong></td>
+<td>Vector2</td>
+<td>(1, 1)</td>
+<td>Texture tiling scale. Code: <code>FogTextureTiling</code>.</td>
+</tr>
+<tr>
+<td><strong>Texture Scroll Speed</strong></td>
+<td>Vector2</td>
+<td>(1, 1)</td>
+<td>Texture scroll animation speed. Code: <code>FogScrollSpeed</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="outline">Outline</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Outline Thickness</strong></td>
+<td>float</td>
+<td>0.1</td>
+<td>Thickness of the outline drawn at the fog boundary. Code: <code>OutlineThickness</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="custom">Custom</h2>
+<p>The <strong>Custom</strong> look runs your own HLSL shader. See <a href="../../features/custom-fog-shader.html">Custom Fog Shader</a>.</p>
 <h2 id="related">Related</h2>
 <ul>
-<li><a href="../features/fog-sample-modes.html">Fog Sample Modes</a></li>
-<li><a href="regrow.html">Regrow &amp; Fading</a></li>
+<li><a href="../../features/fog-appearance.html">Fog Appearance</a></li>
+<li><a href="../../features/custom-fog-shader.html">Custom Fog Shader</a></li>
 </ul>
 
 </article>

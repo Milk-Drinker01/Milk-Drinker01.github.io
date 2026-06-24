@@ -91,6 +91,7 @@
 <p>Spatial acceleration (added in 3.0) uses a <strong>spatial hash grid</strong> to make revealer and hider queries fast, so the system scales to large worlds and many objects. It is enabled by default.</p>
 <h2 id="settings">Settings</h2>
 <p>On the <a href="../getting-started/fog-of-war-world.html">Fog Of War World</a> component:</p>
+<p>Under <strong>Configuration and Optimizations</strong>. (Labels match the inspector; the code field name is noted where it differs.)</p>
 <table>
 <thead>
 <tr>
@@ -102,22 +103,22 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>Use Spatial Acceleration</strong></td>
+<td><strong>Use Spatial Acceleration?</strong></td>
 <td>bool</td>
 <td>true</td>
-<td>Enables the spatial hash grid.</td>
+<td>Enables the spatial hash grid. Code: <code>UseSpatialAcceleration</code>.</td>
 </tr>
 <tr>
-<td><strong>Spatial Hash Grid Size</strong></td>
+<td><strong>Grid Size</strong></td>
 <td>int</td>
 <td>32</td>
-<td>The size of each spatial hash bucket, in world units.</td>
+<td>The size of each spatial hash bucket, in world units. Code: <code>SpatialHashGridSize</code>.</td>
 </tr>
 <tr>
-<td><strong>Num Spatial Hash Buckets</strong></td>
+<td><strong>Table Capacity</strong></td>
 <td>int</td>
 <td>1024</td>
-<td>How many buckets the hash table can hold. More buckets = fewer collisions.</td>
+<td>How many buckets the hash table can hold. More buckets = fewer collisions. Code: <code>NumSpatialHashBuckets</code>.</td>
 </tr>
 </tbody>
 </table>

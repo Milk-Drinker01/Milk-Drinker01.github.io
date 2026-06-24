@@ -91,6 +91,7 @@
 <p><strong>Staged GPU Uploads</strong> batch each revealer's GPU data and upload it all at once at the end of the frame, instead of uploading per-revealer as each one is calculated. This reduces GPU upload overhead when many revealers update in a frame.</p>
 <h2 id="settings">Settings</h2>
 <p>On the <a href="../getting-started/fog-of-war-world.html">Fog Of War World</a> component:</p>
+<p>Under <strong>Configuration and Optimizations</strong>. (Labels match the inspector; the code field name is noted where it differs.)</p>
 <table>
 <thead>
 <tr>
@@ -102,22 +103,22 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>Use Staged GPU Uploads</strong></td>
+<td><strong>Use Staged GPU Uploads?</strong></td>
 <td>bool</td>
 <td>true</td>
-<td>Defer revealer GPU uploads to the end of the frame and submit them in one batch.</td>
+<td>Defer revealer GPU uploads to the end of the frame and submit them in one batch. Code: <code>UseStagedGPUUploads</code>.</td>
 </tr>
 <tr>
-<td><strong>Scatter Revealers Shader</strong></td>
+<td><strong>Scatter Compute Shader</strong></td>
 <td>ComputeShader</td>
-<td>(assigned)</td>
-<td>The compute shader that scatters staged revealer data on the GPU.</td>
+<td>(auto-assigned)</td>
+<td>The compute shader that scatters staged revealer data on the GPU. Code: <code>ScatterRevealersShader</code>.</td>
 </tr>
 </tbody>
 </table>
 <div class="IMPORTANT">
 <h5>Important</h5>
-<p>When <strong>Use Staged GPU Uploads</strong> is enabled, the <strong>Scatter Revealers Shader</strong> must be assigned. If it isn't, the system logs a warning and falls back to the slower per-revealer upload path. The shader is assigned by default — only worry about this if you cleared the field.</p>
+<p>When <strong>Use Staged GPU Uploads?</strong> is enabled, the <strong>Scatter Compute Shader</strong> must be assigned. If it isn't, the system logs a warning and falls back to the slower per-revealer upload path. The shader is auto-assigned by default — only worry about this if you cleared the field.</p>
 </div>
 <p>You can toggle staged uploads at runtime with <a href="../api/fog-of-war-world.html#togglestageduploads"><code>ToggleStagedUploads</code></a>.</p>
 <h2 id="related">Related</h2>

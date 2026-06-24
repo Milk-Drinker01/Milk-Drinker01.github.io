@@ -88,62 +88,62 @@
 <h1 id="regrow--fading">Regrow &amp; Fading</h1>
 
 <hr>
-<p>Regrow and fading options on the <a href="../getting-started/fog-of-war-world.html">Fog Of War World</a> component. See <a href="../features/regrow-and-fading.html">Fog Regrow &amp; Fading</a> for a conceptual overview.</p>
+<p>Regrow and fading options on the <a href="../getting-started/fog-of-war-world.html">Fog Of War World</a> component, under <strong>FOW Texture Options</strong>. See <a href="../features/regrow-and-fading.html">Fog Regrow &amp; Fading</a> for a conceptual overview. (Labels below match the inspector; the code field name is noted where it differs.)</p>
 <div class="IMPORTANT">
 <h5>Important</h5>
-<p>These options require the <strong>Texture</strong> <a href="sampling-mode.html">sampling mode</a>.</p>
+<p>These options require the <strong>Texture Storage</strong> <a href="sampling-mode.html">sampling mode</a>.</p>
 </div>
 <table>
 <thead>
 <tr>
 <th>Property</th>
 <th>Type</th>
-<th>Default</th>
+<th>Range</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Use Regrow</strong></td>
+<td><strong>Use Fog Regrow/Memory?</strong></td>
 <td>bool</td>
-<td>false</td>
-<td>Explored areas gradually return to fog after revealers leave.</td>
+<td>—</td>
+<td>Explored areas gradually return to fog after revealers leave. Code: <code>UseRegrow</code>.</td>
 </tr>
 <tr>
-<td><strong>Revealer Fade In</strong></td>
+<td><strong>Gradually Fade In Revealer?</strong></td>
 <td>bool</td>
-<td>false</td>
-<td>Newly revealed areas fade in over time instead of popping.</td>
+<td>—</td>
+<td>Newly revealed areas fade in over time instead of popping. Code: <code>RevealerFadeIn</code>.</td>
 </tr>
 <tr>
 <td><strong>Revealer Fade In Speed</strong></td>
 <td>float</td>
-<td>0.5</td>
-<td>Speed of the fade-in.</td>
+<td>0 → 10</td>
+<td>Speed of the fade-in. Code: <code>RevealerFadeInSpeed</code>.</td>
 </tr>
 <tr>
-<td><strong>Revealer Fade Out</strong></td>
+<td><strong>Gradually Fade Out Revealer?</strong></td>
 <td>bool</td>
-<td>false</td>
-<td>Areas a revealer leaves fade out over time.</td>
+<td>—</td>
+<td>Areas a revealer leaves fade out over time. Code: <code>RevealerFadeOut</code>.</td>
 </tr>
 <tr>
 <td><strong>Revealer Fade Out Speed</strong></td>
 <td>float</td>
-<td>0.5</td>
-<td>Speed of the fade-out.</td>
+<td>0 → 10</td>
+<td>Speed of the fade-out. Code: <code>RevealerFadeOutSpeed</code>.</td>
 </tr>
 <tr>
-<td><strong>Initial Fog Exploration Value</strong></td>
+<td><strong>Initial Fog Exploration Amount</strong></td>
 <td>float</td>
-<td>0</td>
-<td>How explored the world is at startup (0 = fully fogged).</td>
+<td>0 → 1</td>
+<td>How explored the world is at startup (0 = fully fogged). Code: <code>InitialFogExplorationValue</code>.</td>
 </tr>
 <tr>
-<td><strong>Max Fog Regrow Amount</strong></td>
+<td><strong>Explored Fog Retention</strong></td>
 <td>float</td>
-<td>0.3</td>
-<td>Caps how much fog can grow back, allowing partially-remembered areas.</td>
+<td>0 → 1</td>
+<td>How much previously-explored fog is retained, so explored areas stay partially remembered rather than fully regrowing. Code: <code>MaxFogRegrowAmount</code>.</td>
 </tr>
 </tbody>
 </table>

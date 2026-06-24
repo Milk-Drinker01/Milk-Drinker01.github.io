@@ -105,22 +105,22 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>Max Possible Revealers</strong></td>
+<td><strong>Max Num Revealers</strong></td>
 <td>The maximum number of revealers that can be active at once. The GPU buffer is sized from this value.</td>
 </tr>
 <tr>
-<td><strong>Max Possible Segments Per Revealer</strong></td>
+<td><strong>Max Num Segments Per Revealer</strong></td>
 <td>The maximum number of sight &quot;segments&quot; a single revealer can produce. A segment is one edge of the revealer's line-of-sight polygon. Setting this too low causes errors — leave it at a reasonable value. Enable <strong>Debug Mode</strong> on a revealer to visualize these segments.</td>
 </tr>
 <tr>
-<td><strong>Max Possible Hiders</strong></td>
-<td>The maximum number of hiders. This will auto-resize if exceeded, but that causes a one-time hitch — size it appropriately up front.</td>
+<td><strong>Initial Hider Pool Capacity</strong></td>
+<td>The starting number of hiders. This will auto-resize if exceeded, but that causes a one-time hitch — size it appropriately up front.</td>
 </tr>
 </tbody>
 </table>
 <div class="IMPORTANT">
 <h5>Important</h5>
-<p>If a revealer needs more segments than <strong>Max Possible Segments Per Revealer</strong> allows, you will get a console error telling you to raise the value. See <a href="../debugging.html">Debugging</a>.</p>
+<p>If a revealer needs more segments than <strong>Max Num Segments Per Revealer</strong> allows, you will get a console error telling you to raise the value. See <a href="../debugging.html">Debugging</a>.</p>
 </div>
 <p>Each edge a revealer sees adds two segments — enabling <strong>Debug Mode</strong> on a revealer draws them:</p>
 <p><img src="../../images/revealer-segments.png" alt="Revealer sight segments"></p>

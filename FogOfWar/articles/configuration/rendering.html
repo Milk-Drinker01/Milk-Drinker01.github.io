@@ -88,61 +88,65 @@
 <h1 id="rendering">Rendering</h1>
 
 <hr>
-<p>Core rendering options on the <a href="../getting-started/fog-of-war-world.html">Fog Of War World</a> component.</p>
+<p>Core rendering options on the <a href="../getting-started/fog-of-war-world.html">Fog Of War World</a> component, under <strong>FOW Rendering Options &gt; General Rendering Options</strong>. (Labels below match the inspector; the code field name is noted where it differs.)</p>
 <table>
 <thead>
 <tr>
 <th>Property</th>
 <th>Type</th>
-<th>Default</th>
+<th>Range</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>Fog Type</strong></td>
-<td>enum (Hard / Soft)</td>
-<td>Soft</td>
+<td>enum</td>
+<td>Hard / Soft</td>
 <td>Hard fog has crisp edges; Soft fog blurs sight-segment edges into a gradient. See <a href="../features/hard-soft-fog.html">Hard &amp; Soft Fog</a>.</td>
 </tr>
 <tr>
-<td><strong>Fog Fade</strong></td>
+<td><strong>Soft Fog Fade Mode</strong></td>
 <td>enum</td>
-<td>Smoothstep</td>
-<td>Falloff curve used for soft fog: Linear, Exponential, Smooth, Smoother, or Smoothstep.</td>
+<td>Linear / Exponential / Smooth / Smoother / Smooth Step</td>
+<td>(Soft only) Falloff curve for soft fog. Code: <code>FogFade</code>.</td>
 </tr>
 <tr>
-<td><strong>Fog Fade Power</strong></td>
+<td><strong>Fade Exponent</strong></td>
 <td>float</td>
-<td>1</td>
-<td>Curve power, used when <strong>Fog Fade</strong> is set to <strong>Exponential</strong>.</td>
+<td>—</td>
+<td>(Soft + Exponential only) Curve power. Code: <code>FogFadePower</code>.</td>
 </tr>
 <tr>
-<td><strong>Blend Type</strong></td>
-<td>enum (Max / Additive)</td>
-<td>Additive</td>
-<td>How overlapping revealers combine. <strong>Additive</strong> adds opacities; <strong>Max</strong> takes the strongest.</td>
+<td><strong>Revealer Combination Mode</strong></td>
+<td>enum</td>
+<td>Maximum / Additive</td>
+<td>(Soft only) How overlapping revealers combine. <strong>Additive</strong> adds opacities; <strong>Maximum</strong> takes the strongest. Code: <code>BlendType</code>.</td>
 </tr>
 <tr>
-<td><strong>Sight Extra Amount</strong></td>
+<td><strong>Revealer Extra Sight Distance</strong></td>
 <td>float</td>
-<td>0.01</td>
-<td>Lets fog expand slightly past its actual vision radius to prevent Z-fighting. Use <strong>negative</strong> values to prevent unwanted bleeding (e.g. with pixelated fog or low-resolution texture fog).</td>
+<td>-1 → 1</td>
+<td>Lets fog expand slightly past its actual vision radius to prevent Z-fighting. Use <strong>negative</strong> values to prevent unwanted bleeding (e.g. with pixelated or low-res texture fog). Code: <code>SightExtraAmount</code>.</td>
 </tr>
 <tr>
-<td><strong>Edge Soften Distance</strong></td>
+<td><strong>Revealer Extra Sight Distance Softening</strong></td>
 <td>float</td>
-<td>0.1</td>
-<td>Controls softening for the revealer's extra sight distance.</td>
+<td>0 → 1</td>
+<td>(Soft only) Softens the extra sight distance edge. Code: <code>EdgeSoftenDistance</code>.</td>
 </tr>
 <tr>
 <td><strong>Max Fog Distance</strong></td>
 <td>float</td>
-<td>10000</td>
+<td>0 → 10000</td>
 <td>The maximum distance from the camera at which fog is rendered.</td>
 </tr>
 </tbody>
 </table>
+<div class="NOTE">
+<h5>Note</h5>
+<p><strong>Use Dithering?</strong> and <strong>Dithering Size</strong> also live in this section (under Soft Fog Options), but are documented with the other stylization options in <a href="appearance.html#dithering">Appearance</a>.</p>
+</div>
 <h2 id="related">Related</h2>
 <ul>
 <li><a href="../features/hard-soft-fog.html">Hard &amp; Soft Fog</a></li>

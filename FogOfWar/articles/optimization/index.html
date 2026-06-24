@@ -89,50 +89,14 @@
 
 <hr>
 <p>Pixel-Perfect Fog Of War is built to scale. Line-of-sight raycasting runs on Burst-compiled jobs, and several systems let you trade accuracy for throughput so you can run anywhere from a handful to thousands of revealers.</p>
-<h4 id="revealer-update-modes"><a href="update-modes.html">Revealer Update Modes</a></h4>
-<p>Control when and how many revealers recalculate line of sight each frame.</p>
-<h4 id="spatial-acceleration"><a href="spatial-acceleration.html">Spatial Acceleration</a></h4>
-<p>A spatial hash grid that keeps revealer/hider queries fast in large worlds.</p>
+<h4 id="fog-of-war-world-optimization"><a href="fog-of-war-world.html">Fog Of War World Optimization</a></h4>
+<p>The high-impact world settings — update timing, spatial acceleration, staged uploads, and buffer limits.</p>
 <h4 id="occlusion-quality"><a href="occlusion-quality.html">Occlusion Quality</a></h4>
-<p>Preset quality tiers for raycast resolution and edge detection — or disable occlusion entirely for thousands of cheap revealers.</p>
+<p>Per-revealer preset tiers for raycast resolution and edge detection — or disable occlusion entirely for thousands of cheap revealers.</p>
 <h4 id="static-revealers"><a href="static-revealers.html">Static Revealers</a></h4>
 <p>Stop unmoving revealers from recalculating every frame.</p>
-<h4 id="staged-gpu-uploads"><a href="staged-uploads.html">Staged GPU Uploads</a></h4>
-<p>Batch revealer GPU uploads to the end of the frame.</p>
 <h4 id="shader-stripping"><a href="shader-stripping.html">Shader Stripping</a></h4>
 <p>Strip unused shader variants from builds to reduce build size and compile time.</p>
-<h2 id="buffer-limits">Buffer Limits</h2>
-<p>Several limits on the <a href="../getting-started/fog-of-war-world.html">Fog Of War World</a> pre-size GPU and CPU buffers. Keep them as low as is reasonable for your project to minimize memory use.</p>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Max Possible Revealers</strong></td>
-<td>int</td>
-<td>256</td>
-<td>Maximum revealers active at once. Sizes the GPU buffer.</td>
-</tr>
-<tr>
-<td><strong>Max Possible Segments Per Revealer</strong></td>
-<td>int</td>
-<td>128</td>
-<td>Maximum sight segments a single revealer can produce. Too low causes errors.</td>
-</tr>
-<tr>
-<td><strong>Max Possible Hiders</strong></td>
-<td>int</td>
-<td>512</td>
-<td>Maximum hiders. Auto-resizes if exceeded, but that causes a hitch.</td>
-</tr>
-</tbody>
-</table>
 
 </article>
 

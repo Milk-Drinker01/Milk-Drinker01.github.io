@@ -93,38 +93,38 @@
 <h2 id="setup">Setup</h2>
 <p>See <a href="../getting-started/fog-of-war-world.html">Getting Started: Fog Of War World</a> for adding the component and setting the essential buffer limits.</p>
 <h2 id="properties">Properties</h2>
-<p>The component exposes a large number of properties, organized by inspector section. Each section has a dedicated reference page:</p>
+<p>The component exposes a large number of properties, fully documented under <strong><a href="../configuration/fog-of-war-world/index.html">Configuration → Fog Of War World</a></strong>, organized to match its inspector:</p>
 <table>
 <thead>
 <tr>
-<th>Section</th>
+<th>Inspector section</th>
 <th>Reference</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Fog type, fade curve, blend mode, softening, distance</td>
-<td><a href="../configuration/rendering.html">Configuration: Rendering</a></td>
+<td>FOW Rendering Options (General Rendering, Fog Appearance, Extra Rendering)</td>
+<td><a href="../configuration/fog-of-war-world/rendering.html">Rendering Options</a></td>
 </tr>
 <tr>
-<td>Appearance modes, color, pixelation, dithering, invert, arc leaking</td>
-<td><a href="../configuration/appearance.html">Configuration: Appearance</a></td>
+<td>FOW Sampling Mode</td>
+<td><a href="../configuration/fog-of-war-world/sampling-mode.html">Sampling Mode</a></td>
 </tr>
 <tr>
-<td>Pixel-Perfect vs Texture sampling, hider sampling, fog texture resolution</td>
-<td><a href="../configuration/sampling-mode.html">Configuration: Sampling Mode</a></td>
+<td>FOW Texture Options (resolution, hiders, regrow)</td>
+<td><a href="../configuration/fog-of-war-world/texture-options.html">Texture Options</a></td>
 </tr>
 <tr>
-<td>Fog regrow and revealer fade in/out</td>
-<td><a href="../configuration/regrow.html">Configuration: Regrow &amp; Fading</a></td>
+<td>FOW Bounds</td>
+<td><a href="../configuration/fog-of-war-world/bounds.html">Bounds</a></td>
 </tr>
 <tr>
-<td>World boundary definition and black-out</td>
-<td><a href="../configuration/world-bounds.html">Configuration: World Bounds</a></td>
+<td>Configuration and Optimizations</td>
+<td><a href="../configuration/fog-of-war-world/config-optimizations.html">Configuration &amp; Optimizations</a></td>
 </tr>
 <tr>
-<td>Update modes, spatial acceleration, staged uploads, buffer limits</td>
-<td><a href="../optimization/index.html">Optimization</a></td>
+<td>Utility Options</td>
+<td><a href="../configuration/fog-of-war-world/utility-options.html">Utility Options</a></td>
 </tr>
 </tbody>
 </table>
@@ -140,22 +140,22 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>Max Possible Revealers</strong></td>
+<td><strong>Max Num Revealers</strong></td>
 <td>int</td>
 <td>256</td>
 <td>Maximum revealers active at once.</td>
 </tr>
 <tr>
-<td><strong>Max Possible Segments Per Revealer</strong></td>
+<td><strong>Max Num Segments Per Revealer</strong></td>
 <td>int</td>
 <td>128</td>
 <td>Maximum sight segments per revealer.</td>
 </tr>
 <tr>
-<td><strong>Max Possible Hiders</strong></td>
+<td><strong>Initial Hider Pool Capacity</strong></td>
 <td>int</td>
 <td>512</td>
-<td>Maximum hiders (auto-resizes, with a hitch).</td>
+<td>Initial hider capacity (auto-resizes, with a hitch).</td>
 </tr>
 <tr>
 <td><strong>Is 2D?</strong></td>
@@ -164,7 +164,7 @@
 <td>Switches the system to 2D mode.</td>
 </tr>
 <tr>
-<td><strong>Game Plane Orientation</strong></td>
+<td><strong>Game Plane</strong></td>
 <td>enum (XZ / XY / ZY)</td>
 <td>XZ</td>
 <td>The world plane the fog is calculated on (3D).</td>

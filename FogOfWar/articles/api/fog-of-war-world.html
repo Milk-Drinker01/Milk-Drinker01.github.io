@@ -152,7 +152,7 @@ var fow = FogOfWarWorld.instance;
 <p>Converts a world position to a fog-texture UV coordinate.</p>
 <div class="TIP">
 <h5>Tip</h5>
-<p>For frequent CPU sampling, enable <strong>Async Readback Fog Data To Cpu</strong> so reads take the fast path. See <a href="../configuration/sampling-mode.html">Sampling Mode</a>.</p>
+<p>For frequent CPU sampling, enable <strong>Async Readback Fog Data To Cpu</strong> so reads take the fast path. See <a href="../configuration/fog-of-war-world/sampling-mode.html">Sampling Mode</a>.</p>
 </div>
 <h2 id="runtime-configuration">Runtime Configuration</h2>
 <h3 id="setfowappearance">SetFowAppearance</h3>
@@ -167,11 +167,11 @@ public FogOfWarAppearance GetFowAppearance()
 <h3 id="switchspatialaccelerationmode">SwitchSpatialAccelerationMode</h3>
 <pre><code class="lang-csharp">public void SwitchSpatialAccelerationMode(bool useSpatial)
 </code></pre>
-<p>Enables or disables <a href="../optimization/spatial-acceleration.html">spatial acceleration</a> at runtime.</p>
+<p>Enables or disables <a href="../configuration/fog-of-war-world/config-optimizations.html">spatial acceleration</a> at runtime.</p>
 <h3 id="togglestageduploads">ToggleStagedUploads</h3>
 <pre><code class="lang-csharp">public void ToggleStagedUploads(bool enabled)
 </code></pre>
-<p>Enables or disables <a href="../optimization/staged-uploads.html">staged GPU uploads</a> at runtime.</p>
+<p>Enables or disables <a href="../configuration/fog-of-war-world/config-optimizations.html">staged GPU uploads</a> at runtime.</p>
 <h3 id="switchhidersusefogtexturemode">SwitchHidersUseFogTextureMode</h3>
 <pre><code class="lang-csharp">public void SwitchHidersUseFogTextureMode(bool useFogTextureToSeeHiders)
 </code></pre>

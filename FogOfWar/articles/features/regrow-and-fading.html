@@ -94,9 +94,9 @@
 <p>These are temporal effects, so they require the <strong>Texture Storage</strong> <a href="fog-sample-modes.html">fog sample mode</a> (they rely on fog data persisting in a render texture between frames). You will also need to set <a href="world-bounds.html">World Bounds</a>.</p>
 </div>
 <h2 id="fog-regrow">Fog Regrow</h2>
-<p>When <strong>Use Regrow</strong> is enabled, areas that were once explored gradually return to fog after a revealer leaves — a classic &quot;the fog grows back&quot; effect.</p>
+<p>When <strong>Use Fog Regrow/Memory?</strong> is enabled, areas that were once explored gradually return to fog after a revealer leaves — a classic &quot;the fog grows back&quot; effect.</p>
 <ul>
-<li><strong>Max Fog Regrow Amount</strong> caps how much the fog can grow back, so previously explored areas can stay partially remembered rather than returning to full darkness.</li>
+<li><strong>Explored Fog Retention</strong> caps how much the fog can grow back, so previously explored areas can stay partially remembered rather than returning to full darkness.</li>
 <li><strong>Initial Fog Exploration Value</strong> sets how explored the world is at startup (0 = fully fogged, higher = partially pre-explored).</li>
 </ul>
 <h2 id="revealer-fading">Revealer Fading</h2>
@@ -109,7 +109,7 @@
 <ul>
 <li><a href="fog-sample-modes.html">Fog Sample Modes</a></li>
 <li><a href="saving-loading.html">Saving &amp; Loading</a></li>
-<li><a href="../configuration/regrow.html">Configuration: Regrow &amp; Fading</a></li>
+<li><a href="../configuration/fog-of-war-world/texture-options.html">Configuration: Regrow &amp; Fading</a></li>
 </ul>
 
 </article>

@@ -2,18 +2,18 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Appearance | Pixel-Perfect Fog Of War </title>
+      <title>Rendering Options | Pixel-Perfect Fog Of War </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Appearance | Pixel-Perfect Fog Of War ">
+      <meta name="title" content="Rendering Options | Pixel-Perfect Fog Of War ">
       <meta name="description" content="Documentation for Pixel-Perfect Fog Of War.">
       
-      <link rel="icon" href="../../favicon.ico">
-      <link rel="stylesheet" href="../../public/docfx.min.css">
-      <link rel="stylesheet" href="../../public/main.css">
-      <meta name="docfx:navrel" content="../../toc.html">
-      <meta name="docfx:tocrel" content="../toc.html">
+      <link rel="icon" href="../../../favicon.ico">
+      <link rel="stylesheet" href="../../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../../public/main.css">
+      <meta name="docfx:navrel" content="../../../toc.html">
+      <meta name="docfx:tocrel" content="../../toc.html">
       
-      <meta name="docfx:rel" content="../../">
+      <meta name="docfx:rel" content="../../../">
       
       
       
@@ -30,7 +30,7 @@
       <meta name="loc:copy" content="Copy">
       <meta name="loc:downloadPdf" content="Download PDF">
 
-      <script type="module" src="./../../public/docfx.min.js"></script>
+      <script type="module" src="./../../../public/docfx.min.js"></script>
 
       <script>
         const theme = localStorage.getItem('theme') || 'auto'
@@ -43,8 +43,8 @@
     <header class="bg-body border-bottom">
       <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
         <div class="container-xxl flex-nowrap">
-          <a class="navbar-brand" href="../../index.html">
-            <img id="logo" class="svg" src="../../logo.png" alt="Pixel-Perfect Fog Of War">
+          <a class="navbar-brand" href="../../../index.html">
+            <img id="logo" class="svg" src="../../../logo.png" alt="Pixel-Perfect Fog Of War">
             Pixel-Perfect Fog Of War
           </a>
           <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,11 +85,95 @@
         </div>
 
         <article data-uid="">
-<h1 id="appearance">Appearance</h1>
+<h1 id="rendering-options">Rendering Options</h1>
 
 <hr>
-<p>Appearance options on the <a href="../getting-started/fog-of-war-world.html">Fog Of War World</a> component, under the <strong>Fog Appearance</strong> and <strong>FOW Extra Rendering Options</strong> inspector sections. See <a href="../features/fog-appearance.html">Fog Appearance</a> for a conceptual overview. (Labels below match the inspector; the code field name is noted where it differs.)</p>
-<h2 id="fog-shader--color">Fog Shader &amp; Color</h2>
+<p>The <strong>FOW Rendering Options</strong> group of the <a href="index.html">Fog Of War World</a> inspector — everything that controls how the fog is drawn. It contains three sub-groups: <strong>General Rendering Options</strong>, <strong>Fog Appearance</strong>, and <strong>FOW Extra Rendering Options</strong>. Labels match the inspector; the code field name is noted where it differs.</p>
+<h2 id="general-rendering-options">General Rendering Options</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Range</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Fog Type</strong></td>
+<td>enum</td>
+<td>Hard / Soft</td>
+<td>Hard fog has crisp edges; Soft fog blurs sight-segment edges into a gradient. See <a href="../../features/hard-soft-fog.html">Hard &amp; Soft Fog</a>.</td>
+</tr>
+<tr>
+<td><strong>Revealer Extra Sight Distance</strong></td>
+<td>float</td>
+<td>-1 → 1</td>
+<td>Lets fog expand slightly past its actual vision radius to prevent Z-fighting. Use <strong>negative</strong> values to prevent unwanted bleeding (e.g. with pixelated or low-res texture fog). Code: <code>SightExtraAmount</code>.</td>
+</tr>
+<tr>
+<td><strong>Max Fog Distance</strong></td>
+<td>float</td>
+<td>0 → 10000</td>
+<td>The maximum distance from the camera at which fog is rendered.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="soft-fog-options">Soft Fog Options</h3>
+<p>Shown when <strong>Fog Type</strong> is <strong>Soft</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Range</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Soft Fog Fade Mode</strong></td>
+<td>enum</td>
+<td>Linear / Exponential / Smooth / Smoother / Smooth Step</td>
+<td>Falloff curve for soft fog. Code: <code>FogFade</code>.</td>
+</tr>
+<tr>
+<td><strong>Fade Exponent</strong></td>
+<td>float</td>
+<td>—</td>
+<td>(Exponential only) Curve power. Code: <code>FogFadePower</code>.</td>
+</tr>
+<tr>
+<td><strong>Revealer Combination Mode</strong></td>
+<td>enum</td>
+<td>Maximum / Additive</td>
+<td>How overlapping revealers combine. <strong>Additive</strong> adds opacities; <strong>Maximum</strong> takes the strongest. Code: <code>BlendType</code>.</td>
+</tr>
+<tr>
+<td><strong>Use Dithering?</strong></td>
+<td>bool</td>
+<td>—</td>
+<td>Uses a dither pattern instead of true opacity. Code: <code>UseDithering</code>.</td>
+</tr>
+<tr>
+<td><strong>Dithering Size</strong></td>
+<td>float</td>
+<td>—</td>
+<td>Size of the dither pattern (shown when dithering is on). Code: <code>DitherSize</code>.</td>
+</tr>
+<tr>
+<td><strong>Revealer Extra Sight Distance Softening</strong></td>
+<td>float</td>
+<td>0 → 1</td>
+<td>Softens the extra sight distance edge. Code: <code>EdgeSoftenDistance</code>.</td>
+</tr>
+</tbody>
+</table>
+<p><img src="../../../images/fog-dithered.png" alt="Dithered fog">
+<em>Use Dithering?</em></p>
+<h2 id="fog-appearance">Fog Appearance</h2>
+<p>See <a href="../../features/fog-appearance.html">Fog Appearance</a> for a conceptual overview.</p>
 <table>
 <thead>
 <tr>
@@ -104,7 +188,7 @@
 <td><strong>Fog Shader</strong></td>
 <td>enum</td>
 <td>Solid Color</td>
-<td>The render style: Solid Color, Gray Scale, Blur, Texture Color, Outline, None, or Custom. Change at runtime with <a href="../api/fog-of-war-world.html#setfowappearance"><code>SetFowAppearance</code></a>. Code: <code>FogAppearance</code>.</td>
+<td>The render style: Solid Color, Gray Scale, Blur, Texture Color, Outline, None, or Custom. Change at runtime with <a href="../../api/fog-of-war-world.html#setfowappearance"><code>SetFowAppearance</code></a>. Code: <code>FogAppearance</code>.</td>
 </tr>
 <tr>
 <td><strong>Fow Color</strong></td>
@@ -114,12 +198,12 @@
 </tr>
 </tbody>
 </table>
-<p><img src="../../images/fog-appearance-dropdown.png" alt="Fog Appearance dropdown"></p>
+<p><img src="../../../images/fog-appearance-dropdown.png" alt="Fog Appearance dropdown"></p>
 <div class="NOTE">
 <h5>Note</h5>
 <p>In the current version, the <strong>Outline</strong> look is labelled <em>&quot;Temporarily non-functional&quot;</em> in the inspector while it is being reworked.</p>
 </div>
-<h2 id="gray-scale">Gray Scale</h2>
+<h3 id="gray-scale">Gray Scale</h3>
 <table>
 <thead>
 <tr>
@@ -138,7 +222,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="blur">Blur</h2>
+<h3 id="blur">Blur</h3>
 <table>
 <thead>
 <tr>
@@ -175,7 +259,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="texture-color">Texture Color</h2>
+<h3 id="texture-color">Texture Color</h3>
 <table>
 <thead>
 <tr>
@@ -212,7 +296,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="outline">Outline</h2>
+<h3 id="outline">Outline</h3>
 <table>
 <thead>
 <tr>
@@ -231,8 +315,10 @@
 </tr>
 </tbody>
 </table>
-<h2 id="pixelation">Pixelation</h2>
-<p>Under <strong>FOW Extra Rendering Options</strong>.</p>
+<h3 id="custom">Custom</h3>
+<p>The <strong>Custom</strong> look runs your own HLSL shader. See <a href="../../features/custom-fog-shader.html">Custom Fog Shader</a>.</p>
+<h2 id="fow-extra-rendering-options">FOW Extra Rendering Options</h2>
+<h3 id="pixelation">Pixelation</h3>
 <table>
 <thead>
 <tr>
@@ -275,37 +361,42 @@
 </tr>
 </tbody>
 </table>
-<p><img src="../../images/fog-pixelated.png" alt="Pixelated fog"></p>
-<h2 id="dithering">Dithering</h2>
-<p>Under <strong>Soft Fog Options</strong>.</p>
+<p><img src="../../../images/fog-pixelated.png" alt="Pixelated fog"></p>
+<p>See <a href="../../features/pixelation-dithering.html">Pixelation &amp; Dithering</a>.</p>
+<h3 id="world-bounds-darkening">World Bounds Darkening</h3>
 <table>
 <thead>
 <tr>
 <th>Property</th>
 <th>Type</th>
-<th>Default</th>
+<th>Range</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Use Dithering?</strong></td>
+<td><strong>Darken Out-Of-World-Bounds Area?</strong></td>
 <td>bool</td>
-<td>false</td>
-<td>(Soft only) Uses a dither pattern instead of true opacity. Code: <code>UseDithering</code>.</td>
+<td>—</td>
+<td>Renders everything outside the bounds as solid black. Code: <code>UseWorldBounds</code>.</td>
 </tr>
 <tr>
-<td><strong>Dithering Size</strong></td>
+<td><strong>World Bounds Soften Distance</strong></td>
 <td>float</td>
-<td>20</td>
-<td>Size of the dither pattern. Code: <code>DitherSize</code>.</td>
+<td>0 → 5</td>
+<td>Softens the boundary edge of the black-out. Code: <code>WorldBoundsSoftenDistance</code>.</td>
+</tr>
+<tr>
+<td><strong>World Bounds Influence</strong></td>
+<td>float</td>
+<td>0 → 1</td>
+<td>How strongly the black-out is applied. Code: <code>WorldBoundsInfluence</code>.</td>
 </tr>
 </tbody>
 </table>
-<p><img src="../../images/fog-dithered.png" alt="Dithered fog"></p>
-<p>See <a href="../features/pixelation-dithering.html">Pixelation &amp; Dithering</a> for a conceptual overview of both.</p>
-<h2 id="extra-options">Extra Options</h2>
-<p>Under <strong>FOW Extra Rendering Options</strong>.</p>
+<p>The bounds volume itself (center / extents) is set under <a href="bounds.html">Bounds</a>. See <a href="../../features/world-bounds.html">World Bounds</a>.</p>
+<p><img src="../../../images/world-bounds-effect.png" alt="World Bounds black-out"></p>
+<h3 id="other">Other</h3>
 <table>
 <thead>
 <tr>
@@ -330,11 +421,14 @@
 </tr>
 </tbody>
 </table>
-<p><img src="../../images/arc-leaking.png" alt="Add Slight Arc Leaking"></p>
-<div class="NOTE">
-<h5>Note</h5>
-<p><strong>Darken Out-Of-World-Bounds Area?</strong> also lives in this section — it is documented in <a href="world-bounds.html">World Bounds</a>.</p>
-</div>
+<p><img src="../../../images/arc-leaking.png" alt="Add Slight Arc Leaking"></p>
+<h2 id="related">Related</h2>
+<ul>
+<li><a href="../../features/hard-soft-fog.html">Hard &amp; Soft Fog</a></li>
+<li><a href="../../features/fog-appearance.html">Fog Appearance</a></li>
+<li><a href="../../features/pixelation-dithering.html">Pixelation &amp; Dithering</a></li>
+<li><a href="../../features/custom-fog-shader.html">Custom Fog Shader</a></li>
+</ul>
 
 </article>
 

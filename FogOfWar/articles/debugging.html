@@ -129,14 +129,14 @@
 </tr>
 </tbody>
 </table>
-<p>The sight <strong>segments</strong> drawn in debug mode also help you size <strong>Max Possible Segments Per Revealer</strong> on the <a href="getting-started/fog-of-war-world.html">Fog Of War World</a>.</p>
+<p>The sight <strong>segments</strong> drawn in debug mode also help you size <strong>Max Num Segments Per Revealer</strong> on the <a href="getting-started/fog-of-war-world.html">Fog Of War World</a>.</p>
 <h2 id="common-issues">Common Issues</h2>
 <h3 id="my-revealer-misses-some-edges">My revealer misses some edges</h3>
 <p>Increase the number of refinement iterations: set <strong>Occlusion Quality</strong> to <strong>Custom</strong> and raise <strong>Num Extra Iterations</strong>. See <a href="optimization/occlusion-quality.html">Occlusion Quality</a>.</p>
 <h3 id="sight-segment-buffer-is-full-error">&quot;Sight Segment buffer is full&quot; error</h3>
-<p>A revealer produced more segments than allowed. Increase <strong>Max Possible Segments Per Revealer</strong> on the <a href="getting-started/fog-of-war-world.html">Fog Of War World</a>.</p>
-<h3 id="errors-mentioning-max-possible-revealers--hiders">Errors mentioning Max Possible Revealers / Hiders</h3>
-<p>You exceeded the pre-sized buffers. Raise <strong>Max Possible Revealers</strong> or <strong>Max Possible Hiders</strong> on the Fog Of War World.</p>
+<p>A revealer produced more segments than allowed. Increase <strong>Max Num Segments Per Revealer</strong> on the <a href="getting-started/fog-of-war-world.html">Fog Of War World</a>.</p>
+<h3 id="errors-about-exceeding-the-revealer-or-hider-limits">Errors about exceeding the revealer or hider limits</h3>
+<p>You exceeded the pre-sized buffers. Raise <strong>Max Num Revealers</strong> or <strong>Initial Hider Pool Capacity</strong> on the Fog Of War World.</p>
 <h3 id="fog-isnt-rendering-older-unity-versions">Fog isn't rendering (older Unity versions)</h3>
 <p>On some older Unity versions, shader keyword variants may not be picked up automatically. If fog fails to render, copy the <code>#pragma multi_compile_local</code> lines from <code>FogOfWarLogic.hlsl</code> into your Fog Of War fog shader, below the <code>#include &quot;FogOfWarLogic.hlsl&quot;</code> line.</p>
 <div class="NOTE">

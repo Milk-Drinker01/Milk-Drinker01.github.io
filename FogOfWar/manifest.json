@@ -182,10 +182,70 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "articles/configuration/appearance.md",
+      "source_relative_path": "articles/configuration/fog-of-war-world/bounds.md",
       "output": {
         ".html": {
-          "relative_path": "articles/configuration/appearance.html"
+          "relative_path": "articles/configuration/fog-of-war-world/bounds.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/fog-of-war-world/config-optimizations.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/fog-of-war-world/config-optimizations.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/fog-of-war-world/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/fog-of-war-world/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/fog-of-war-world/rendering.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/fog-of-war-world/rendering.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/fog-of-war-world/sampling-mode.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/fog-of-war-world/sampling-mode.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/fog-of-war-world/texture-options.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/fog-of-war-world/texture-options.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/configuration/fog-of-war-world/utility-options.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/configuration/fog-of-war-world/utility-options.html"
         }
       },
       "version": ""
@@ -212,50 +272,10 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "articles/configuration/regrow.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/configuration/regrow.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "articles/configuration/rendering.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/configuration/rendering.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
       "source_relative_path": "articles/configuration/revealers.md",
       "output": {
         ".html": {
           "relative_path": "articles/configuration/revealers.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "articles/configuration/sampling-mode.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/configuration/sampling-mode.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "articles/configuration/world-bounds.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/configuration/world-bounds.html"
         }
       },
       "version": ""
@@ -452,6 +472,16 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/optimization/fog-of-war-world.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/optimization/fog-of-war-world.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/optimization/index.md",
       "output": {
         ".html": {
@@ -482,40 +512,10 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "articles/optimization/spatial-acceleration.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/optimization/spatial-acceleration.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "articles/optimization/staged-uploads.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/optimization/staged-uploads.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
       "source_relative_path": "articles/optimization/static-revealers.md",
       "output": {
         ".html": {
           "relative_path": "articles/optimization/static-revealers.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "articles/optimization/update-modes.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/optimization/update-modes.html"
         }
       },
       "version": ""
