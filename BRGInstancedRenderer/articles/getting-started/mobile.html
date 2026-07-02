@@ -133,9 +133,9 @@
 <li>The patcher only works against SRP Core versions whose <code>SetupDOTSVisibleInstancingData</code> function still matches the original anchor text. If Unity rewrites that function in a future release the patcher will warn and refuse to apply — let us know on Discord and we'll ship an updated anchor.</li>
 <li>The patcher is URP-only. The version-define gate (<code>com.unity.render-pipelines.universal &gt;= 17.0.0</code>) keeps the <code>ADRENO_DRIVER_WORKAROUND</code> define from being added to projects that don't have URP installed.</li>
 </ul>
-<blockquote>
-<p>Once Unity ships a driver-side fix in URP/SRP Core, this patcher will no longer be required.</p>
-</blockquote>
+<h2 id="help-us-get-this-fixed-upstream">Help Us Get This Fixed Upstream</h2>
+<p>Unity has confirmed the bug — track and <strong>vote on it</strong> here: <a href="https://issuetracker.unity3d.com/issues/visible-instance-buffer-returns-0-for-every-instance-when-using-batchdrawcommandindirect-on-adreno-devices-with-vulkan-api">Visible instance buffer returns 0 for every instance when using BatchDrawCommandIndirect on Adreno devices with Vulkan API</a>.</p>
+<p>The more votes the issue gets, the higher it climbs in Unity's prioritization queue. Once Unity ships a fix in URP/SRP Core, this patcher will no longer be required and you'll be able to revert it cleanly.</p>
 
 </article>
 
