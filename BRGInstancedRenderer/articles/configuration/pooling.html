@@ -100,10 +100,10 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>Max Pools Per Chunk</strong></td>
+<td><strong>Max Pool Refs Per Chunk</strong></td>
 <td>int</td>
-<td>32</td>
-<td>Maximum number of pools each chunk can hold. Each pool holds 64 instances, so this limits the max instances per chunk. Higher values allow more instances per chunk, meaning fewer chunks to cull but less granular culling.</td>
+<td>128</td>
+<td>Maximum number of pools each chunk can hold. Each pool holds 16 instances, so this limits the max instances per chunk (default: 128 × 16 = 2048). Higher values allow more instances per chunk, meaning fewer chunks to cull but less granular culling.</td>
 </tr>
 <tr>
 <td><strong>Initial Chunk Count</strong></td>
@@ -112,9 +112,9 @@
 <td>Starting number of chunk slots. Grows automatically as needed.</td>
 </tr>
 <tr>
-<td><strong>Initial Pool Count</strong></td>
+<td><strong>Initial Pool Capacity</strong></td>
 <td>int</td>
-<td>1024</td>
+<td>4096</td>
 <td>Starting number of pool slots. Grows automatically as needed.</td>
 </tr>
 <tr>
@@ -133,7 +133,11 @@
 </table>
 <div class="TIP">
 <h5>Tip</h5>
-<p>If you know your scene's approximate instance count, set the initial chunk and pool counts high enough to avoid runtime growth. Alternatively, use <a href="gathered-allocations.html">Gathered Allocations</a> to record peak values automatically.</p>
+<p>If you know your scene's approximate instance count, set the initial chunk and pool capacities high enough to avoid runtime growth. Alternatively, use <a href="gathered-allocations.html">Gathered Allocations</a> to record peak values automatically.</p>
+</div>
+<div class="IMPORTANT">
+<h5>Important</h5>
+<p><strong>Upgrading from a pre-16-slot version.</strong> Pool size changed from 64 slots to 16 slots per pool, and the pool config fields were renamed. Default effective capacities are unchanged (128 × 16 = 2048 max instances per chunk, matching the old 32 × 64), so most projects need no action. <strong>If you had tuned Max Pools Per Chunk above 32</strong>, set <strong>Max Pool Refs Per Chunk</strong> to 4× your old value — otherwise previously converted BRG GameObject Groups may truncate at load (a console warning names the affected chunk; the source data is untouched and recoverable by re-converting). Gathered Allocations data recorded before this change is discarded automatically — re-run gathering.</p>
 </div>
 
 </article>

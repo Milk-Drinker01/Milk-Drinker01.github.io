@@ -160,7 +160,7 @@
 </ul>
 <h3 id="high-gpu-memory-usage">High GPU memory usage</h3>
 <ul>
-<li>Lower <strong>Max Pools Per Chunk</strong> to reduce per-chunk allocation (each pool holds 64 instances)</li>
+<li>Lower <strong>Max Pool Refs Per Chunk</strong> to reduce per-chunk allocation (each pool holds 16 instances)</li>
 <li>Review the memory estimate in the <a href="system-window.html">System Window</a></li>
 <li>If <strong>Support Legacy Light Probes</strong> is enabled, consider whether it's needed — it adds ~65% per-instance buffer cost (128 bytes/instance)</li>
 </ul>

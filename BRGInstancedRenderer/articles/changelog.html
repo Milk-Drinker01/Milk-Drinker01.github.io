@@ -88,9 +88,15 @@
 <h1 id="changelog">Changelog</h1>
 
 <hr>
+<h2 id="120--2026-07-08">1.2.0 — 2026-07-08</h2>
+<ul>
+<li>Switched pool size to hold 16 instances instead of 64. <strong>If you changed Max Pools Per Chunk or Initial Num Pools</strong>, you'll need to set them again after the update to be 4× as high as your previous values.</li>
+<li>Optimized GPU uploads</li>
+<li>Faster legacy light probe sampling</li>
+</ul>
 <h2 id="114--2026-07-01">1.1.4 — 2026-07-01</h2>
 <ul>
-<li>Fixed culling on Unity 6.5+ (thanks @saini)</li>
+<li>Fixed occlusion culling + debug info on Unity 6.5+ (thanks @saini)</li>
 </ul>
 <h2 id="113--2026-06-26">1.1.3 — 2026-06-26</h2>
 <ul>

@@ -583,7 +583,7 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 <tbody>
 <tr>
 <td><code>int MaxInstancesPerChunk</code></td>
-<td>Maximum instances a single chunk can hold (driven by <strong>Max Pools Per Chunk</strong> × 64 in the <a href="../configuration/pooling.html">Config</a>).</td>
+<td>Maximum instances a single chunk can hold (driven by <strong>Max Pool Refs Per Chunk</strong> × 16 in the <a href="../configuration/pooling.html">Config</a>).</td>
 </tr>
 <tr>
 <td><code>ChunkLink AllocChunk()</code></td>
@@ -807,6 +807,12 @@ tracker.StageSetEnabled(link, true);
 </table>
 <blockquote>
 <p>Mixing staged and unsafe writes on the same slot in the same frame is undefined — pick one path.</p>
+</blockquote>
+<blockquote>
+<p><strong>Same-path duplicates are unsafe too.</strong> The direct/unsafe write path is append-only: two <code>*Unsafe</code> calls on the same slot in one frame — or two calls to the equivalent <code>BRGRenderer.SetInstance*</code> methods on the same slot in one frame — race, landing in a single GPU dispatch with an arbitrary winner. Partial-flag TRS writes (e.g. two <code>SetPositionUnsafe</code> + a <code>SetRotationUnsafe</code> in the same frame) can also lose components. If your code path might touch the same slot more than once per frame, use <code>Stage*</code> — it deduplicates in the tracker dictionary and is safe against this. Some <code>BRGRenderer</code> direct methods carry the same warning in their XML doc comments.</p>
+</blockquote>
+<blockquote>
+<p><strong>Removed slots never inherit stale writes.</strong> <code>RemoveInstance</code> and <code>RemoveUnsafe</code> flush any pending direct TRS patches, color writes, and sig overrides onto the dying instance before the slot can be reused. A same-frame remove → re-add always receives only the new instance's data. This is a floor guarantee (&quot;writes never outlive a slot&quot;) on top of the general &quot;one write per slot per frame&quot; rule — it doesn't add per-frame dedup to the direct path, it just prevents cross-instance contamination.</p>
 </blockquote>
 <h2 id="chunkwritten-event">ChunkWritten Event</h2>
 <p>When <code>WriteChunk</code> is called, the underlying GPU writes may be deferred (e.g. for a buffer resize). The <code>ChunkWritten</code> event fires once per primary chunk after all of its sub-chunks (primary + overflow) have completed their writes, so you can safely call <code>GetInstanceLink</code> afterward.</p>

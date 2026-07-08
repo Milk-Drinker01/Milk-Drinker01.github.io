@@ -146,6 +146,12 @@
 <td>false</td>
 <td>Defer pool frees until after <code>FlushStagedUploads</code>. Prevents freed pools from being reused before staged overrides flush. Edge-case workaround — leave off unless you hit specific issues.</td>
 </tr>
+<tr>
+<td><strong>Debug Validate Uploads</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>(Editor-only, session-only — resets on editor restart.) Enables a CPU mirror that replays every upload / clear / patch / override / color command at dispatch time and compares against GPU readbacks every <strong>Debug Upload Validation Interval</strong> flush passes (0 = manual via <code>DebugValidateUploadsNow()</code>). Mismatches log the pool, chunk, and prototype plus the slot's last two writers. Verifies <code>rotScale</code>, sig bits, color, and pool refs; skips matrix-derived fields and masks slots hit by duplicate same-dispatch writes. GPU readback cost is nontrivial — leave off unless investigating a write-correctness bug.</td>
+</tr>
 </tbody>
 </table>
 <p>For more debugging guidance, see <a href="../editor-tools/debugging.html">Debugging</a>.</p>

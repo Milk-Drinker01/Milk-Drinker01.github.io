@@ -99,7 +99,7 @@
 <p>This eliminates runtime buffer growth entirely.</p>
 <p><img src="../../images/Gathered-Allocations.png" alt="Gathered Allocations"></p>
 <h2 id="understand-pool-utilization">Understand Pool Utilization</h2>
-<p>Instances are stored in fixed-size <strong>pools</strong> of 64 slots each. A pool is allocated as a whole block — if a pool only holds 1 instance, the other 63 slots are wasted GPU memory.</p>
+<p>Instances are stored in fixed-size <strong>pools</strong> of 16 slots each. A pool is allocated as a whole block — if a pool only holds 1 instance, the other 15 slots are wasted GPU memory.</p>
 <p>You can monitor pool utilization in the <a href="../editor-tools/system-window.html">System Window</a> under <strong>Chunk System &gt; Pool Utilization</strong>.</p>
 <h4 id="what-causes-low-utilization">What Causes Low Utilization</h4>
 <ul>
