@@ -136,7 +136,11 @@ function copyAIDocs(btn) {
 </tr>
 <tr>
 <td>Per-instance color via <code>InstanceLink</code> on a real terrain (uses <code>GetInstanceLink</code> + <code>*Unsafe</code>)</td>
-<td><code>Examples/Scripts/TreeRandomColor.cs</code></td>
+<td><code>Examples/Scripts/TerrainTreeRandomColor.cs</code></td>
+</tr>
+<tr>
+<td>Full runtime add/remove pattern — click to chop trees (<code>StageRemove</code>) or plant new prototypes at runtime (<code>RegisterRenderSignatureFromPrefab</code> + <code>AddInstance</code> + <code>StageColor</code>)</td>
+<td><code>Examples/Scripts/TerrainTreeChopper.cs</code> (paired scene: <code>Examples/Demos/Terrain Tree Chopper.unity</code>)</td>
 </tr>
 <tr>
 <td>Per-frame animated <code>InstanceLink</code> mutation (cache links in <code>OnChunkWritten</code>, then <code>StagePosition</code> + <code>StageColor</code> every Update)</td>
@@ -209,7 +213,8 @@ function copyAIDocs(btn) {
 <p><strong>Two reference patterns:</strong></p>
 <ul>
 <li><code>Examples/Scripts/BRGRegistererExample.cs</code> — stores <code>InstanceLink</code>s in a list as instances are added (<code>AddInstance</code> return value) and modifies them later with <code>Stage*</code> calls for batch updates.</li>
-<li><code>Examples/Scripts/TreeRandomColor.cs</code> — sits next to a <code>TerrainBRGRegisterer</code>, subscribes to <code>OnTreeChunkWritten</code>, then uses <code>Registration.GetInstanceLink(chunk, i)</code> + <code>Registration.SetColorUnsafe(link, color)</code> to apply a one-shot random color per tree.</li>
+<li><code>Examples/Scripts/TerrainTreeRandomColor.cs</code> — sits next to a <code>TerrainBRGRegisterer</code>, subscribes to <code>OnTreeChunkWritten</code>, then uses <code>Registration.GetInstanceLink(chunk, i)</code> + <code>Registration.SetColorUnsafe(link, color)</code> to apply a one-shot random color per tree.</li>
+<li><code>Examples/Scripts/TerrainTreeChopper.cs</code> — the fullest runtime add/remove example. Caches <code>InstanceLink</code>s per chunk on <code>OnTreeChunkWritten</code>, uses <code>StageRemove(link)</code> to chop trees inside a click radius, and on right-click plants a new instance via <code>Registration.RegisterRenderSignatureFromPrefab</code> + <code>Registration.AddInstance</code> + <code>StageColor</code>. Also demonstrates <code>UnregisterRenderSignature</code> cleanup on disable. Paired scene: <code>Examples/Demos/Terrain Tree Chopper.unity</code>.</li>
 </ul>
 <h2 id="stage-vs-unsafe">Stage* vs *Unsafe</h2>
 <p>There are two paths for modifying existing instances:</p>

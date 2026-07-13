@@ -35,7 +35,8 @@ All paths below are inside the BRGInstancedRenderer package folder in the Unity 
 | MonoBehaviour subclass API + protected forwarders | `Runtime/Scripts/Registerers/BRGRegisterer.cs` |
 | Singleton (`BRGRenderer`) full API | `Runtime/Scripts/Core/BRGInstancedRenderer.cs` + partials (`.Batches.cs`, `.Chunks.cs`, `.Culling.cs`, `.Debug.cs`, `.HZB.cs`, `.Prototypes.cs`, `.SpeedTree.cs`, `.Upload.cs`) |
 | Working custom-registerer example (uses `Stage*` patterns) | `Examples/Scripts/BRGRegistererExample.cs` |
-| Per-instance color via `InstanceLink` on a real terrain (uses `GetInstanceLink` + `*Unsafe`) | `Examples/Scripts/TreeRandomColor.cs` |
+| Per-instance color via `InstanceLink` on a real terrain (uses `GetInstanceLink` + `*Unsafe`) | `Examples/Scripts/TerrainTreeRandomColor.cs` |
+| Full runtime add/remove pattern — click to chop trees (`StageRemove`) or plant new prototypes at runtime (`RegisterRenderSignatureFromPrefab` + `AddInstance` + `StageColor`) | `Examples/Scripts/TerrainTreeChopper.cs` (paired scene: `Examples/Demos/Terrain Tree Chopper.unity`) |
 | Per-frame animated `InstanceLink` mutation (cache links in `OnChunkWritten`, then `StagePosition` + `StageColor` every Update) | `Examples/Demos/Scripts/InstanceLinkWaveDemo.cs` |
 | Reference terrain implementation | `Runtime/Scripts/Registerers/Terrain/TerrainBRGRegisterer.cs` + `.Trees.cs` / `.Details.cs` / `.Details.Extraction.cs` partials |
 | Reference GameObject-group implementation (kept-source, transform-tracked) | `Runtime/Scripts/Registerers/GameObjects/BRGGameObjectGroup.cs` |
@@ -79,7 +80,8 @@ An `InstanceLink` is the handle you pass to every per-instance modification call
 
 **Two reference patterns:**
 - `Examples/Scripts/BRGRegistererExample.cs` — stores `InstanceLink`s in a list as instances are added (`AddInstance` return value) and modifies them later with `Stage*` calls for batch updates.
-- `Examples/Scripts/TreeRandomColor.cs` — sits next to a `TerrainBRGRegisterer`, subscribes to `OnTreeChunkWritten`, then uses `Registration.GetInstanceLink(chunk, i)` + `Registration.SetColorUnsafe(link, color)` to apply a one-shot random color per tree.
+- `Examples/Scripts/TerrainTreeRandomColor.cs` — sits next to a `TerrainBRGRegisterer`, subscribes to `OnTreeChunkWritten`, then uses `Registration.GetInstanceLink(chunk, i)` + `Registration.SetColorUnsafe(link, color)` to apply a one-shot random color per tree.
+- `Examples/Scripts/TerrainTreeChopper.cs` — the fullest runtime add/remove example. Caches `InstanceLink`s per chunk on `OnTreeChunkWritten`, uses `StageRemove(link)` to chop trees inside a click radius, and on right-click plants a new instance via `Registration.RegisterRenderSignatureFromPrefab` + `Registration.AddInstance` + `StageColor`. Also demonstrates `UnregisterRenderSignature` cleanup on disable. Paired scene: `Examples/Demos/Terrain Tree Chopper.unity`.
 
 ## Stage* vs *Unsafe
 
