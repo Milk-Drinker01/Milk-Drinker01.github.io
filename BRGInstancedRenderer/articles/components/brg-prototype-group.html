@@ -88,18 +88,20 @@
 <h1 id="brg-prototype-group">BRG Prototype Group</h1>
 
 <hr>
-<p>A ScriptableObject that groups prototypes for runtime <strong>LOD bias</strong> and <strong>density</strong> control. Assign one to the <strong>Prototype Group</strong> field on <a href="brg-prototype-extra-data.html">BRG Prototype Extra Data</a> for each prefab you want to control together — then call <code>SetLodBias()</code> or <code>SetDensity()</code> on the group at runtime to update every member at once.</p>
-<p><code>lodBias</code> and <code>density</code> default to <code>1</code> at the start of every session — re-apply them from your settings or bootstrap script if you need non-default values.</p>
+<p>A ScriptableObject that groups prototypes for runtime <strong>LOD bias</strong>, <strong>density</strong>, and <strong>shadow</strong> control. Assign one to the <strong>Prototype Group</strong> field on <a href="brg-prototype-extra-data.html">BRG Prototype Extra Data</a> for each prefab you want to control together — then call <code>SetLodBias()</code>, <code>SetDensity()</code>, or <code>SetForceDisableShadows()</code> on the group at runtime to update every member at once.</p>
+<p><code>lodBias</code> and <code>density</code> default to <code>1</code> and <code>forceDisableShadows</code> defaults to <code>false</code> at the start of every session — re-apply them from your settings or bootstrap script if you need non-default values.</p>
 <h2 id="create">Create</h2>
 <p>Right-click in the Project window: <strong>Create &gt; BRG Instanced Renderer &gt; Prototype Group</strong>.</p>
 <h2 id="public-api">Public API</h2>
 <pre><code class="lang-csharp">public class BRGPrototypeGroup : ScriptableObject
 {
-    public float lodBias;   // current LOD bias (runtime-only, default 1)
-    public float density;   // current density (runtime-only, default 1)
+    public float lodBias;              // current LOD bias (runtime-only, default 1)
+    public float density;              // current density (runtime-only, default 1)
+    public bool  forceDisableShadows;  // current shadow toggle (runtime-only, default false)
 
     public void SetLodBias(float value);
     public void SetDensity(float value);
+    public void SetForceDisableShadows(bool value);
 }
 </code></pre>
 <h3 id="setlodbias">SetLodBias</h3>
@@ -138,6 +140,17 @@ grassGroup.SetDensity(0.5f);
 grassGroup.SetDensity(1f);
 </code></pre>
 <p>A prototype is affected by density simply by belonging to a group whose density has been set below <code>1</code>. There is no per-prototype &quot;enable&quot; checkbox.</p>
+<h3 id="setforcedisableshadows">SetForceDisableShadows</h3>
+<pre><code class="lang-csharp">public void SetForceDisableShadows(bool value)
+</code></pre>
+<p>Force every prototype in this group to stop casting shadows. Default is <code>false</code>.</p>
+<p>Use this to build a graphics-quality toggle for shadow casters — for example, a &quot;Grass Shadows&quot; option that turns off shadow casting on all grass prototypes on Low quality without touching the prefabs themselves.</p>
+<pre><code class="lang-csharp">// disable grass shadows on Low quality
+grassGroup.SetForceDisableShadows(true);
+
+// re-enable them on High
+grassGroup.SetForceDisableShadows(false);
+</code></pre>
 <h2 id="usage-pattern">Usage Pattern</h2>
 <ol>
 <li>Create one group asset per logical bucket you want to control (e.g. <code>Grass</code>, <code>Trees</code>, <code>SmallProps</code>, <code>HeroFoliage</code>).</li>
@@ -152,6 +165,7 @@ grassGroup.SetDensity(1f);
     public void ApplyQuality(QualityLevel level)
     {
         grass.SetDensity(level == QualityLevel.Low ? 0.4f : 1f);
+        grass.SetForceDisableShadows(level == QualityLevel.Low);
         trees.SetLodBias(level == QualityLevel.Ultra ? 1.5f : 1f);
     }
 }
