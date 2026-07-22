@@ -88,6 +88,15 @@
 <h1 id="changelog">Changelog</h1>
 
 <hr>
+<h2 id="132--2026-07-21">1.3.2 — 2026-07-21</h2>
+<ul>
+<li>Terrain Registerer startup is now 3× faster (jobified + Burst data extraction)</li>
+<li>Optimized terrain detail chunk streaming</li>
+<li>Added profiler markers to ensure all BRGIR code is wrapped</li>
+<li>Micro-optimized culling compute shader — removed redundant <code>InterlockedMax</code></li>
+<li>Optimized chunk shadow culling</li>
+<li>Fixed incorrect distance density culling</li>
+</ul>
 <h2 id="131--2026-07-17">1.3.1 — 2026-07-17</h2>
 <ul>
 <li>Added <strong>Force Disable Shadows</strong> to BRG Prototype Group — useful for a &quot;Grass Shadows&quot; graphics option</li>
