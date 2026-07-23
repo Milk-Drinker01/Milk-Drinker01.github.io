@@ -21,21 +21,21 @@
       "version": ""
     },
     {
-      "type": "Resource",
-      "source_relative_path": "articles/ai-reference.md",
-      "output": {
-        "resource": {
-          "relative_path": "articles/ai-reference.md"
-        }
-      },
-      "version": ""
-    },
-    {
       "type": "Conceptual",
       "source_relative_path": "articles/ai-reference.md",
       "output": {
         ".html": {
           "relative_path": "articles/ai-reference.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "articles/ai-reference.md",
+      "output": {
+        "resource": {
+          "relative_path": "articles/ai-reference.md"
         }
       },
       "version": ""
