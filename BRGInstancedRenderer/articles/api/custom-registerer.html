@@ -341,9 +341,10 @@ namespace BRGInstancedRenderer
 </table>
 <h3 id="tracked-staging">Tracked Staging</h3>
 <p>The <code>Stage*</code> methods buffer per-slot writes and merge updates to the same instance within a frame into a single GPU write. <strong>This is the recommended path for runtime modifications.</strong> See <a href="registration-tracker.html#tracked-staging">Tracked Staging</a> for the full list.</p>
-<p>Both <code>InstanceLink</code> and <code>int globalSlot</code> overloads are provided for every staging method.</p>
+<p>Both <code>InstanceLink</code> and <code>int globalSlot</code> overloads are provided for every staging method. <code>StageTRSBatch</code> / <code>StageColorBatch</code> submit a whole <code>NativeArray</code> of entries in one call while keeping the per-slot merge.</p>
 <h3 id="unsafe-direct-modification">Unsafe Direct Modification</h3>
 <p>The <code>*Unsafe</code> methods skip the staging buffer and write directly to <code>BRGRenderer</code>. Use only when you've already deduplicated writes yourself or need writes to land immediately. See <a href="registration-tracker.html#unsafe-direct-modification">Unsafe Direct Modification</a>.</p>
+<p><code>SetTRSBatchUnsafe</code> / <code>SetColorBatchUnsafe</code> are the fastest path at scale — they bulk-stage a <code>NativeArray</code> (typically filled by a Burst job) straight into the core staging buffers. See <a href="registration-tracker.html#batched-unsafe-writes">Batched Unsafe Writes</a>. For a working example of all three submission paths, see <a href="instance-link-example.html">Instance Link Example</a>.</p>
 <blockquote>
 <p>Mixing staged and unsafe writes on the same slot within a frame is undefined — pick one path per slot.</p>
 </blockquote>

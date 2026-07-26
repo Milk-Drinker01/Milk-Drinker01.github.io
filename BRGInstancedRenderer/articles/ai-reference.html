@@ -143,7 +143,7 @@ function copyAIDocs(btn) {
 <td><code>Examples/Scripts/TerrainTreeChopper.cs</code> (paired scene: <code>Examples/Demos/Terrain Tree Chopper.unity</code>)</td>
 </tr>
 <tr>
-<td>Per-frame animated <code>InstanceLink</code> mutation (cache links in <code>OnChunkWritten</code>, then <code>StagePosition</code> + <code>StageColor</code> every Update)</td>
+<td><strong>All three per-frame submission paths side by side</strong> (Simple <code>Stage*</code> / per-instance <code>*Unsafe</code> / Burst-job-fed <code>Set*BatchUnsafe</code>), plus <code>OnChunkWritten</code> link caching and bounds padding for animated instances</td>
 <td><code>Examples/Demos/Scripts/InstanceLinkWaveDemo.cs</code></td>
 </tr>
 <tr>
@@ -210,19 +210,34 @@ function copyAIDocs(btn) {
 </ul>
 <p><strong>How to use one:</strong> pass to any <code>Stage*</code> or <code>*Unsafe</code> method on the tracker (or, inside a registerer subclass, on <code>this</code>). Examples: <code>tracker.StageColor(link, color)</code>, <code>tracker.SetPositionUnsafe(link, pos)</code>, <code>tracker.StageRemove(link)</code>.</p>
 <p><strong>Timing:</strong> <code>WriteChunk</code> does not necessarily complete its GPU upload on the same frame — the write can be deferred (e.g. for a buffer resize). Do <strong>not</strong> call <code>GetInstanceLink</code> immediately after <code>WriteChunk</code> and assume the link is valid; the slot indices aren't guaranteed to exist yet. Instead, grab links from <strong>inside the <code>ChunkWritten</code> event handler</strong> (or <code>OnChunkWritten(int chunkId)</code> override in a subclass), which fires once per primary chunk after primary + all overflow sub-chunks have finished writing. That's the only path that's guaranteed safe. If you really need a link before the callback fires, check <code>link.IsValid</code> before using it.</p>
-<p><strong>Two reference patterns:</strong></p>
+<p><strong>Reference patterns:</strong></p>
 <ul>
 <li><code>Examples/Scripts/BRGRegistererExample.cs</code> — stores <code>InstanceLink</code>s in a list as instances are added (<code>AddInstance</code> return value) and modifies them later with <code>Stage*</code> calls for batch updates.</li>
 <li><code>Examples/Scripts/TerrainTreeRandomColor.cs</code> — sits next to a <code>TerrainBRGRegisterer</code>, subscribes to <code>OnTreeChunkWritten</code>, then uses <code>Registration.GetInstanceLink(chunk, i)</code> + <code>Registration.SetColorUnsafe(link, color)</code> to apply a one-shot random color per tree.</li>
 <li><code>Examples/Scripts/TerrainTreeChopper.cs</code> — the fullest runtime add/remove example. Caches <code>InstanceLink</code>s per chunk on <code>OnTreeChunkWritten</code>, uses <code>StageRemove(link)</code> to chop trees inside a click radius, and on right-click plants a new instance via <code>Registration.RegisterRenderSignatureFromPrefab</code> + <code>Registration.AddInstance</code> + <code>StageColor</code>. Also demonstrates <code>UnregisterRenderSignature</code> cleanup on disable. Paired scene: <code>Examples/Demos/Terrain Tree Chopper.unity</code>.</li>
+<li><code>Examples/Demos/Scripts/InstanceLinkWaveDemo.cs</code> — the per-frame animation reference. Resolves links in <code>OnChunkWritten</code> into a <code>NativeArray&lt;int&gt;</code> of global slots (compacting out invalid ones), then animates them every frame from a Burst job. Implements all three submission paths behind an <code>UpdateMode</code> enum so they can be profiled against each other. Also shows the bounds-padding pattern for moving instances.</li>
 </ul>
-<h2 id="stage-vs-unsafe">Stage* vs *Unsafe</h2>
-<p>There are two paths for modifying existing instances:</p>
+<h2 id="the-three-submission-paths">The three submission paths</h2>
+<p>There are <strong>three</strong> ways to modify existing instances. <code>Examples/Demos/Scripts/InstanceLinkWaveDemo.cs</code> implements all three behind an <code>UpdateMode</code> enum on identical data — read it when choosing.</p>
+<p><strong>1. <code>Stage*</code> (Simple) — the safe default.</strong> Keeps a per-slot dictionary on the tracker. Repeated writes to the same slot (or to different fields of the same slot) are merged into a single entry, then bulk-uploaded to <code>BRGRenderer</code> when the tracker flushes each frame. Use this if your code might touch the same slot more than once per frame — dedup is handled for you. Slowest of the three, because of the per-instance call + dictionary insert.</p>
+<pre><code class="lang-csharp">StagePosition(slot, pos);
+StageColor(slot, color);
+</code></pre>
+<p><strong>2. <code>*Unsafe</code> (per-instance direct).</strong> Bypasses the tracker dictionary and forwards each call straight to <code>BRGRenderer</code>. You must guarantee <strong>at most one write per slot per frame</strong> yourself. Faster than <code>Stage*</code> but still one call per instance.</p>
+<pre><code class="lang-csharp">SetPositionUnsafe(slot, pos);
+SetColorUnsafe(slot, color);
+</code></pre>
+<p><strong>3. <code>Set*BatchUnsafe</code> (batched direct) — fastest at scale.</strong> Submits a whole <code>NativeArray</code> of pre-built entries in a single call, skipping both the per-instance call overhead and the merge dictionary. Designed to be fed directly by a Burst job. Same one-write-per-slot contract as mode 2 — and additionally, the array must not contain two entries with the same <code>slotIndex</code>.</p>
+<pre><code class="lang-csharp">SetTRSBatchUnsafe(patches, slots, count);   // slots[i] MUST match patches[i].slotIndex
+SetColorBatchUnsafe(colorEntries, count);
+</code></pre>
+<p>There are also <strong>tracked batch</strong> overloads — <code>StageTRSBatch(entries, count)</code> and <code>StageColorBatch(entries, count)</code> — which take the same arrays but route them through the merging path. Use these when you want array-submission ergonomics but still need per-slot dedup.</p>
+<p><strong>Entry structs</strong> (on <code>BRGRenderer</code>, both Burst-compatible so a job can write them):</p>
 <ul>
-<li><strong><code>Stage*</code></strong> — keeps a per-slot dictionary on the tracker. Repeated writes to the same slot (or to different fields of the same slot) are merged into a single entry, then bulk-uploaded to <code>BRGRenderer</code> when the tracker flushes each frame. Use this if your code might touch the same slot more than once per frame — dedup is handled for you.</li>
-<li><strong><code>*Unsafe</code></strong> — bypasses the tracker and forwards each call directly to <code>BRGRenderer</code>. You must guarantee at most one write per slot per frame yourself. Two <code>*Unsafe</code> calls on the same slot in the same frame, or mixing <code>Stage*</code> and <code>*Unsafe</code> on the same slot, both produce undefined results.</li>
+<li><code>GPUTRSPatchEntry { uint slotIndex; uint flags; float3 position; float4 rotation; float3 scale; }</code> — 48 bytes. <code>flags</code> uses <code>BRGRegistrationTracker.kPatchPosition</code> (1), <code>kPatchRotation</code> (2), <code>kPatchScale</code> (4). Set only the bits you're writing.</li>
+<li><code>GPUColorEntry { uint slotIndex; uint packedColor; }</code> — pack via <code>BRGRegistrationTracker.PackColor(in Color32)</code>.</li>
 </ul>
-<p>Default to <code>Stage*</code>. Only reach for <code>*Unsafe</code> in code paths where you've already deduplicated writes per slot.</p>
+<p><strong>Rules that apply across all paths:</strong> mixing <code>Stage*</code> and <code>*Unsafe</code> on the same slot in one frame is undefined; two direct/unsafe writes to one slot in one frame race (arbitrary winner, and partial-flag TRS writes can lose components). Default to <code>Stage*</code> for gameplay code; reach for the batch paths when you're updating thousands of instances per frame from a job.</p>
 <h2 id="public-api-surface">Public API surface</h2>
 <p><strong>Names only — do NOT infer signatures from names.</strong> Before calling any method, open the source file (see <em>Where to look</em>) and read its actual signature. Common pitfalls: <code>AllocChunk()</code> takes no arguments (bounds go in <code>WriteChunk</code>, not <code>AllocChunk</code>); <code>WriteChunk(link, instances, bounds, cullDistance, instanceCullDistance)</code> takes a <code>ChunkLink</code> and a <code>NativeArray&lt;InstanceData&gt;</code>, not a chunk id and a managed array; the <code>InstanceData</code> field is <code>signatureIndex</code> (not <code>prototypeIndex</code>).</p>
 <p><strong><code>BRGRenderer</code></strong> (singleton, via <code>BRGRenderer.Instance</code>)</p>
@@ -243,14 +258,17 @@ function copyAIDocs(btn) {
 <li>Instance lifecycle: <code>AddInstance</code>, <code>AddInstances</code>, <code>MoveInstanceToChunk</code></li>
 <li>Lookups: <code>GetInstanceLink</code>, <code>GetTotalChunkInstanceCount</code>, <code>GetOverflowChunkCount</code>, <code>GetPerChunkInstanceCounts</code></li>
 <li>Staged writes: <code>StagePosition</code>, <code>StageRotation</code>, <code>StageScale</code>, <code>StageMoveAndRotate</code>, <code>StageMove</code>, <code>StageColor</code>, <code>StageSetEnabled</code>, <code>StageRemove</code></li>
+<li>Staged batch writes: <code>StageTRSBatch</code>, <code>StageColorBatch</code></li>
 <li>Unsafe direct writes: <code>SetPositionUnsafe</code>, <code>SetRotationUnsafe</code>, <code>SetScaleUnsafe</code>, <code>MoveAndRotateUnsafe</code>, <code>MoveUnsafe</code>, <code>SetColorUnsafe</code>, <code>SetEnabledUnsafe</code>, <code>RemoveUnsafe</code>, <code>SampleLightProbeUnsafe</code></li>
+<li>Unsafe batch writes: <code>SetTRSBatchUnsafe</code>, <code>SetColorBatchUnsafe</code></li>
+<li>Batch helpers: <code>kPatchPosition</code> / <code>kPatchRotation</code> / <code>kPatchScale</code> (const uint flag bits), <code>PackColor(in Color32)</code> (static, Burst-compatible)</li>
 </ul>
 <p><strong><code>BRGRegisterer</code></strong> (MonoBehaviour subclass entry point)</p>
 <ul>
 <li>Implement: <code>OnInitialize</code>, <code>OnShutdown</code> (abstract); <code>OnChunkWritten(int chunkId)</code> (virtual)</li>
 <li>Lifecycle: <code>Initialize</code>, <code>Shutdown</code>, <code>Registration</code> (the underlying tracker)</li>
 <li>Protected (for use inside your subclass): all tracker methods above for registration / chunks / instance lifecycle / lookups</li>
-<li>Public (also callable from outside): <code>SetChunkEnabled</code>, <code>GetChunkEnabled</code>, <code>SetRenderEnabled</code>, all <code>Stage*</code> and <code>*Unsafe</code> methods</li>
+<li>Public (also callable from outside): <code>SetChunkEnabled</code>, <code>GetChunkEnabled</code>, <code>SetRenderEnabled</code>, all <code>Stage*</code> / <code>Stage*Batch</code> / <code>*Unsafe</code> / <code>Set*BatchUnsafe</code> methods</li>
 </ul>
 <p><strong>Components users add in the editor</strong></p>
 <ul>

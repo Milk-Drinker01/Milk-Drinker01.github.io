@@ -757,6 +757,30 @@ tracker.StageMoveAndRotate(link, newPos, newRot);
 tracker.StageColor(link, Color.red);
 tracker.StageSetEnabled(link, true);
 </code></pre>
+<h3 id="batched-staging">Batched Staging</h3>
+<p>When you already have per-instance results in a <code>NativeArray</code> — typically produced by a Burst job — the batch overloads submit the whole array in one call instead of looping over per-instance <code>Stage*</code> calls. They still go through the tracked path, so per-slot merging still applies.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>StageTRSBatch(NativeArray&lt;BRGRenderer.GPUTRSPatchEntry&gt; entries, int count)</code></td>
+<td>Stage a batch of TRS patches, merging with any pending writes per slot. Entries whose <code>flags</code> have no patch bits set are skipped.</td>
+</tr>
+<tr>
+<td><code>StageColorBatch(NativeArray&lt;BRGRenderer.GPUColorEntry&gt; entries, int count)</code></td>
+<td>Stage a batch of colors, merging with any pending writes per slot.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-csharp">// entries filled by a Burst job, then submitted in one call
+tracker.StageTRSBatch(patchEntries, count);
+tracker.StageColorBatch(colorEntries, count);
+</code></pre>
 <h2 id="unsafe-direct-modification">Unsafe Direct Modification</h2>
 <p>The <code>*Unsafe</code> variants are direct pass-throughs to <code>BRGRenderer</code> with no buffering, no merging, and no conflict resolution. Use them only when you know what you're doing — for example, in performance-critical hot paths where you've already deduplicated writes yourself, or when you need writes to land immediately.</p>
 <table>
@@ -805,11 +829,80 @@ tracker.StageSetEnabled(link, true);
 </tr>
 </tbody>
 </table>
+<h3 id="batched-unsafe-writes">Batched Unsafe Writes</h3>
+<p>The fastest path at scale. These bulk-stage a whole <code>NativeArray</code> straight into the core staging buffers, skipping both the per-instance call overhead and the tracker's merge dictionary. Same one-write-per-slot contract as the other <code>*Unsafe</code> methods.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SetTRSBatchUnsafe(NativeArray&lt;BRGRenderer.GPUTRSPatchEntry&gt; entries, NativeArray&lt;int&gt; slotIndices, int count, bool skipFlipProcessing = false)</code></td>
+<td>Bulk-stage TRS patches directly. <code>slotIndices[i]</code> <strong>must</strong> match <code>entries[i].slotIndex</code>. Entries carrying the scale flag may be modified in place.</td>
+</tr>
+<tr>
+<td><code>SetColorBatchUnsafe(NativeArray&lt;BRGRenderer.GPUColorEntry&gt; entries, int count)</code></td>
+<td>Bulk-stage per-instance colors directly.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-csharp">// job wrote patches[] + slots[] + colorEntries[]; submit in two calls
+tracker.SetTRSBatchUnsafe(patches, slots, count);
+tracker.SetColorBatchUnsafe(colorEntries, count);
+</code></pre>
+<h3 id="batch-entry-structs">Batch Entry Structs</h3>
+<p>Both structs live on <code>BRGRenderer</code> and are Burst-compatible, so a job can write them directly.</p>
+<pre><code class="lang-csharp">public struct GPUTRSPatchEntry   // 48 bytes, sequential layout
+{
+    public uint   slotIndex;     // InstanceLink.GlobalBRGSlotIndex
+    public uint   flags;         // bit 0 = position, bit 1 = rotation, bit 2 = scale
+    public float3 position;
+    public float4 rotation;      // quaternion.value
+    public float3 scale;
+}
+
+public struct GPUColorEntry
+{
+    public uint slotIndex;
+    public uint packedColor;     // see BRGRegistrationTracker.PackColor
+}
+</code></pre>
+<p>Helpers on <code>BRGRegistrationTracker</code> for filling those structs from inside a Burst job:</p>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>const uint kPatchPosition</code> (<code>1u</code>)</td>
+<td>Flag bit — this entry writes position.</td>
+</tr>
+<tr>
+<td><code>const uint kPatchRotation</code> (<code>2u</code>)</td>
+<td>Flag bit — this entry writes rotation.</td>
+</tr>
+<tr>
+<td><code>const uint kPatchScale</code> (<code>4u</code>)</td>
+<td>Flag bit — this entry writes scale.</td>
+</tr>
+<tr>
+<td><code>static uint PackColor(in Color32 color)</code></td>
+<td>Packs a <code>Color32</code> into the GPU encoding used by <code>GPUColorEntry.packedColor</code>. Burst-compatible.</td>
+</tr>
+</tbody>
+</table>
+<p>Set only the flags you're actually writing — an entry that just moves an instance sets <code>kPatchPosition</code> and leaves <code>rotation</code> / <code>scale</code> untouched.</p>
 <blockquote>
 <p>Mixing staged and unsafe writes on the same slot in the same frame is undefined — pick one path.</p>
 </blockquote>
 <blockquote>
-<p><strong>Same-path duplicates are unsafe too.</strong> The direct/unsafe write path is append-only: two <code>*Unsafe</code> calls on the same slot in one frame — or two calls to the equivalent <code>BRGRenderer.SetInstance*</code> methods on the same slot in one frame — race, landing in a single GPU dispatch with an arbitrary winner. Partial-flag TRS writes (e.g. two <code>SetPositionUnsafe</code> + a <code>SetRotationUnsafe</code> in the same frame) can also lose components. If your code path might touch the same slot more than once per frame, use <code>Stage*</code> — it deduplicates in the tracker dictionary and is safe against this. Some <code>BRGRenderer</code> direct methods carry the same warning in their XML doc comments.</p>
+<p><strong>Same-path duplicates are unsafe too.</strong> The direct/unsafe write path is append-only: two <code>*Unsafe</code> calls on the same slot in one frame — or two calls to the equivalent <code>BRGRenderer.SetInstance*</code> methods on the same slot in one frame — race, landing in a single GPU dispatch with an arbitrary winner. Partial-flag TRS writes (e.g. two <code>SetPositionUnsafe</code> + a <code>SetRotationUnsafe</code> in the same frame) can also lose components. The same applies inside a batch: <code>SetTRSBatchUnsafe</code> / <code>SetColorBatchUnsafe</code> arrays must not contain two entries pointing at the same <code>slotIndex</code>. If your code path might touch the same slot more than once per frame, use <code>Stage*</code> or the <code>Stage*Batch</code> overloads — they deduplicate in the tracker dictionary and are safe against this. Some <code>BRGRenderer</code> direct methods carry the same warning in their XML doc comments.</p>
 </blockquote>
 <blockquote>
 <p><strong>Removed slots never inherit stale writes.</strong> <code>RemoveInstance</code> and <code>RemoveUnsafe</code> flush any pending direct TRS patches, color writes, and sig overrides onto the dying instance before the slot can be reused. A same-frame remove → re-add always receives only the new instance's data. This is a floor guarantee (&quot;writes never outlive a slot&quot;) on top of the general &quot;one write per slot per frame&quot; rule — it doesn't add per-frame dedup to the direct path, it just prevents cross-instance contamination.</p>

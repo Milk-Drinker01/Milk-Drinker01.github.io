@@ -37,7 +37,7 @@ All paths below are inside the BRGInstancedRenderer package folder in the Unity 
 | Working custom-registerer example (uses `Stage*` patterns) | `Examples/Scripts/BRGRegistererExample.cs` |
 | Per-instance color via `InstanceLink` on a real terrain (uses `GetInstanceLink` + `*Unsafe`) | `Examples/Scripts/TerrainTreeRandomColor.cs` |
 | Full runtime add/remove pattern — click to chop trees (`StageRemove`) or plant new prototypes at runtime (`RegisterRenderSignatureFromPrefab` + `AddInstance` + `StageColor`) | `Examples/Scripts/TerrainTreeChopper.cs` (paired scene: `Examples/Demos/Terrain Tree Chopper.unity`) |
-| Per-frame animated `InstanceLink` mutation (cache links in `OnChunkWritten`, then `StagePosition` + `StageColor` every Update) | `Examples/Demos/Scripts/InstanceLinkWaveDemo.cs` |
+| **All three per-frame submission paths side by side** (Simple `Stage*` / per-instance `*Unsafe` / Burst-job-fed `Set*BatchUnsafe`), plus `OnChunkWritten` link caching and bounds padding for animated instances | `Examples/Demos/Scripts/InstanceLinkWaveDemo.cs` |
 | Reference terrain implementation | `Runtime/Scripts/Registerers/Terrain/TerrainBRGRegisterer.cs` + `.Trees.cs` / `.Details.cs` / `.Details.Extraction.cs` partials |
 | Reference GameObject-group implementation (kept-source, transform-tracked) | `Runtime/Scripts/Registerers/GameObjects/BRGGameObjectGroup.cs` |
 | Reference baked-instance group implementation (destroyed-source, packed blob) | `Runtime/Scripts/Registerers/Baked/BRGInstanceGroup.cs` + `.Bake.cs` |
@@ -78,19 +78,44 @@ An `InstanceLink` is the handle you pass to every per-instance modification call
 
 **Timing:** `WriteChunk` does not necessarily complete its GPU upload on the same frame — the write can be deferred (e.g. for a buffer resize). Do **not** call `GetInstanceLink` immediately after `WriteChunk` and assume the link is valid; the slot indices aren't guaranteed to exist yet. Instead, grab links from **inside the `ChunkWritten` event handler** (or `OnChunkWritten(int chunkId)` override in a subclass), which fires once per primary chunk after primary + all overflow sub-chunks have finished writing. That's the only path that's guaranteed safe. If you really need a link before the callback fires, check `link.IsValid` before using it.
 
-**Two reference patterns:**
+**Reference patterns:**
 - `Examples/Scripts/BRGRegistererExample.cs` — stores `InstanceLink`s in a list as instances are added (`AddInstance` return value) and modifies them later with `Stage*` calls for batch updates.
 - `Examples/Scripts/TerrainTreeRandomColor.cs` — sits next to a `TerrainBRGRegisterer`, subscribes to `OnTreeChunkWritten`, then uses `Registration.GetInstanceLink(chunk, i)` + `Registration.SetColorUnsafe(link, color)` to apply a one-shot random color per tree.
 - `Examples/Scripts/TerrainTreeChopper.cs` — the fullest runtime add/remove example. Caches `InstanceLink`s per chunk on `OnTreeChunkWritten`, uses `StageRemove(link)` to chop trees inside a click radius, and on right-click plants a new instance via `Registration.RegisterRenderSignatureFromPrefab` + `Registration.AddInstance` + `StageColor`. Also demonstrates `UnregisterRenderSignature` cleanup on disable. Paired scene: `Examples/Demos/Terrain Tree Chopper.unity`.
+- `Examples/Demos/Scripts/InstanceLinkWaveDemo.cs` — the per-frame animation reference. Resolves links in `OnChunkWritten` into a `NativeArray<int>` of global slots (compacting out invalid ones), then animates them every frame from a Burst job. Implements all three submission paths behind an `UpdateMode` enum so they can be profiled against each other. Also shows the bounds-padding pattern for moving instances.
 
-## Stage* vs *Unsafe
+## The three submission paths
 
-There are two paths for modifying existing instances:
+There are **three** ways to modify existing instances. `Examples/Demos/Scripts/InstanceLinkWaveDemo.cs` implements all three behind an `UpdateMode` enum on identical data — read it when choosing.
 
-- **`Stage*`** — keeps a per-slot dictionary on the tracker. Repeated writes to the same slot (or to different fields of the same slot) are merged into a single entry, then bulk-uploaded to `BRGRenderer` when the tracker flushes each frame. Use this if your code might touch the same slot more than once per frame — dedup is handled for you.
-- **`*Unsafe`** — bypasses the tracker and forwards each call directly to `BRGRenderer`. You must guarantee at most one write per slot per frame yourself. Two `*Unsafe` calls on the same slot in the same frame, or mixing `Stage*` and `*Unsafe` on the same slot, both produce undefined results.
+**1. `Stage*` (Simple) — the safe default.** Keeps a per-slot dictionary on the tracker. Repeated writes to the same slot (or to different fields of the same slot) are merged into a single entry, then bulk-uploaded to `BRGRenderer` when the tracker flushes each frame. Use this if your code might touch the same slot more than once per frame — dedup is handled for you. Slowest of the three, because of the per-instance call + dictionary insert.
 
-Default to `Stage*`. Only reach for `*Unsafe` in code paths where you've already deduplicated writes per slot.
+```csharp
+StagePosition(slot, pos);
+StageColor(slot, color);
+```
+
+**2. `*Unsafe` (per-instance direct).** Bypasses the tracker dictionary and forwards each call straight to `BRGRenderer`. You must guarantee **at most one write per slot per frame** yourself. Faster than `Stage*` but still one call per instance.
+
+```csharp
+SetPositionUnsafe(slot, pos);
+SetColorUnsafe(slot, color);
+```
+
+**3. `Set*BatchUnsafe` (batched direct) — fastest at scale.** Submits a whole `NativeArray` of pre-built entries in a single call, skipping both the per-instance call overhead and the merge dictionary. Designed to be fed directly by a Burst job. Same one-write-per-slot contract as mode 2 — and additionally, the array must not contain two entries with the same `slotIndex`.
+
+```csharp
+SetTRSBatchUnsafe(patches, slots, count);   // slots[i] MUST match patches[i].slotIndex
+SetColorBatchUnsafe(colorEntries, count);
+```
+
+There are also **tracked batch** overloads — `StageTRSBatch(entries, count)` and `StageColorBatch(entries, count)` — which take the same arrays but route them through the merging path. Use these when you want array-submission ergonomics but still need per-slot dedup.
+
+**Entry structs** (on `BRGRenderer`, both Burst-compatible so a job can write them):
+- `GPUTRSPatchEntry { uint slotIndex; uint flags; float3 position; float4 rotation; float3 scale; }` — 48 bytes. `flags` uses `BRGRegistrationTracker.kPatchPosition` (1), `kPatchRotation` (2), `kPatchScale` (4). Set only the bits you're writing.
+- `GPUColorEntry { uint slotIndex; uint packedColor; }` — pack via `BRGRegistrationTracker.PackColor(in Color32)`.
+
+**Rules that apply across all paths:** mixing `Stage*` and `*Unsafe` on the same slot in one frame is undefined; two direct/unsafe writes to one slot in one frame race (arbitrary winner, and partial-flag TRS writes can lose components). Default to `Stage*` for gameplay code; reach for the batch paths when you're updating thousands of instances per frame from a job.
 
 ## Public API surface
 
@@ -112,13 +137,16 @@ Default to `Stage*`. Only reach for `*Unsafe` in code paths where you've already
 - Instance lifecycle: `AddInstance`, `AddInstances`, `MoveInstanceToChunk`
 - Lookups: `GetInstanceLink`, `GetTotalChunkInstanceCount`, `GetOverflowChunkCount`, `GetPerChunkInstanceCounts`
 - Staged writes: `StagePosition`, `StageRotation`, `StageScale`, `StageMoveAndRotate`, `StageMove`, `StageColor`, `StageSetEnabled`, `StageRemove`
+- Staged batch writes: `StageTRSBatch`, `StageColorBatch`
 - Unsafe direct writes: `SetPositionUnsafe`, `SetRotationUnsafe`, `SetScaleUnsafe`, `MoveAndRotateUnsafe`, `MoveUnsafe`, `SetColorUnsafe`, `SetEnabledUnsafe`, `RemoveUnsafe`, `SampleLightProbeUnsafe`
+- Unsafe batch writes: `SetTRSBatchUnsafe`, `SetColorBatchUnsafe`
+- Batch helpers: `kPatchPosition` / `kPatchRotation` / `kPatchScale` (const uint flag bits), `PackColor(in Color32)` (static, Burst-compatible)
 
 **`BRGRegisterer`** (MonoBehaviour subclass entry point)
 - Implement: `OnInitialize`, `OnShutdown` (abstract); `OnChunkWritten(int chunkId)` (virtual)
 - Lifecycle: `Initialize`, `Shutdown`, `Registration` (the underlying tracker)
 - Protected (for use inside your subclass): all tracker methods above for registration / chunks / instance lifecycle / lookups
-- Public (also callable from outside): `SetChunkEnabled`, `GetChunkEnabled`, `SetRenderEnabled`, all `Stage*` and `*Unsafe` methods
+- Public (also callable from outside): `SetChunkEnabled`, `GetChunkEnabled`, `SetRenderEnabled`, all `Stage*` / `Stage*Batch` / `*Unsafe` / `Set*BatchUnsafe` methods
 
 **Components users add in the editor**
 - `BRGInstancedRendererConfig` — singleton config asset (auto-created at `Assets/BRGInstancedRenderer/BRGIRConfig.asset`, auto-added to Preloaded Assets)

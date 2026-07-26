@@ -72,6 +72,16 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/api/instance-link-example.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/api/instance-link-example.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/api/registerer-example.md",
       "output": {
         ".html": {

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Instance Link Example | BRG Instanced Renderer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Instance Link Example | BRG Instanced Renderer ">
+      <meta name="description" content="Documentation for BRG Instanced Renderer.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.svg" alt="BRG Instanced Renderer">
+            BRG Instanced Renderer
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="instance-link-example">Instance Link Example</h1>
+
+<hr>
+<p><code>InstanceLinkWaveDemo</code> is a working <a href="custom-registerer.html">Custom Registerer</a> included in the <code>Examples/Demos</code> folder. It moves and tints a grid of instances every frame, with an <strong>Update Mode</strong> dropdown comparing <strong>the three ways to submit those updates</strong>.</p>
+<p>A Burst job computes the new positions and colors regardless of mode — the dropdown selects only <em>how</em> the results reach the GPU, so the three paths can be profiled against each other on identical data.</p>
+<blockquote>
+<p>Per-instance color requires <strong>Enable Per-Instance Color</strong> on the <a href="../configuration/rendering.html">Config</a>. The <code>color</code> field on <code>InstanceData</code> is not uploaded by <code>WriteChunk</code> — color is set only through the staging paths below.</p>
+</blockquote>
+<h2 id="the-three-update-modes">The Three Update Modes</h2>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Calls used</th>
+<th>Per-slot merge</th>
+<th>Speed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Simple</strong></td>
+<td><code>StagePosition</code> + <code>StageColor</code> per instance</td>
+<td>Yes</td>
+<td>Slowest</td>
+</tr>
+<tr>
+<td><strong>Unsafe</strong></td>
+<td><code>SetPositionUnsafe</code> + <code>SetColorUnsafe</code> per instance</td>
+<td>No</td>
+<td>Faster</td>
+</tr>
+<tr>
+<td><strong>Batched</strong></td>
+<td><code>SetTRSBatchUnsafe</code> + <code>SetColorBatchUnsafe</code>, two calls total</td>
+<td>No</td>
+<td>Fastest at scale</td>
+</tr>
+</tbody>
+</table>
+<h3 id="simple">Simple</h3>
+<p>Per-instance <code>Stage*</code> calls. Repeated writes to the same slot within one frame are merged in the tracker's dictionary, so it's safe even if your code touches an instance more than once per frame. <strong>This is the correct default for gameplay code.</strong></p>
+<pre><code class="lang-csharp">for (int i = 0; i &lt; _count; i++)
+{
+    StagePosition(_slots[i], _patches[i].position);
+    StageColor(_slots[i], _colors32[i]);
+}
+</code></pre>
+<h3 id="unsafe">Unsafe</h3>
+<p>Per-instance <code>Set*Unsafe</code> calls. Skips the merge step and writes straight through to <code>BRGRenderer</code>. The caller must guarantee <strong>at most one write per slot per frame</strong> — two writes to the same slot race, and partial-flag TRS writes can lose components.</p>
+<pre><code class="lang-csharp">for (int i = 0; i &lt; _count; i++)
+{
+    SetPositionUnsafe(_slots[i], _patches[i].position);
+    SetColorUnsafe(_slots[i], _colors32[i]);
+}
+</code></pre>
+<h3 id="batched">Batched</h3>
+<p>Two calls submit the job's entry arrays directly into the core staging buffers. Same one-write-per-slot contract as Unsafe mode, but without the per-instance call overhead — this is the mode to use when you're updating thousands of instances per frame.</p>
+<pre><code class="lang-csharp">SetTRSBatchUnsafe(_patches, _slots, _count);
+SetColorBatchUnsafe(_colorEntries, _count);
+</code></pre>
+<p>The Burst job writes <code>BRGRenderer.GPUTRSPatchEntry</code> and <code>BRGRenderer.GPUColorEntry</code> structs directly, using <code>BRGRegistrationTracker.kPatchPosition</code> for the flag bits and <code>BRGRegistrationTracker.PackColor</code> to encode the color:</p>
+<pre><code class="lang-csharp">patches[i] = new BRGRenderer.GPUTRSPatchEntry
+{
+    slotIndex = slot,
+    flags     = BRGRegistrationTracker.kPatchPosition,   // position only
+    position  = pos
+};
+
+colorEntries[i] = new BRGRenderer.GPUColorEntry
+{
+    slotIndex   = slot,
+    packedColor = BRGRegistrationTracker.PackColor(color)
+};
+</code></pre>
+<p>See <a href="registration-tracker.html#batched-unsafe-writes">Batched Unsafe Writes</a> for the full API and struct layouts.</p>
+<h2 id="how-it-works">How It Works</h2>
+<h3 id="oninitialize">OnInitialize</h3>
+<ol>
+<li>Registers the assigned prefab via <code>RegisterRenderSignatureFromPrefab()</code></li>
+<li>Allocates a chunk and builds a <code>width × depth</code> grid of <code>InstanceData</code>, centered on the GameObject</li>
+<li>Caches each instance's base position and its radius from the center (which drives the wave phase)</li>
+<li><strong>Pads the chunk bounds by the wave amplitude</strong> so rising and falling instances aren't culled at the extremes</li>
+<li>Calls <code>WriteChunk</code>, then <code>BRGSystem.RequestSnapAllViews()</code></li>
+</ol>
+<h3 id="onchunkwritten">OnChunkWritten</h3>
+<p>Resolves each instance's stable global slot index once the chunk write has completed on the GPU. Invalid links are compacted out so every entry in the parallel arrays maps to a live slot.</p>
+<pre><code class="lang-csharp">int write = 0;
+for (int i = 0; i &lt; total; i++)
+{
+    var link = GetInstanceLink(_chunk, i);
+    if (!link.IsValid) continue;
+    _slots[write] = link.GlobalBRGSlotIndex;
+    _basePositions[write] = _basePositions[i];
+    _radii[write] = _radii[i];
+    write++;
+}
+_count = write;
+</code></pre>
+<blockquote>
+<p>This is the correct place to resolve links — <code>GetInstanceLink</code> immediately after <code>WriteChunk</code> is not safe, because the GPU write may be deferred.</p>
+</blockquote>
+<h3 id="onshutdown">OnShutdown</h3>
+<p>Completes any in-flight job, then disposes the persistent <code>NativeArray</code>s. The chunk itself is freed automatically by the base class.</p>
+<h2 id="inspector-properties">Inspector Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Update Mode</strong></td>
+<td>enum</td>
+<td>Batched</td>
+<td>Which submission path to use: <strong>Simple</strong> / <strong>Unsafe</strong> / <strong>Batched</strong>. See above.</td>
+</tr>
+<tr>
+<td><strong>Prefab</strong></td>
+<td>GameObject</td>
+<td>—</td>
+<td>Prefab to render. Must have a MeshFilter + MeshRenderer (or LODGroup).</td>
+</tr>
+</tbody>
+</table>
+<p>The remaining <strong>Grid</strong>, <strong>Wave</strong>, and <strong>Color</strong> fields just tune the demo — grid dimensions and spacing, wave amplitude/speed/frequency, and the hue range the rainbow tint spans. All are editable at runtime; changes that affect instance count trigger a rebuild, while amplitude changes only resize the chunk bounds in place.</p>
+<blockquote>
+<p>For the simpler chunk/instance lifecycle example, see <a href="registerer-example.html">Registerer Example</a>.</p>
+</blockquote>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
