@@ -300,11 +300,102 @@
 <pre><code class="lang-csharp">public InstanceLink[] GetTreeInstanceLinks()
 </code></pre>
 <p>Returns <code>InstanceLink</code> handles for all registered tree instances, or <code>null</code> if trees aren't registered yet. Use the returned handles with the <code>Stage*</code> API (or <code>*Unsafe</code> direct API) to modify individual trees at runtime (e.g. set per-tree color).</p>
+<h3 id="getchunkownedtrees">GetChunkOwnedTrees</h3>
+<pre><code class="lang-csharp">public NativeArray&lt;int&gt; GetChunkOwnedTrees(int chunkId)
+</code></pre>
+<p>Returns the terrain tree indices owned by a chunk, <strong>in the same order as that chunk's <code>InstanceLink</code>s</strong>. This lets you map a BRG instance back to its entry in <code>TerrainData.treeInstances</code> — useful for spawning colliders, reading original tree data, or building your own index.</p>
+<table>
+<thead>
+<tr>
+<th>Returns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>NativeArray&lt;int&gt;</strong></td>
+<td>Indices into <code>CachedTreeInstanceData</code> / <code>TerrainData.treeInstances</code>. Returns <code>default</code> (an uncreated array) if trees aren't registered or the chunk is unknown — always check <code>.IsCreated</code>.</td>
+</tr>
+</tbody>
+</table>
+<div class="IMPORTANT">
+<h5>Important</h5>
+<p>The returned array is a <strong>read-only view</strong> into internal storage, not a copy. <strong>Do not dispose it.</strong> It is only valid until the next tree rebuild (a <code>Refresh</code>, terrain edit, or re-registration invalidates it) — don't cache it across frames.</p>
+</div>
+<pre><code class="lang-csharp">var indices = registerer.GetChunkOwnedTrees(chunkId);
+if (!indices.IsCreated) return;
+
+for (int i = 0; i &lt; indices.Length; i++)
+{
+    var link = registerer.Registration.GetInstanceLink(new ChunkLink(chunkId), i);
+    if (!link.IsValid) continue;
+
+    TreeInstance src = registerer.CachedTreeInstanceData[indices[i]];
+    // ... use src, or store (indices[i] -&gt; link) in your own map
+}
+</code></pre>
 <h3 id="clearextractioncache">ClearExtractionCache</h3>
 <pre><code class="lang-csharp">public static void ClearExtractionCache(Terrain terrain)
 public static void ClearAllExtractionCaches()
 </code></pre>
 <p>Clear cached tree and detail extraction data for a specific terrain or all terrains. The component caches extraction data to avoid redundant work across enable/disable cycles. Call these when terrain data has changed externally and you need a clean re-extraction.</p>
+<h2 id="tree-data-properties">Tree Data Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>TreeChunkIds</strong></td>
+<td>ICollection&lt;int&gt;</td>
+<td>Chunk IDs currently holding registered trees. Iterate these to walk every tree chunk.</td>
+</tr>
+<tr>
+<td><strong>CachedTreeInstanceData</strong></td>
+<td>TreeInstance[]</td>
+<td>The terrain's cached <code>TreeInstance</code> array. Index into it using values from <code>GetChunkOwnedTrees</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ontreechunkwritten-event">OnTreeChunkWritten Event</h2>
+<pre><code class="lang-csharp">public event Action&lt;ChunkLink, NativeArray&lt;int&gt;&gt; OnTreeChunkWritten
+</code></pre>
+<p>Fires once per tree chunk after its GPU write completes, passing the chunk and its owned terrain tree indices. This is the safe place to resolve <code>InstanceLink</code>s for tree chunks — calling <code>GetInstanceLink</code> right after registration isn't guaranteed, since the write may be deferred.</p>
+<p>Subscribe on enable, and seed from already-registered chunks so you don't miss any that were written before you subscribed:</p>
+<pre><code class="lang-csharp">void OnEnable()
+{
+    foreach (int chunkId in _registerer.TreeChunkIds)
+        HandleChunk(new ChunkLink(chunkId), _registerer.GetChunkOwnedTrees(chunkId));
+
+    _registerer.OnTreeChunkWritten += HandleChunk;
+}
+
+void OnDisable()
+{
+    if (_registerer != null)
+        _registerer.OnTreeChunkWritten -= HandleChunk;
+}
+
+void HandleChunk(ChunkLink chunk, NativeArray&lt;int&gt; terrainTreeIndices)
+{
+    if (!terrainTreeIndices.IsCreated) return;
+
+    for (int i = 0; i &lt; terrainTreeIndices.Length; i++)
+    {
+        var link = _registerer.Registration.GetInstanceLink(chunk, i);
+        if (!link.IsValid) continue;
+        // ... modify the tree, or map terrainTreeIndices[i] -&gt; link
+    }
+}
+</code></pre>
+<blockquote>
+<p>The <code>NativeArray&lt;int&gt;</code> passed to the handler follows the same rules as <a href="#getchunkownedtrees">GetChunkOwnedTrees</a> — it's a non-owning view, don't dispose it, and don't cache it past the current callback.</p>
+</blockquote>
+<p>For working implementations, see <code>Examples/Scripts/TerrainTreeRandomColor.cs</code> and <code>Examples/Scripts/TerrainTreeChopper.cs</code>.</p>
 <h2 id="runtime-distance-overrides">Runtime Distance Overrides</h2>
 <p>Two static properties let you override tree and detail render distances at runtime across <strong>all active terrain registerers</strong>. Useful for graphics-quality scaling (e.g. push trees and grass farther on high-end hardware, pull them in on low-end).</p>
 <pre><code class="lang-csharp">public static float TerrainBRGRegisterer.TreeRenderDistance   // default: float.MaxValue
