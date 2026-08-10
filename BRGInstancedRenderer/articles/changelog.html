@@ -88,6 +88,26 @@
 <h1 id="changelog">Changelog</h1>
 
 <hr>
+<h2 id="major-update-150--2026-08-09">Major Update 1.5.0 — 2026-08-09</h2>
+<ul>
+<li>Switched to a mix of box/sphere culling for the instance culling kernel</li>
+<li>Optimized prototype bounding sphere tightness to cull more instances</li>
+<li>Added new levels to occlusion culling:
+<ul>
+<li><strong>Loose</strong> — the existing mode</li>
+<li><strong>Tight</strong> — tightens culling a bit more at the cost of making culling more expensive</li>
+<li><strong>Aggressive</strong> — culls even more instances, but might also falsely cull some instances</li>
+</ul>
+</li>
+<li>Added lossy/improper shadow culling modes, good for prototypes that cast short shadows:
+<ul>
+<li><strong>Lossy/Improper Caster Distance Culling</strong> — culls shadows when a caster is a certain distance from the camera</li>
+<li><strong>Lossy/Improper Caster Frustum Culling</strong> — culls shadows when a caster is outside the camera frustum + padding</li>
+</ul>
+</li>
+<li>Fixed lossless shadow caster culling to work with single-cascade directional lights</li>
+<li>Improved Runtime Stats window</li>
+</ul>
 <h2 id="141--2026-08-03">1.4.1 — 2026-08-03</h2>
 <ul>
 <li>Fixed <code>RemoveInstance</code> not actually removing an instance</li>

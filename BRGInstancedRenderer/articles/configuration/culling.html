@@ -105,10 +105,34 @@
 <td>Enables per-chunk occlusion testing against Unity's baked occlusion data. Chunks fully hidden behind occluders are skipped.</td>
 </tr>
 <tr>
+<td><strong>Fit Cull Bounds To Vertices</strong></td>
+<td>bool</td>
+<td>true</td>
+<td>Fits each prototype's cull sphere to its farthest vertex instead of its bounding box corner, measured once per mesh at registration. Around 13% smaller on typical vegetation, so more instances cull. Meshes without Read/Write enabled are measured by async readback and use the box radius until it lands.</td>
+</tr>
+<tr>
 <td><strong>Use GPU Occlusion Culling</strong></td>
 <td>bool</td>
 <td>false</td>
 <td>Enables real-time GPU occlusion culling using a Hierarchical Z-Buffer (HZB) built from the previous frame's depth buffer. Works with dynamic objects and requires no baking. Can run alongside baked occlusion culling.</td>
+</tr>
+<tr>
+<td><strong>HZB Tightness</strong></td>
+<td>enum</td>
+<td>Tight</td>
+<td>How much of an instance's screen footprint the occlusion test covers. See <a href="#hzb-tightness">HZB Tightness</a> below.</td>
+</tr>
+<tr>
+<td><strong>Shadow Caster Occlusion</strong></td>
+<td>bool</td>
+<td>true</td>
+<td>Culls shadow casters whose entire swept shadow volume is hidden behind the previous frame's depth. <strong>Directional lights only</strong>, and requires <strong>Use GPU Occlusion Culling</strong>. Lossless — never drops a visible shadow. Worst-case artifact: a shadow can reappear one frame late after a fast disocclusion.</td>
+</tr>
+<tr>
+<td><strong>HZB Shadow Segments</strong></td>
+<td>int (1–16)</td>
+<td>8</td>
+<td>Maximum sub-capsules the shadow caster test splits a shadow volume into. Higher values cull more at the cost of one extra depth sample per segment; 1 tests the whole volume in a single sample. Only has an effect on long shadows.</td>
 </tr>
 <tr>
 <td><strong>Use HZB Retest Pass</strong></td>
@@ -121,12 +145,6 @@
 <td>float</td>
 <td>2.0</td>
 <td>Fixed pixel expansion applied during HZB testing to compensate for camera movement between frames. Higher values are more conservative (fewer false culls) at the cost of reduced culling effectiveness.</td>
-</tr>
-<tr>
-<td><strong>Shadow Caster Occlusion</strong></td>
-<td>bool</td>
-<td>true</td>
-<td>Culls shadow casters whose entire swept shadow volume is hidden behind the previous frame's depth. <strong>Directional lights only</strong>, and requires <strong>Use GPU Occlusion Culling</strong>. Worst-case artifact: a shadow can reappear one frame late after a fast disocclusion.</td>
 </tr>
 <tr>
 <td><strong>Default Small Mesh Size</strong></td>
@@ -143,6 +161,41 @@
 </tbody>
 </table>
 <p>For a detailed breakdown of the culling pipeline, see <a href="../features/culling.html">Culling</a>.</p>
+<h2 id="hzb-tightness">HZB Tightness</h2>
+<p>Controls how the occlusion test samples the depth pyramid. Tighter settings cull more instances but cost more, and the most aggressive setting can produce false culls.</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Sampling</th>
+<th>Trade-off</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Loose</strong></td>
+<td>One depth sample on a mip that always covers the instance footprint.</td>
+<td>Cheapest. Conservative — never falsely culls, but misses instances it could have culled.</td>
+</tr>
+<tr>
+<td><strong>Tight</strong> <em>(default)</em></td>
+<td>Four samples on the next finer mip.</td>
+<td>Same coverage as Loose, culls noticeably more. Costs three extra samples per instance.</td>
+</tr>
+<tr>
+<td><strong>Aggressive</strong></td>
+<td>One sample on the next finer mip.</td>
+<td>Tests only part of the footprint, so <strong>visible instances can be culled</strong> around the edges of fast-moving objects. Cheapest of the finer-mip options and culls the most.</td>
+</tr>
+</tbody>
+</table>
+<p>Start on <strong>Tight</strong>. Drop to <strong>Loose</strong> if culling shows up as a GPU cost, or try <strong>Aggressive</strong> if you need maximum culling and can tolerate occasional edge artifacts on fast-moving geometry.</p>
+<h2 id="shadow-culling-modes">Shadow Culling Modes</h2>
+<p>Two distinct approaches are available, and they can be combined:</p>
+<ul>
+<li><strong>Lossless</strong> — <strong>Shadow Caster Occlusion</strong> above. Only culls a caster when its entire swept shadow volume is provably hidden. Never removes a shadow you would have seen. Configured globally here.</li>
+<li><strong>Lossy</strong> — per-group frustum and distance culling on <a href="../components/brg-prototype-group.html">BRG Prototype Group</a>. Trades some shadow correctness for a much larger cut in shadow work. Intended for prototypes that cast short shadows (grass, small props), where a dropped shadow is hard to notice.</li>
+</ul>
 <h2 id="occlusion-culling-considerations">Occlusion Culling Considerations</h2>
 <p>GPU occlusion culling uses a Hierarchical Z-Buffer (HZB) built from the previous frame's depth texture. There are two things to be aware of:</p>
 <ol>

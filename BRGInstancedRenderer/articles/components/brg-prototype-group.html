@@ -88,20 +88,35 @@
 <h1 id="brg-prototype-group">BRG Prototype Group</h1>
 
 <hr>
-<p>A ScriptableObject that groups prototypes for runtime <strong>LOD bias</strong>, <strong>density</strong>, and <strong>shadow</strong> control. Assign one to the <strong>Prototype Group</strong> field on <a href="brg-prototype-extra-data.html">BRG Prototype Extra Data</a> for each prefab you want to control together — then call <code>SetLodBias()</code>, <code>SetDensity()</code>, or <code>SetForceDisableShadows()</code> on the group at runtime to update every member at once.</p>
-<p><code>lodBias</code> and <code>density</code> default to <code>1</code> and <code>forceDisableShadows</code> defaults to <code>false</code> at the start of every session — re-apply them from your settings or bootstrap script if you need non-default values.</p>
+<p>A ScriptableObject that groups prototypes for shared <strong>LOD bias</strong>, <strong>density</strong>, and <strong>shadow culling</strong> control. Assign one to the <strong>Prototype Group</strong> field on <a href="brg-prototype-extra-data.html">BRG Prototype Extra Data</a> for each prefab you want to control together — then call the setters on the group to update every member at once.</p>
+<p>The group's values split into two categories:</p>
+<ul>
+<li><strong>Runtime-only</strong> (<code>lodBias</code>, <code>density</code>, <code>forceDisableShadows</code>) — not serialized. They reset to their defaults at the start of every session, so re-apply them from your settings or bootstrap script if you need non-default values.</li>
+<li><strong>Authored</strong> (the shadow culling fields) — serialized on the asset and persist normally. Edit them in the inspector, or override them at runtime with the matching setters.</li>
+</ul>
 <h2 id="create">Create</h2>
 <p>Right-click in the Project window: <strong>Create &gt; BRG Instanced Renderer &gt; Prototype Group</strong>.</p>
 <h2 id="public-api">Public API</h2>
 <pre><code class="lang-csharp">public class BRGPrototypeGroup : ScriptableObject
 {
-    public float lodBias;              // current LOD bias (runtime-only, default 1)
-    public float density;              // current density (runtime-only, default 1)
-    public bool  forceDisableShadows;  // current shadow toggle (runtime-only, default false)
+    // runtime-only (not serialized, reset each session)
+    public float lodBias;              // default 1
+    public float density;              // default 1
+    public bool  forceDisableShadows;  // default false
+
+    // authored (serialized on the asset)
+    public bool  useImproperShadowFrustumCulling;  // default false
+    public float improperShadowFrustumPadding;     // default 10
+    public bool  useShadowCasterDistanceCulling;   // default false
+    public bool  useSceneShadowDistance;           // default true
+    public float maxShadowDistance;                // default 80
 
     public void SetLodBias(float value);
     public void SetDensity(float value);
-    public void SetForceDisableShadows(bool value);
+    public void SetShadowsEnabled(bool enabled);
+    public void SetImproperShadowFrustumCulling(bool enabled, float? padding = null);
+    public void SetShadowCasterDistanceCulling(bool enabled);
+    public void SetMaxShadowDistance(float distance, bool useScene = false);
 }
 </code></pre>
 <h3 id="setlodbias">SetLodBias</h3>
@@ -140,16 +155,97 @@ grassGroup.SetDensity(0.5f);
 grassGroup.SetDensity(1f);
 </code></pre>
 <p>A prototype is affected by density simply by belonging to a group whose density has been set below <code>1</code>. There is no per-prototype &quot;enable&quot; checkbox.</p>
-<h3 id="setforcedisableshadows">SetForceDisableShadows</h3>
-<pre><code class="lang-csharp">public void SetForceDisableShadows(bool value)
+<h3 id="setshadowsenabled">SetShadowsEnabled</h3>
+<pre><code class="lang-csharp">public void SetShadowsEnabled(bool enabled)
 </code></pre>
-<p>Force every prototype in this group to stop casting shadows. Default is <code>false</code>.</p>
+<p>Toggle shadow casting for every prototype in this group. When re-enabled, prototypes go back to following their own source shadow casting mode.</p>
 <p>Use this to build a graphics-quality toggle for shadow casters — for example, a &quot;Grass Shadows&quot; option that turns off shadow casting on all grass prototypes on Low quality without touching the prefabs themselves.</p>
 <pre><code class="lang-csharp">// disable grass shadows on Low quality
-grassGroup.SetForceDisableShadows(true);
+grassGroup.SetShadowsEnabled(false);
 
 // re-enable them on High
-grassGroup.SetForceDisableShadows(false);
+grassGroup.SetShadowsEnabled(true);
+</code></pre>
+<div class="NOTE">
+<h5>Note</h5>
+<p>This triggers a batch rebuild, so use it for infrequent changes (a settings menu) rather than per frame.</p>
+</div>
+<h2 id="shadow-culling">Shadow Culling</h2>
+<p>Beyond fully disabling shadows, a group can cull shadow casters that are unlikely to contribute anything visible. These are <strong>lossy</strong> optimizations — they trade some shadow correctness for a significant cut in shadow culling and rasterization work, and are best suited to prototypes that cast <strong>short</strong> shadows (grass, small props, debris).</p>
+<p>For lossless shadow culling that never drops a visible shadow, see <strong>Shadow Caster Occlusion</strong> on the <a href="../configuration/culling.html">Culling Config</a> instead.</p>
+<p>Unlike LOD bias and density, these settings are <strong>authored on the asset</strong> and persist between sessions. Edit them in the inspector, or drive them at runtime with the setters below.</p>
+<h3 id="inspector-properties">Inspector Properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Improper Shadow Frustum Culling</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Drop shadow casters in this group once their bounds leave the camera frustum. <strong>Lossy</strong> — geometry outside the view stops casting shadows into it, most visible at low sun angles and when the camera rotates quickly.</td>
+</tr>
+<tr>
+<td><strong>Improper Shadow Frustum Padding</strong></td>
+<td>float (≥ 0)</td>
+<td>10m</td>
+<td>Metres each camera frustum plane is pushed outward before the test, so casters just off-screen still cast. Raise this if shadows pop in at the screen edge.</td>
+</tr>
+<tr>
+<td><strong>Use Shadow Caster Distance Culling</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Stop prototypes in this group casting shadows past a distance from the camera. Also drops casters beyond that distance whose shadows would still reach into view, so very long shadows from far geometry disappear.</td>
+</tr>
+<tr>
+<td><strong>Use Scene Shadow Distance</strong></td>
+<td>bool</td>
+<td>true</td>
+<td>Take the distance from what the pipeline actually renders shadows to, instead of <strong>Max Shadow Distance</strong> below. Tracks the project's shadow settings, so it never goes stale.</td>
+</tr>
+<tr>
+<td><strong>Max Shadow Distance</strong></td>
+<td>float (≥ 0.01)</td>
+<td>80m</td>
+<td>Explicit maximum shadow distance for every prototype in this group. Only used when <strong>Use Scene Shadow Distance</strong> is off.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setimpropershadowfrustumculling">SetImproperShadowFrustumCulling</h3>
+<pre><code class="lang-csharp">public void SetImproperShadowFrustumCulling(bool enabled, float? padding = null)
+</code></pre>
+<p>Enable or disable frustum-based shadow caster culling for the group. The optional <code>padding</code> is only written when supplied, so toggling the feature off and back on preserves the authored padding value. Applies live.</p>
+<pre><code class="lang-csharp">// enable with the authored padding
+grassGroup.SetImproperShadowFrustumCulling(true);
+
+// enable and widen the padding to 25m
+grassGroup.SetImproperShadowFrustumCulling(true, 25f);
+</code></pre>
+<h3 id="setshadowcasterdistanceculling">SetShadowCasterDistanceCulling</h3>
+<pre><code class="lang-csharp">public void SetShadowCasterDistanceCulling(bool enabled)
+</code></pre>
+<p>Turn distance-based shadow caster culling on or off, leaving the authored distance and the scene-distance choice untouched.</p>
+<pre><code class="lang-csharp">grassGroup.SetShadowCasterDistanceCulling(true);
+</code></pre>
+<div class="NOTE">
+<h5>Note</h5>
+<p>This re-derives every active chunk — use it for infrequent changes (a settings menu), not per frame.</p>
+</div>
+<h3 id="setmaxshadowdistance">SetMaxShadowDistance</h3>
+<pre><code class="lang-csharp">public void SetMaxShadowDistance(float distance, bool useScene = false)
+</code></pre>
+<p>Set an explicit shadow caster distance in metres and stop following the scene shadow distance. Pass <code>useScene: true</code> to follow the pipeline's shadow distance instead, in which case <code>distance</code> is ignored. <strong>Enables distance culling either way.</strong></p>
+<pre><code class="lang-csharp">// explicit 40m cutoff
+grassGroup.SetMaxShadowDistance(40f);
+
+// follow the project's shadow distance instead
+grassGroup.SetMaxShadowDistance(0f, useScene: true);
 </code></pre>
 <h2 id="usage-pattern">Usage Pattern</h2>
 <ol>
@@ -165,15 +261,16 @@ grassGroup.SetForceDisableShadows(false);
     public void ApplyQuality(QualityLevel level)
     {
         grass.SetDensity(level == QualityLevel.Low ? 0.4f : 1f);
-        grass.SetForceDisableShadows(level == QualityLevel.Low);
+        grass.SetShadowsEnabled(level != QualityLevel.Low);
         trees.SetLodBias(level == QualityLevel.Ultra ? 1.5f : 1f);
     }
 }
 </code></pre>
 <h2 id="notes">Notes</h2>
 <ul>
-<li><strong>Values are not serialized.</strong> They default to <code>1</code> every session — your game / settings code is responsible for re-applying them after each play-mode entry or build launch.</li>
+<li><strong>LOD bias, density, and the shadows-enabled toggle are not serialized.</strong> They reset every session — your game / settings code is responsible for re-applying them after each play-mode entry or build launch. The shadow <em>culling</em> fields are authored on the asset and do persist.</li>
 <li>Setting a value before <code>BRGRenderer</code> is initialized is safe — the value lives on the group and is read when prototypes register.</li>
+<li><code>SetShadowsEnabled</code>, <code>SetShadowCasterDistanceCulling</code>, and <code>SetMaxShadowDistance</code> each trigger a rebuild or re-derive of active chunks. Call them on quality-setting changes, not per frame.</li>
 <li>Multiple prototypes can reference the same group; one <code>Set*</code> call updates every member live.</li>
 <li>LOD bias currently scales LOD screen-size thresholds. It does <strong>not</strong> rescale the separate distance-density ramp on <a href="brg-prototype-extra-data-density.html">BRG Prototype Extra Data / Density</a> — those start/end distances stay fixed.</li>
 <li>Baked <a href="brg-instance-group.html">BRG Instance Group</a> assets carry the group reference through the bake. Assets baked before this feature existed should be re-baked to pick up group support.</li>

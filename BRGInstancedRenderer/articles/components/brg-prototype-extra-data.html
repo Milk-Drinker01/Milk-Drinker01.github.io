@@ -105,7 +105,7 @@
 <td><strong>Prototype Group</strong></td>
 <td><a href="brg-prototype-group.html">BRGPrototypeGroup</a></td>
 <td>None</td>
-<td>Optional group asset for runtime LOD bias, density, and shadow control. Assign the same group to multiple prefabs and call <code>group.SetLodBias()</code> / <code>group.SetDensity()</code> / <code>group.SetForceDisableShadows()</code> to update them all together. When unassigned, the prototype uses default LOD bias (1), full density (1), and shadows enabled.</td>
+<td>Optional group asset for shared LOD bias, density, and shadow culling control. Assign the same group to multiple prefabs and call <code>group.SetLodBias()</code> / <code>group.SetDensity()</code> / <code>group.SetShadowsEnabled()</code> to update them all together. The group also carries authored lossy shadow frustum and distance culling settings. When unassigned, the prototype uses default LOD bias (1), full density (1), and shadows enabled.</td>
 </tr>
 </tbody>
 </table>
