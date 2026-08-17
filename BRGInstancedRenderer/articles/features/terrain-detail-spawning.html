@@ -92,6 +92,8 @@
 <p>BRG Instanced Renderer replaces this entirely with a custom detail extraction algorithm that runs on worker threads via the Unity Job System, produces zero garbage, and causes no hitches.</p>
 <h4 id="how-it-works">How It Works</h4>
 <p>The system reads the terrain's detail density maps directly and computes instance transforms in parallel using Burst-compiled jobs. As the camera moves, new terrain patches are loaded and old ones recycled — all without blocking the main thread or allocating managed memory.</p>
+<h4 id="async-terrain-initialization">Async Terrain Initialization</h4>
+<p>Reading a terrain's heightmap and holes textures normally blocks the main thread twice per terrain during initialization. With <strong>Allow Async Detail Loading</strong> enabled (the default), those reads go through an async GPU readback instead, removing both stalls — which matters most when terrains stream in at runtime. The trade-off is that details for a newly initialized terrain don't begin streaming until the readback completes a few frames later. See <a href="../configuration/terrain.html">Terrain Config</a>.</p>
 <h4 id="compatibility">Compatibility</h4>
 <p>The custom algorithm reproduces the same placement concepts as Unity's built-in system — density maps, per-layer settings, and terrain patch boundaries are all respected. Instance transforms do not match Unity's output exactly on a per-instance basis, but the overall look and coverage is equivalent.</p>
 <blockquote>

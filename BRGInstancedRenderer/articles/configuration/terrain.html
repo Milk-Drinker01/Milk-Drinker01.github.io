@@ -124,6 +124,12 @@
 <td>Force extraction jobs to complete on the same frame they are scheduled. Eliminates pop-in at the cost of a per-patch main thread stall.</td>
 </tr>
 <tr>
+<td><strong>Allow Async Detail Loading</strong></td>
+<td>bool</td>
+<td>true</td>
+<td>Reads the terrain heightmap and holes textures through an async GPU readback instead of blocking on the result. Removes two main-thread stalls per terrain at init — useful when streaming terrains in at runtime. Trade-off: details don't start streaming until the readback lands a few frames later. Turn off if you need details present immediately on the frame a terrain initializes.</td>
+</tr>
+<tr>
 <td><strong>Terrain Skip Throttle On Start</strong></td>
 <td>bool</td>
 <td>false</td>
