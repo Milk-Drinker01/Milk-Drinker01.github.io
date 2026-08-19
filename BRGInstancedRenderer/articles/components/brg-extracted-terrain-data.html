@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>BRG Extracted Terrain Data | BRG Instanced Renderer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="BRG Extracted Terrain Data | BRG Instanced Renderer ">
+      <meta name="description" content="Documentation for BRG Instanced Renderer.">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.svg" alt="BRG Instanced Renderer">
+            BRG Instanced Renderer
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="brg-extracted-terrain-data">BRG Extracted Terrain Data</h1>
+
+<hr>
+<p>An optional ScriptableObject holding terrain data that the renderer would otherwise read back from <code>TerrainData</code> when a terrain initializes — detail layers, trees already sorted into spatial chunks, holes, and the heightmap. Reading it is a memcpy instead of a set of allocating Unity getters.</p>
+<p>Assign one to the <strong>Pre-Baked Terrain Data</strong> field on the <a href="brg-terrain-registerer.html">BRG Terrain Registerer</a>. When it's present and matches the terrain, it's used instead of the <code>TerrainData</code> readback path.</p>
+<p><strong>Assigning the asset is the whole setup.</strong> The payload is filled automatically during a player build, and in the editor a non-serialized cache fills itself on first use. You don't have to bake anything by hand.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>This is an optimization, not a requirement. Without an assigned asset the registerer reads <code>TerrainData</code> as normal — leaving the field empty is how a terrain opts out.</p>
+</div>
+<h2 id="two-separate-stores">Two Separate Stores</h2>
+<p>The asset holds its data in two places, and the difference is the whole point of the design.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Editor cache</th>
+<th>Serialized payload</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stored where</td>
+<td>In memory on the asset instance</td>
+<td>On disk, in the <code>.asset</code> file</td>
+</tr>
+<tr>
+<td>Serialized</td>
+<td><strong>No</strong></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Filled by</td>
+<td>Automatically, when the registerer initializes</td>
+<td>The <a href="#baking-during-a-player-build">build step</a>, into the build's scene copy</td>
+</tr>
+<tr>
+<td>Survives domain reload</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Reaches version control</td>
+<td><strong>Never</strong></td>
+<td>Not from a build — only if you bake by hand</td>
+</tr>
+<tr>
+<td>Ships in a player build</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p>The extracted data is multi-megabyte and duplicates what's already in the <code>TerrainData</code>. Committing it would bloat the repository with a redundant copy that goes stale the moment someone paints the terrain — <strong>avoiding that is why the editor cache exists and is deliberately not serialized.</strong></p>
+<p>The automatic build step keeps that property: it bakes into the build's <em>temporary copy</em> of the scene, so the payload ships while the project asset on disk stays empty.</p>
+<p>When both stores hold data, the editor cache wins.</p>
+<blockquote>
+<p><code>HasPayload</code> reports only on the <strong>serialized</strong> payload. It answers &quot;does this asset carry data that ships in a build&quot;, not &quot;does this asset have data available right now&quot; — a warm editor cache alone leaves it <code>false</code>.</p>
+</blockquote>
+<h2 id="setup">Setup</h2>
+<p>On the <a href="brg-terrain-registerer.html">BRG Terrain Registerer</a> inspector, under <strong>Extracted Data</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>When it appears</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pre-Baked Terrain Data</strong></td>
+<td>Always</td>
+<td>The asset reference. Assigning one is the opt-in; leaving it empty means this terrain always reads <code>TerrainData</code> and is skipped by the build step.</td>
+</tr>
+<tr>
+<td><strong>Create &amp; Assign</strong></td>
+<td>No asset assigned</td>
+<td>Creates a new asset next to the terrain's <code>TerrainData</code> (named <code>&lt;TerrainData&gt;_BRGExtracted.asset</code>) and assigns it. Disabled if the terrain has no <code>TerrainData</code>.</td>
+</tr>
+<tr>
+<td><strong>Point At This Terrain</strong></td>
+<td>Assigned asset targets a different terrain</td>
+<td>Rebinds the asset to this terrain and clears whatever it had cached, since that data described the old terrain.</td>
+</tr>
+<tr>
+<td><strong>Refresh Registerer</strong></td>
+<td>Asset assigned and matching</td>
+<td>Re-runs registration. The registerer is the only thing that reads <code>TerrainData</code>, so a refresh is what warms the editor cache.</td>
+</tr>
+<tr>
+<td><strong>Clear Editor Cache</strong></td>
+<td>Asset assigned and matching</td>
+<td>Drops the in-memory cache. Disabled when the cache is already empty.</td>
+</tr>
+</tbody>
+</table>
+<p>If the assigned asset points at a different <code>TerrainData</code> than the terrain it's on, the inspector shows a warning naming both — any payload it carries describes the wrong terrain and will be rejected at load.</p>
+<h3 id="warming-the-cache">Warming the cache</h3>
+<ol>
+<li>Assign an asset with <strong>Create &amp; Assign</strong>.</li>
+<li>Click <strong>Refresh Registerer</strong>.</li>
+<li><strong>Payloads &gt; Editor cache</strong> now reports a size and section count.</li>
+</ol>
+<p>Subsequent refreshes read the cache instead of <code>TerrainData</code>.</p>
+<p>This only affects editor iteration — for builds, assigning the asset in step 1 is all that's required, since the <a href="#baking-during-a-player-build">build step</a> does its own extract.</p>
+<h2 id="reading-the-asset-inspector">Reading the Asset Inspector</h2>
+<p>Selecting the asset itself shows:</p>
+<table>
+<thead>
+<tr>
+<th>Row</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Source Terrain Data</strong></td>
+<td>The <code>TerrainData</code> this asset was extracted from. Read-only — use <a href="#brgextractedterraindatabaker">Rebind</a> to point it at a different terrain. Editor-only, and dropped from player builds so the asset never pulls <code>TerrainData</code> into them as a dependency.</td>
+</tr>
+<tr>
+<td><strong>Payloads &gt; Serialized</strong></td>
+<td>Size of the on-disk payload, or <em>&quot;none — only a build step writes this&quot;</em>. <strong>&quot;none&quot; is normal</strong> — the automatic build step bakes into the built scene, not the project asset. A size here means someone baked manually.</td>
+</tr>
+<tr>
+<td><strong>Payloads &gt; Editor cache</strong></td>
+<td>Size and section count of the in-memory cache, or <em>&quot;none — fills on the next terrain refresh&quot;</em>.</td>
+</tr>
+<tr>
+<td><strong>Payloads &gt; Runtime would use</strong></td>
+<td>Which store would actually be read right now: editor cache, serialized payload, or <em>&quot;neither — reads TerrainData&quot;</em>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sections">Sections</h3>
+<p>Each row reports whether that piece of data is present and how big it is.</p>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Reads as</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Detail layers</strong></td>
+<td><code>&lt;res&gt; x &lt;res&gt;, &lt;n&gt; of &lt;total&gt; painted, &lt;size&gt;</code> — resolution, how many detail layers actually have paint (unpainted layers aren't stored), and section size.</td>
+</tr>
+<tr>
+<td><strong>Trees</strong></td>
+<td><code>&lt;n&gt; instances in &lt;n&gt; cells (&lt;size&gt;m), &lt;size&gt;</code> — instance count, spatial cell count, the tree chunk size they were sorted with, and section size.</td>
+</tr>
+<tr>
+<td><strong>Holes</strong></td>
+<td><code>&lt;res&gt; x &lt;res&gt;, &lt;size&gt;</code></td>
+</tr>
+<tr>
+<td><strong>Heightmap</strong></td>
+<td><code>&lt;res&gt; x &lt;res&gt;, &lt;size&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p>A section reads <strong>absent</strong> when that data hasn't been extracted, or when the section is too short to be valid.</p>
+<p><strong>Check this list after a bake.</strong> <a href="#brgextractedterraindatabaker">BakeFor</a> returns <code>true</code> even when a section was skipped, so the Sections list is how you confirm what actually landed.</p>
+<p>If the asset carries a saved payload, an info box appears with a <strong>Clear Saved Payload</strong> button. A saved payload is the expected result of a manual bake — the note is a reminder to keep it out of version control, since it duplicates data already in the <code>TerrainData</code>. The automatic build step never produces one on the project asset.</p>
+<h2 id="baking-during-a-player-build">Baking During a Player Build</h2>
+<p>Player builds bake automatically. The step is controlled by <strong>Auto Bake Pre-Extracted Terrain Data On Build</strong> on the <a href="../configuration/terrain.html">Terrain Config</a>, which is <strong>on by default</strong>.</p>
+<p>For each scene in the build it walks every <code>TerrainBRGRegisterer</code> — including inactive ones — and bakes any that have an asset assigned. When a terrain is baked it logs a summary naming the scene and the payload size per terrain:</p>
+<pre><code>BRGExtractedTerrainData: baked 2 terrain(s) into 'Level_01'
+  Terrain_North: 4.21 MB
+  Terrain_South: 3.87 MB
+</code></pre>
+<h3 id="opting-a-terrain-out">Opting a terrain out</h3>
+<p>Leave <strong>Pre-Baked Terrain Data</strong> empty on that registerer. The build step skips registerers with no asset assigned, and the terrain reads <code>TerrainData</code> as normal.</p>
+<p>To disable baking project-wide, turn off <strong>Auto Bake Pre-Extracted Terrain Data On Build</strong> in the config.</p>
+<blockquote>
+<p>The step does nothing when entering play mode — only actual player builds bake.</p>
+</blockquote>
+<h2 id="scripting-api">Scripting API</h2>
+<h3 id="terrainbrgregistererextractedterraindata">TerrainBRGRegisterer.ExtractedTerrainData</h3>
+<pre><code class="lang-csharp">public BRGExtractedTerrainData ExtractedTerrainData { get; set; }
+</code></pre>
+<p>The asset bound to a registerer. Assigning while the registerer is already registered triggers a <code>Refresh()</code> so it rebuilds from the new asset — which means a procedural setup can bind an asset <strong>before</strong> the registerer is enabled and pay nothing for the swap.</p>
+<h3 id="brgextractedterraindatabaker">BRGExtractedTerrainDataBaker</h3>
+<p>Editor-only static helpers in the <code>BRGInstancedRenderer.Editor</code> namespace.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CreateUnsaved(TerrainData terrainData = null)</code></td>
+<td>Creates an <strong>unsaved</strong> instance. For procedurally built terrain whose <code>TerrainData</code> has no asset path — the caller decides whether it lives in a scene or gets written somewhere.</td>
+</tr>
+<tr>
+<td><code>CreateFor(TerrainData terrainData)</code></td>
+<td>Creates the asset <strong>on disk</strong>, next to the <code>TerrainData</code>, so the pair stays together when either is moved. Returns <code>null</code> and logs an error if the <code>TerrainData</code> isn't a saved asset.</td>
+</tr>
+<tr>
+<td><code>Rebind(BRGExtractedTerrainData asset, TerrainData terrainData)</code></td>
+<td>Points an asset at a different terrain and clears both stores, since anything cached describes the old one. This is the only way to change <code>SourceTerrainData</code>, which is get-only.</td>
+</tr>
+<tr>
+<td><code>BakeFor(TerrainBRGRegisterer registerer)</code></td>
+<td>The whole bake for one terrain. See <a href="#bakefor">BakeFor</a> below.</td>
+</tr>
+<tr>
+<td><code>BakeForBuild(TerrainBRGRegisterer registerer)</code></td>
+<td>What the automatic build step calls. Clones project assets first so they stay empty. See <a href="#bakeforbuild">BakeForBuild</a> below.</td>
+</tr>
+<tr>
+<td><code>BakeToAsset(BRGExtractedTerrainData asset)</code></td>
+<td>Promotes the warm editor cache to the serialized payload. Returns <code>false</code> and logs an error if the cache is empty.</td>
+</tr>
+<tr>
+<td><code>Clear(BRGExtractedTerrainData asset)</code></td>
+<td>Clears both the serialized payload and the editor cache.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="createunsaved-vs-createfor">CreateUnsaved vs CreateFor</h4>
+<p>Use <strong><code>CreateFor</code></strong> for terrain authored in the editor — the <code>TerrainData</code> is a saved asset, so the extracted asset can be placed beside it.</p>
+<p>Use <strong><code>CreateUnsaved</code></strong> for procedurally generated terrain, where the <code>TerrainData</code> exists only in memory and has no asset path. <code>CreateFor</code> fails in that case.</p>
+<p>An unsaved instance referenced by a component in a scene is <strong>serialized into that scene and ships with it</strong> — which is what makes <code>CreateUnsaved</code> viable for procedural terrain with no <code>TerrainData</code> asset on disk.</p>
+<h4 id="bakefor">BakeFor</h4>
+<pre><code class="lang-csharp">public static bool BakeFor(TerrainBRGRegisterer registerer)
+</code></pre>
+<p>Creates and binds an asset if the registerer has none, forces a fresh extract, promotes the result to the serialized payload, and marks the owning scene dirty.</p>
+<ul>
+<li><strong>Edit mode only.</strong> The registerer must be <strong>active and enabled</strong> — otherwise it can't read its terrain, so the call logs an error and returns <code>false</code>.</li>
+<li><strong>Always re-extracts.</strong> Both stores are cleared before the refresh, so a stale payload can't refill the cache from itself. Re-baking a regenerated terrain is safe.</li>
+<li><strong>Returns <code>true</code> even if a section was skipped.</strong> A terrain with more than 64 tree prototypes or more than 64 detail layers bakes without that section. Check the asset inspector's <a href="#sections">Sections</a> list to confirm what actually landed.</li>
+<li><strong>Marks the scene dirty but does not save it.</strong> See below.</li>
+<li>Works in <code>-batchmode -nographics</code>, so it can run on a CI agent.</li>
+</ul>
+<h4 id="bakeforbuild">BakeForBuild</h4>
+<pre><code class="lang-csharp">public static bool BakeForBuild(TerrainBRGRegisterer registerer)
+</code></pre>
+<p>The entry point the automatic <a href="#baking-during-a-player-build">build step</a> uses. Differs from <code>BakeFor</code> in two ways:</p>
+<ul>
+<li><strong>Returns <code>false</code> silently when the registerer has no asset assigned</strong> — that's the opt-out, not an error.</li>
+<li><strong>Never dirties a project asset.</strong> If the assigned asset lives on disk, it's cloned into an unsaved instance first and the registerer is pointed at the clone. The bake lands in the clone, which is serialized into the scene being built, so the <code>.asset</code> file in your project stays empty.</li>
+</ul>
+<p>Otherwise it delegates to <code>BakeFor</code>, so all of that method's behavior applies.</p>
+<h4 id="manual-baking">Manual baking</h4>
+<p>Calling <code>BakeFor</code> yourself marks the scene dirty but <strong>does not save it</strong>. Inside <code>IProcessSceneWithReport</code> that's fine, since the build serializes live memory. Anywhere else — a menu item, an <code>IPreprocessBuildWithReport</code>, a loop over open scenes — <strong>you must save the scene or the bake is silently lost:</strong></p>
+<pre><code class="lang-csharp">using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using BRGInstancedRenderer;
+using BRGInstancedRenderer.Editor;
+
+public static class BakeTerrainMenu
+{
+    [MenuItem(&quot;Tools/Bake BRG Terrain Data&quot;)]
+    public static void BakeOpenScene()
+    {
+        foreach (var reg in Object.FindObjectsByType&lt;TerrainBRGRegisterer&gt;(
+                     FindObjectsSortMode.None))
+        {
+            if (BRGExtractedTerrainDataBaker.BakeFor(reg))
+                Debug.Log($&quot;Baked {reg.name}&quot;, reg);
+        }
+
+        // BakeFor only marks the scene dirty - without this the bake is lost
+        EditorSceneManager.SaveOpenScenes();
+    }
+}
+</code></pre>
+<div class="IMPORTANT">
+<h5>Important</h5>
+<p>Unlike the automatic build step, a manual <code>BakeFor</code> on a project asset writes a multi-megabyte payload to disk. Revert it afterwards if you don't want it committed — <code>BRGExtractedTerrainDataBaker.Clear(asset)</code> clears both stores.</p>
+</div>
+<h2 id="keeping-it-fresh">Keeping It Fresh</h2>
+<p>The editor cache is a snapshot. Once the terrain changes underneath it, it's stale.</p>
+<pre><code class="lang-csharp">#if UNITY_EDITOR
+asset.InvalidateEditorCache();
+#endif
+</code></pre>
+<p>Call this whenever the terrain's trees or detail data are repainted or edited, then refresh the registerer to re-warm it. <strong>Clear Editor Cache</strong> in either inspector does the same thing.</p>
+<p>The cache doesn't survive a domain reload, so a script recompile or play-mode entry clears it on its own.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p><code>InvalidateEditorCache()</code> and <code>SourceTerrainData</code> are both compiled out of player builds. Guard any call site in runtime code with <code>#if UNITY_EDITOR</code>. <code>HasPayload</code> is available at runtime.</p>
+</div>
+<h2 id="verifying-it-works">Verifying It Works</h2>
+<p>Open the Profiler and look at terrain initialization:</p>
+<table>
+<thead>
+<tr>
+<th>Marker</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DetailRegisterer.LoadFromScriptableObject</code></td>
+<td>Detail data came from the asset.</td>
+</tr>
+<tr>
+<td><code>TreeRegisterer.LoadFromScriptableObject</code></td>
+<td>Tree data came from the asset.</td>
+</tr>
+<tr>
+<td><code>DetailRegisterer.CacheTerrainData</code></td>
+<td>Detail data was read from <code>TerrainData</code> — the asset was missing, empty, or rejected.</td>
+</tr>
+<tr>
+<td><code>DetailRegisterer.CacheToScriptableObject</code> / <code>TreeRegisterer.CacheToScriptableObject</code></td>
+<td><code>TerrainData</code> was read <strong>and</strong> mirrored into the editor cache, so the next refresh can use it.</td>
+</tr>
+</tbody>
+</table>
+<p>Seeing a <code>LoadFromScriptableObject</code> marker is the confirmation that the fast path ran.</p>
+<blockquote>
+<p>Measured on one terrain on one machine, so treat any figure you get as a data point rather than a guarantee — the win depends on terrain resolution, detail layer count, and tree count.</p>
+</blockquote>
+<h2 id="fallback-behaviour">Fallback Behaviour</h2>
+<p><strong>A payload that doesn't match the terrain is rejected, and the normal <code>TerrainData</code> path runs.</strong> Nothing breaks, and nothing renders differently — you just don't get the speedup.</p>
+<p>Detail data is rejected when:</p>
+<ul>
+<li>The section is missing or shorter than its header.</li>
+<li>The baked detail resolution doesn't match the terrain's. <em>(logs a warning naming both)</em></li>
+<li>The baked detail layer count doesn't match the terrain's. <em>(logs a warning naming both)</em></li>
+<li>The painted layer blocks don't all fit inside the section.</li>
+</ul>
+<p>The heightmap and holes sections are rejected when the section is missing, too short for the grid it claims, or its baked resolution doesn't match.</p>
+<p>Tree data is rejected when:</p>
+<ul>
+<li>The section is missing or shorter than its header. <em>(silent)</em></li>
+<li>The instance, index, and cell regions don't all fit inside the section. <em>(silent)</em></li>
+<li>The baked terrain size, tree chunk size, or prototype count changed. <em>(logs a warning naming the reason)</em></li>
+<li>A prototype the payload has instances for failed to register — dropping its instances would shift every baked cell range. <em>(logs a warning naming the prototype)</em></li>
+</ul>
+<p>A <strong>moved</strong> terrain still loads from the payload; a <strong>resized</strong> or <strong>re-gridded</strong> one can't.</p>
+<h3 id="what-logs-and-what-doesnt">What logs and what doesn't</h3>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>On rejection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Detail layers</td>
+<td>Warning, when the resolution or layer count mismatches. Silent otherwise.</td>
+</tr>
+<tr>
+<td>Trees</td>
+<td>Warning, naming the reason — terrain size, chunk size, prototype count, or the prototype that failed to register. Silent for malformed-section cases.</td>
+</tr>
+<tr>
+<td>Heightmap</td>
+<td><strong>Always silent.</strong></td>
+</tr>
+<tr>
+<td>Holes</td>
+<td><strong>Always silent.</strong></td>
+</tr>
+</tbody>
+</table>
+<p>If the heightmap or holes section is quietly falling back, nothing in the console will tell you — check the Profiler markers above instead.</p>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>One asset per terrain. Sharing an asset between registerers on different terrains means at most one of them matches — the rest are rejected at load.</li>
+<li>The automatic build step bakes into the built scene, never the project asset — so an empty <strong>Serialized</strong> row in the inspector is the normal, expected state for a project asset.</li>
+<li><code>SourceTerrainData</code> is get-only and editor-only. Use <code>Rebind</code> to change it; it's stripped from player builds so the asset never drags a <code>TerrainData</code> into them.</li>
+<li>An <strong>unsaved</strong> asset referenced by a scene component is serialized into that scene and ships with it — no <code>.asset</code> file required.</li>
+<li>Baking works in <code>-batchmode -nographics</code>, so it can run on a CI agent.</li>
+<li>The payload byte format is internal and may change between versions. Re-bake after upgrading rather than shipping an old payload.</li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (c) 2026 Milk_Drinker01. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

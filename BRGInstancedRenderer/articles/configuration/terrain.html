@@ -165,6 +165,12 @@
 <td>true</td>
 <td>(Editor only.) Enables click-to-select for terrain trees in the Scene View. Spawns a temporary proxy GameObject for transform editing.</td>
 </tr>
+<tr>
+<td><strong>Auto Bake Pre-Extracted Terrain Data On Build</strong></td>
+<td>bool</td>
+<td>true</td>
+<td>(Editor only.) During a player build, extracts terrain data into any assigned <strong>Pre-Baked Terrain Data</strong> asset so the build loads it instead of reading back from <code>TerrainData</code>. The data is written into the built scene only — the project asset is left empty, so nothing large reaches version control. Terrains with no asset assigned are skipped. See <a href="../components/brg-extracted-terrain-data.html">Pre-Extracted Terrain Data</a>.</td>
+</tr>
 </tbody>
 </table>
 <blockquote>

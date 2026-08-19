@@ -39,6 +39,7 @@ All paths below are inside the BRGInstancedRenderer package folder in the Unity 
 | Full runtime add/remove pattern — click to chop trees (`StageRemove`) or plant new prototypes at runtime (`RegisterRenderSignatureFromPrefab` + `AddInstance` + `StageColor`) | `Examples/Scripts/TerrainTreeChopper.cs` (paired scene: `Examples/Demos/Terrain Tree Chopper.unity`) |
 | **All three per-frame submission paths side by side** (Simple `Stage*` / per-instance `*Unsafe` / Burst-job-fed `Set*BatchUnsafe`), plus `OnChunkWritten` link caching and bounds padding for animated instances | `Examples/Demos/Scripts/InstanceLinkWaveDemo.cs` |
 | Reference terrain implementation | `Runtime/Scripts/Registerers/Terrain/TerrainBRGRegisterer.cs` + `.Trees.cs` / `.Details.cs` / `.Details.Extraction.cs` partials |
+| Pre-extracted terrain data (skip `TerrainData` readback at load) | `Runtime/Scripts/Registerers/Terrain/BRGExtractedTerrainData.cs` + `Editor/Scripts/Registerers/BRGExtractedTerrainDataBaker.cs` |
 | Reference GameObject-group implementation (kept-source, transform-tracked) | `Runtime/Scripts/Registerers/GameObjects/BRGGameObjectGroup.cs` |
 | Reference baked-instance group implementation (destroyed-source, packed blob) | `Runtime/Scripts/Registerers/Baked/BRGInstanceGroup.cs` + `.Bake.cs` |
 | Config schema (every serialized field + tooltips) | `Runtime/Scripts/Config/BRGInstancedRendererConfig.cs` |
