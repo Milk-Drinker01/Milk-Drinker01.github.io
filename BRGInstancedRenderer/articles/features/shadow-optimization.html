@@ -93,14 +93,18 @@
 <p>Limit how many shadow cascades a prototype renders into (1–4). Small objects like grass only need cascade 1, cutting shadow cost significantly.</p>
 <h4 id="minimum-shadow-lod">Minimum Shadow LOD</h4>
 <p>Force shadows to use a lower-detail mesh. Shadows for LOD0 instances can render using LOD1 or LOD2 geometry, reducing shadow polygon count with no visible impact on silhouettes.</p>
-<h4 id="max-shadow-distance">Max Shadow Distance</h4>
-<p>Per-prototype distance limit for shadow rendering. Instances beyond this distance cast no shadows, even within an active cascade.</p>
+<h4 id="shadow-caster-distance-culling">Shadow Caster Distance Culling</h4>
+<p>Stop a group of prototypes casting shadows past a distance from the camera. Can follow the pipeline's own shadow distance automatically so it never goes stale, or use an explicit per-group value. Set on a <a href="../components/brg-prototype-group.html">BRG Prototype Group</a>.</p>
+<h4 id="force-disable-shadows">Force Disable Shadows</h4>
+<p>Make a prototype never cast shadows regardless of its source renderer's shadow casting mode. Available per-prefab, or toggled at runtime for a whole group — useful for a &quot;Grass Shadows&quot; quality option.</p>
 <h4 id="shadow-cascade-crossfade">Shadow Cascade Crossfade</h4>
 <p>Dithered crossfading between shadow cascades smooths the visible seam where cascades meet. Controllable globally and per-prototype.</p>
 <h4 id="per-lod-shadow-casting">Per-LOD Shadow Casting</h4>
 <p>Each LOD level respects its MeshRenderer's shadow casting setting. Disable shadow casting on distant LODs to save GPU work automatically.</p>
+<h4 id="shadow-caster-culling">Shadow Caster Culling</h4>
+<p>Beyond these per-prototype controls, shadow casters can be culled outright — losslessly against the depth pyramid, or with cheaper lossy frustum and distance modes. See <a href="culling.html#shadow-culling">Culling</a>.</p>
 <blockquote>
-<p>For shadow settings, see <a href="../components/brg-prototype-extra-data-shadow.html">BRG Prototype Extra Data / Shadow Optimizations</a> and <a href="../getting-started/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a>.</p>
+<p>For shadow settings, see <a href="../components/brg-prototype-extra-data-shadow.html">BRG Prototype Extra Data / Shadow Optimizations</a>, <a href="../components/brg-prototype-group.html">BRG Prototype Group</a>, and <a href="../getting-started/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a>.</p>
 </blockquote>
 
 </article>

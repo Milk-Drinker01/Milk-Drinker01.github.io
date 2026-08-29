@@ -130,9 +130,9 @@
 <tbody>
 <tr>
 <td><strong>Min Screen Size</strong></td>
-<td>float (0–1)</td>
+<td>float (0–5%)</td>
 <td>0</td>
-<td>Screen size percentage below which instances are culled. 0 means disabled.</td>
+<td>Screen size percentage below which instances are culled. 0 = disabled (use LOD Group defaults). For LOD prototypes this overrides the last LOD's cull threshold if larger; for non-LOD prototypes it adds screen-size culling to something that would otherwise always render.</td>
 </tr>
 <tr>
 <td><strong>Fade Mode</strong></td>

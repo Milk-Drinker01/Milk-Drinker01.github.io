@@ -123,37 +123,88 @@
 <td>Runs GPU culling as normal but skips the actual BRG rendering. Useful for isolating rendering cost.</td>
 </tr>
 <tr>
+<td><strong>Debug Disable Draw Filtering</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Disables per-view prototype draw command filtering and emits full templates for every view. For A/B profiling and regression checks against the filtered path.</td>
+</tr>
+<tr>
 <td><strong>Show Chunk Bounds</strong></td>
 <td>bool</td>
 <td>false</td>
 <td>Draws chunk wireframe gizmos in the Scene View when a registerer is selected.</td>
 </tr>
+</tbody>
+</table>
+<h3 id="gizmo-toggles">Gizmo Toggles</h3>
+<p>These are <strong>editor session-only</strong> — they survive domain reloads but reset when the editor restarts, and they are never serialized into the config asset.</p>
+<table>
+<thead>
 <tr>
-<td><strong>Show Bounding Spheres</strong></td>
-<td>bool</td>
-<td>false</td>
-<td>Draws per-prototype bounding spheres as gizmos in the Scene View when a registerer is selected. Useful for visualizing the spheres used by GPU per-instance HZB occlusion culling.</td>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Debug Draw Bounding Spheres</strong></td>
+<td>Draws per-instance cull spheres — the bounds used by GPU per-instance culling and the HZB occlusion test.</td>
+</tr>
+<tr>
+<td><strong>Debug Draw Bounding Boxes</strong></td>
+<td>Draws per-instance bounding boxes.</td>
+</tr>
+<tr>
+<td><strong>Debug Draw Receiver Spheres</strong></td>
+<td>Draws the shadow receiver spheres used by cascade shadow culling.</td>
 </tr>
 <tr>
 <td><strong>Debug Visualize Culling In Scene View</strong></td>
-<td>bool</td>
-<td>false</td>
-<td>Freezes culling to the Game camera's frustum so you can orbit in the Scene View and see what is being culled.</td>
-</tr>
-<tr>
-<td><strong>Debug Defer Pool Frees</strong></td>
-<td>bool</td>
-<td>false</td>
-<td>Defer pool frees until after <code>FlushStagedUploads</code>. Prevents freed pools from being reused before staged overrides flush. Edge-case workaround — leave off unless you hit specific issues.</td>
+<td>Freezes culling to the Game camera's frustum so you can orbit in the Scene View and see what is being culled. Also engages automatically while the Frame Debugger is open.</td>
 </tr>
 <tr>
 <td><strong>Debug Validate Uploads</strong></td>
-<td>bool</td>
-<td>false</td>
-<td>(Editor-only, session-only — resets on editor restart.) Enables a CPU mirror that replays every upload / clear / patch / override / color command at dispatch time and compares against GPU readbacks every <strong>Debug Upload Validation Interval</strong> flush passes (0 = manual via <code>DebugValidateUploadsNow()</code>). Mismatches log the pool, chunk, and prototype plus the slot's last two writers. Verifies <code>rotScale</code>, sig bits, color, and pool refs; skips matrix-derived fields and masks slots hit by duplicate same-dispatch writes. GPU readback cost is nontrivial — leave off unless investigating a write-correctness bug.</td>
+<td>Enables the <a href="#gpu-upload-validator">GPU upload validator</a>.</td>
 </tr>
 </tbody>
 </table>
+<h2 id="gpu-upload-validator">GPU Upload Validator</h2>
+<p>Editor-only correctness check for the GPU write path. While <strong>Debug Validate Uploads</strong> is on, a CPU mirror tracks every upload / clear / patch / override / color command at dispatch time and compares it against a GPU readback.</p>
+<p>Mismatches log the pool, chunk, and prototype, plus the slot's last two writers. It verifies <code>rotScale</code>, signature bits, color, and pool refs; it deliberately skips matrix-derived fields and masks slots hit by duplicate same-dispatch writes.</p>
+<table>
+<thead>
+<tr>
+<th>Runtime member</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DebugUploadValidationInterval</code></td>
+<td>30</td>
+<td>Flush passes between automatic validations. Set to 0 for manual-only.</td>
+</tr>
+<tr>
+<td><code>DebugValidateUploadsNow()</code></td>
+<td>—</td>
+<td>Runs one validation pass immediately.</td>
+</tr>
+<tr>
+<td><code>StatUploadValidationMismatches</code></td>
+<td>—</td>
+<td>Mismatches found so far.</td>
+</tr>
+<tr>
+<td><code>StatUploadValidationPasses</code></td>
+<td>—</td>
+<td>Validation passes run so far.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>GPU readback cost is nontrivial. Leave this off unless you're investigating a write-correctness bug.</p>
+</blockquote>
 <p>For more debugging guidance, see <a href="../editor-tools/debugging.html">Debugging</a>.</p>
 
 </article>

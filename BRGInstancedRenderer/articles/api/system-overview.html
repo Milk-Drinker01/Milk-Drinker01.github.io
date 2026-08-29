@@ -128,7 +128,7 @@
 <li><strong>Screen-size culling</strong> — the instance's projected screen size is computed from its world-space bounds and distance to the camera. If it falls below the smallest LOD threshold, it is culled entirely.</li>
 <li><strong>LOD selection</strong> — the screen size is compared against the prototype's LOD thresholds to select which mesh to render. If crossfade is active, both the current and target LOD are emitted with a blend factor.</li>
 <li><strong>HZB occlusion culling</strong> — if enabled, the instance's bounds are tested against a hierarchical Z-buffer (a mipmap pyramid of the depth buffer). Instances hidden behind closer geometry are culled.</li>
-<li><strong>Shadow culling</strong> — separate shadow-specific tests compare against per-prototype shadow distances and cascade limits.</li>
+<li><strong>Shadow culling</strong> — separate shadow-specific tests compare against per-prototype cascade limits and per-group shadow caster distances.</li>
 </ol>
 <p>Surviving instances are sorted into <strong>draw buckets</strong> grouped by prototype, LOD level, and render pass (main vs. shadow). The system then finalizes indirect draw arguments and dispatches them through Unity's BatchRendererGroup API.</p>
 <h2 id="registration-to-rendering">Registration to Rendering</h2>

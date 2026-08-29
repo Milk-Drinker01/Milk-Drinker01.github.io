@@ -326,8 +326,47 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 <td>bool</td>
 <td>Unity 6.2+ Mesh LOD instead of separate meshes per level.</td>
 </tr>
+<tr>
+<td><strong>prefitCullBounds</strong></td>
+<td>PrefitCullBounds[]</td>
+<td>Optional pre-computed tight cull sphere per LOD. Skips runtime bounds measurement entirely. See <a href="#prefit-cull-bounds">Prefit Cull Bounds</a>.</td>
+</tr>
 </tbody>
 </table>
+<h3 id="prefitcullbounds">PrefitCullBounds</h3>
+<p>A tightened cull sphere for one LOD, supplied at registration instead of being measured at runtime.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>centre</strong></td>
+<td>float3</td>
+<td>Sphere centre in mesh-local space.</td>
+</tr>
+<tr>
+<td><strong>radius</strong></td>
+<td>float</td>
+<td>Sphere radius. Must be <code>&gt; 0</code> for the entry to be considered valid.</td>
+</tr>
+<tr>
+<td><strong>cylRadius</strong></td>
+<td>float</td>
+<td>Radius of the bounding cylinder about the Y axis, used for tighter tests on upright geometry like trees and grass.</td>
+</tr>
+<tr>
+<td><strong>IsValid</strong></td>
+<td>bool</td>
+<td><code>true</code> when <code>radius &gt; 0</code>. Invalid entries are ignored and that LOD falls back to runtime fitting.</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="#prefit-cull-bounds">Prefit Cull Bounds</a> for how these are produced and consumed.</p>
 <h3 id="rendersignature">RenderSignature</h3>
 <p>The full registration unit — combines a <code>PrototypeData</code> asset with render behavior configuration. This is what you pass to <code>RegisterRenderSignature</code> when you need explicit control over render settings.</p>
 <p>The same prefab can be registered multiple times with different render settings. Deduplication uses both <code>sourcePrefab</code> and a hash of the config fields, so two <code>RenderSignature</code>s with the same prefab but different shadow settings are treated as separate prototypes.</p>
@@ -375,13 +414,19 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 <td><strong>maxShadowDistance</strong></td>
 <td>float</td>
 <td>0</td>
-<td>Max shadow distance, 0 = global.</td>
+<td>Resolved max shadow distance, 0 = global. Fed from the assigned <a href="../components/brg-prototype-group.html">Prototype Group</a>'s shadow caster distance culling.</td>
+</tr>
+<tr>
+<td><strong>forceDisableShadows</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Never cast shadows, regardless of the source renderer's shadow casting mode.</td>
 </tr>
 <tr>
 <td><strong>maxShadowCrossfadeCascade</strong></td>
 <td>int</td>
 <td>-99</td>
-<td>Cascade-specific crossfade control.</td>
+<td>Cascade-specific crossfade control. -99 = use the global config value.</td>
 </tr>
 <tr>
 <td><strong>lodFadeDuration</strong></td>
@@ -393,7 +438,7 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 <td><strong>prototypeGroup</strong></td>
 <td>BRGPrototypeGroup</td>
 <td>null</td>
-<td>Optional group for runtime LOD bias and density control. See <a href="../components/brg-prototype-group.html">BRG Prototype Group</a>.</td>
+<td>Optional group for shared LOD bias, density, and shadow culling. See <a href="../components/brg-prototype-group.html">BRG Prototype Group</a>.</td>
 </tr>
 <tr>
 <td><strong>enableDistanceDensity</strong></td>
@@ -410,7 +455,7 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 <tr>
 <td><strong>densityStartScreenSize</strong></td>
 <td>float</td>
-<td>2</td>
+<td>0.1</td>
 <td>Screen-size percentage where thinning begins (Screen Size mode).</td>
 </tr>
 <tr>
@@ -428,7 +473,7 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 <tr>
 <td><strong>densityMinFraction</strong></td>
 <td>float</td>
-<td>0</td>
+<td>0.3</td>
 <td>Minimum density fraction at max distance. 0 = cull all; 0.3 = keep 30%.</td>
 </tr>
 <tr>
@@ -452,6 +497,9 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 </tbody>
 </table>
 <p>Most users can simply call <code>RegisterRenderSignatureFromPrefab(GameObject)</code>, which extracts a <code>RenderSignature</code> from the prefab automatically (including any <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a> settings). You can also call <code>ExtractRenderSignature(GameObject)</code> to get a <code>RenderSignature</code> without registering it, modify it, and then pass it to <code>RegisterRenderSignature</code>.</p>
+<blockquote>
+<p>The defaults above are the struct's own, used when you build a <code>RenderSignature</code> by hand. They don't all match the inspector defaults on <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a> — extraction overwrites them with whatever that component holds.</p>
+</blockquote>
 <h3 id="chunklink">ChunkLink</h3>
 <p>Handle to an allocated BRG chunk. Tracked for automatic cleanup on shutdown. Includes a generation counter for ABA-safe liveness checks.</p>
 <table>
@@ -539,6 +587,57 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 </tr>
 </tbody>
 </table>
+<h2 id="prefit-cull-bounds">Prefit Cull Bounds</h2>
+<p>Every registered mesh needs a cull sphere. By default BRG measures one at registration time, walking the mesh's vertices to fit a sphere tighter than the bounding-box corner. That costs time on the registering thread and requires the mesh to be readable.</p>
+<p><strong>Prefit bounds skip that work.</strong> If <code>PrototypeData.prefitCullBounds</code> holds a valid entry for an LOD, that sphere is used directly and no measurement happens.</p>
+<h3 id="where-they-come-from">Where they come from</h3>
+<p>For prefabs, they're baked automatically at import — <strong>as long as the prefab has a <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a> component on it.</strong> The importer skips prefabs without one, so those fall back to runtime measurement.</p>
+<div class="TIP">
+<h5>Tip</h5>
+<p>Add <strong>BRG Prototype Extra Data</strong> to your prototype prefabs even if you don't need any of its overrides. Its presence is what enables import-time cull bounds baking, which removes the measurement cost from prototype registration.</p>
+</div>
+<p>The baked values live in the imported artifact only — your prefab file on disk is never modified, so nothing extra reaches version control. Prefabs that produce more than one render signature are skipped, since per-LOD bounds can't be mapped back to a single component; those measure at runtime.</p>
+<h3 id="supplying-them-yourself">Supplying them yourself</h3>
+<p>When building a <code>RenderSignature</code> by hand — procedural meshes, runtime-generated LODs, or your own asset pipeline — populate <code>asset.prefitCullBounds</code> with one entry per LOD:</p>
+<pre><code class="lang-csharp">var sig = tracker.ExtractRenderSignature(prefab);
+
+sig.asset.prefitCullBounds = new[]
+{
+    new PrefitCullBounds { centre = lod0Centre, radius = lod0Radius, cylRadius = lod0CylRadius },
+    new PrefitCullBounds { centre = lod1Centre, radius = lod1Radius, cylRadius = lod1CylRadius },
+};
+
+int protoIndex = tracker.RegisterRenderSignature(sig);
+</code></pre>
+<p>Entries are matched by LOD index. Leave an entry with <code>radius = 0</code> to let that one LOD fall back to runtime fitting.</p>
+<h3 id="fallback-behaviour">Fallback behaviour</h3>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Valid prefit entry for the LOD</td>
+<td>Used directly, no measurement.</td>
+</tr>
+<tr>
+<td>No entry, and <strong>Allow Fallback Runtime Bounds Fitting</strong> is on</td>
+<td>Measured at registration. Non-readable meshes use the box radius until an async readback lands.</td>
+</tr>
+<tr>
+<td>No entry, and that option is off</td>
+<td>Falls back to the bounding-box corner radius.</td>
+</tr>
+<tr>
+<td>Prefit arrives after the mesh was already fitted</td>
+<td>The runtime fit is replaced with the prefit.</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="../configuration/culling.html">Allow Fallback Runtime Bounds Fitting</a> for the config toggle.</p>
 <h2 id="render-signature-registration">Render Signature Registration</h2>
 <p>All registrations are tracked and automatically unregistered on <code>Shutdown()</code>.</p>
 <table>

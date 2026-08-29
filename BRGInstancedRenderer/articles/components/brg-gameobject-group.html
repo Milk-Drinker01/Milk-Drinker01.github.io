@@ -109,8 +109,8 @@
 </tr>
 <tr>
 <td><strong>Chunk Size</strong></td>
-<td>float</td>
-<td>50m</td>
+<td>float (≥ 10)</td>
+<td>256m</td>
 <td>World-space size of the spatial grid cells. Instances are grouped into chunks based on their position. Affects culling granularity — smaller chunks cull more precisely, larger chunks reduce overhead. Only applies to <strong>Static (Multi Chunk)</strong> mode.</td>
 </tr>
 <tr>
@@ -120,13 +120,16 @@
 <td>Maximum render distance in meters. Instances in this group beyond this distance are not rendered. 0 means no distance limit.</td>
 </tr>
 <tr>
-<td><strong>Show Chunk Gizmos</strong></td>
+<td><strong>Detect Prefab Overrides</strong></td>
 <td>bool</td>
-<td>true</td>
-<td>Draws wireframe bounding boxes in the Scene View for each chunk, color-coded by fill percentage.</td>
+<td>false</td>
+<td>(Editor only.) When enabled, instances with different property overrides (e.g. crossfade or shadow settings) register as separate prototypes. When disabled, all instances of the same prefab share one prototype and per-instance overrides are ignored.</td>
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p>To draw chunk bounds in the Scene View, enable <strong>Show Chunk Bounds</strong> on the <a href="../configuration/debug.html">Debug Config</a> — it applies to any selected registerer.</p>
+</blockquote>
 <h2 id="inspector-actions">Inspector Actions</h2>
 <table>
 <thead>

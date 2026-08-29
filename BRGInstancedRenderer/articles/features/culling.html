@@ -103,7 +103,7 @@
 <li><p><strong>GPU Per-Instance Occlusion (HZB)</strong> — Individual instances within visible chunks are tested against the same HZB, culling instances hidden behind other objects even when their chunk is partially visible.</p>
 </li>
 </ol>
-<p>The HZB depth pyramid is constructed each frame using a compute shader based on AMD FidelityFX Single Pass Downsampler (SPD) for the fastest possible performance, and pixel expansion compensates for camera movement between frames. Enable via <strong>Use GPU Occlusion Culling</strong> on the <a href="../getting-started/brg-instanced-renderer-config.html">Config</a>.</p>
+<p>The HZB depth pyramid is constructed each frame using a compute shader based on AMD FidelityFX Single Pass Downsampler (SPD) for the fastest possible performance, and pixel expansion compensates for camera movement between frames. Controlled by <strong>Use GPU Occlusion Culling</strong> on the <a href="../getting-started/brg-instanced-renderer-config.html">Config</a>, which is on by default.</p>
 <p>An optional <strong>HZB Retest Pass</strong> adds a second phase: after the current frame's depth prepass, instances that were occluded in the first pass are re-tested against the fresh depth buffer. This recovers instances that were falsely occluded due to camera movement, reducing temporal artifacts. Enable via <strong>Use HZB Retest Pass</strong> on the <a href="../getting-started/brg-instanced-renderer-config.html">Config</a>.</p>
 <div class="NOTE">
 <h5>Note</h5>

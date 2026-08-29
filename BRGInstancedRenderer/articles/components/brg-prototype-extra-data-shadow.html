@@ -100,6 +100,12 @@
 </thead>
 <tbody>
 <tr>
+<td><strong>Force Disable Shadows</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Force this prototype to never cast shadows, regardless of the source renderer's shadow casting mode. Can also be toggled at runtime for a whole group via <a href="brg-prototype-group.html#setshadowsenabled">BRGPrototypeGroup.SetShadowsEnabled()</a>.</td>
+</tr>
+<tr>
 <td><strong>Max Shadow Cascade</strong></td>
 <td>int (1–4)</td>
 <td>4</td>
@@ -112,18 +118,6 @@
 <td>Minimum LOD level used for shadow rendering. If set to 1, shadows use the LOD1 mesh instead of LOD0, reducing shadow polygon count.</td>
 </tr>
 <tr>
-<td><strong>Override Max Shadow Distance</strong></td>
-<td>bool</td>
-<td>false</td>
-<td>Enables the per-prototype max shadow distance below.</td>
-</tr>
-<tr>
-<td><strong>Max Shadow Distance</strong></td>
-<td>float</td>
-<td>80m</td>
-<td>Cull shadows for this prototype beyond this distance. Only used when the override toggle is enabled.</td>
-</tr>
-<tr>
 <td><strong>Override Max Shadow Crossfade Cascade</strong></td>
 <td>bool</td>
 <td>false</td>
@@ -132,11 +126,14 @@
 <tr>
 <td><strong>Max Shadow Crossfade Cascade</strong></td>
 <td>int (0–4)</td>
-<td>—</td>
+<td>4</td>
 <td>Number of shadow cascades using dithered crossfade for this prototype. Overrides the global value on the <a href="../getting-started/brg-instanced-renderer-config.html">Config</a>.</td>
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p><strong>Max shadow distance</strong> is no longer set here. Assign a <a href="brg-prototype-group.html">BRG Prototype Group</a> and use its shadow caster distance culling, which can also follow the pipeline's own shadow distance automatically.</p>
+</blockquote>
 <p>For more details, see <a href="../features/shadow-optimization.html">Shadow Optimization</a>.</p>
 
 </article>

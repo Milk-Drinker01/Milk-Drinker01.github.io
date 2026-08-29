@@ -89,6 +89,9 @@
 
 <hr>
 <p>Practical advice for getting the best performance and memory usage out of BRG Instanced Renderer.</p>
+<h2 id="add-prototype-extra-data-to-your-prefabs">Add Prototype Extra Data to Your Prefabs</h2>
+<p>Add a <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a> component to every prefab you render through BRG — <strong>even if you don't change any of its settings.</strong></p>
+<p>Prefabs that have the component get their tight cull bounds computed at import time. Prefabs without it have to measure those bounds during prototype registration instead, which costs time on load and requires the mesh to have Read/Write enabled. The baked values go into the imported artifact, so your prefab file and version control are untouched.</p>
 <h2 id="size-your-initial-allocations">Size Your Initial Allocations</h2>
 <p>GPU buffers grow automatically when capacity is exceeded, but resizing involves copying all buffer data and causes a one-time hitch. To avoid this:</p>
 <ol>

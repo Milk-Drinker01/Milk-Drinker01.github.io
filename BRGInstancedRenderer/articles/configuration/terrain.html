@@ -154,6 +154,12 @@
 <td>Hard-culls detail instances beyond the terrain's detail object distance. Prevents visible gridding artifacts caused by detail chunk size.</td>
 </tr>
 <tr>
+<td><strong>Preserve Detail Prototype Layers</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>When enabled, detail instances keep their prefab's layer. When disabled, details use the terrain GameObject's layer, matching Unity's tree behavior. Global rather than per-terrain so that identical detail prototypes deduplicate across terrains.</td>
+</tr>
+<tr>
 <td><strong>Allow Texture Grass</strong></td>
 <td>bool</td>
 <td>false</td>

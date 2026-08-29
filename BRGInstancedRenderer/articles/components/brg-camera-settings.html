@@ -88,7 +88,7 @@
 <h1 id="brg-camera-settings">BRG Camera Settings</h1>
 
 <hr>
-<p>An optional component added to cameras to control the LOD bias multiplier for BRG Instanced Renderer on a per-camera basis.</p>
+<p>An optional component added to cameras to control BRG Instanced Renderer's behavior on a per-camera basis — LOD bias, and whether the camera renders BRG instances at all.</p>
 <h2 id="inspector-properties">Inspector Properties</h2>
 <table>
 <thead>
@@ -101,6 +101,12 @@
 </thead>
 <tbody>
 <tr>
+<td><strong>Exclude From Rendering</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Excludes this camera from rendering BRG instances entirely. Useful for UI cameras, reflection probes, minimaps, or any secondary camera that shouldn't pay for instanced geometry.</td>
+</tr>
+<tr>
 <td><strong>LOD Bias Multiplier</strong></td>
 <td>float (0.01–10)</td>
 <td>1.0</td>
@@ -111,7 +117,7 @@
 <h2 id="how-it-works">How It Works</h2>
 <p>The final LOD bias used for a camera is:</p>
 <blockquote>
-<p><strong>Final LOD Bias = QualitySettings.lodBias x LOD Bias Multiplier</strong></p>
+<p><strong>Final LOD Bias = QualitySettings.lodBias x LOD Bias Multiplier x <a href="brg-prototype-group.html#setlodbias">group LOD bias</a></strong></p>
 </blockquote>
 <ul>
 <li>A multiplier of <strong>1.0</strong> uses the global Quality Settings value as-is (default behavior).</li>
@@ -123,6 +129,7 @@
 <li><strong>Cinematic cameras</strong> — Set a higher multiplier to maintain maximum detail for cutscenes or beauty shots.</li>
 <li><strong>Minimap or overview cameras</strong> — Set a lower multiplier to aggressively use lower LODs, since detail isn't needed.</li>
 <li><strong>Split-screen or secondary cameras</strong> — Reduce LOD quality on secondary viewports to save rendering budget.</li>
+<li><strong>Cameras that shouldn't see instances at all</strong> — Enable <strong>Exclude From Rendering</strong> on UI cameras, reflection probes, or any view where instanced geometry is unwanted.</li>
 </ul>
 <h2 id="methods">Methods</h2>
 <h3 id="snapcrossfade">SnapCrossfade</h3>

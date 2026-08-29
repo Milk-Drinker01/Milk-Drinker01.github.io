@@ -105,15 +105,15 @@
 <td>Enables per-chunk occlusion testing against Unity's baked occlusion data. Chunks fully hidden behind occluders are skipped.</td>
 </tr>
 <tr>
-<td><strong>Fit Cull Bounds To Vertices</strong></td>
+<td><strong>Allow Fallback Runtime Bounds Fitting</strong></td>
 <td>bool</td>
 <td>true</td>
-<td>Fits each prototype's cull sphere to its farthest vertex instead of its bounding box corner, measured once per mesh at registration. Around 13% smaller on typical vegetation, so more instances cull. Meshes without Read/Write enabled are measured by async readback and use the box radius until it lands.</td>
+<td>Measures cull bounds at mesh registration for meshes that have no baked prefit bounds, fitting the cull sphere to the farthest vertex instead of the bounding box corner. Bounds baked at prefab import are always used in preference to this. Meshes without Read/Write enabled are measured by async readback and use the box radius until it lands.</td>
 </tr>
 <tr>
 <td><strong>Use GPU Occlusion Culling</strong></td>
 <td>bool</td>
-<td>false</td>
+<td>true</td>
 <td>Enables real-time GPU occlusion culling using a Hierarchical Z-Buffer (HZB) built from the previous frame's depth buffer. Works with dynamic objects and requires no baking. Can run alongside baked occlusion culling.</td>
 </tr>
 <tr>
@@ -155,8 +155,14 @@
 <tr>
 <td><strong>Default Small Mesh Fade Mode</strong></td>
 <td>enum</td>
-<td>AnimatedCrossfade</td>
-<td>Fade mode for the small mesh cull boundary: <strong>None</strong> (instant pop). <br><strong>Crossfade</strong> (stateless dither). <br><strong>Animated Crossfade</strong> (time-based fade).</td>
+<td>None</td>
+<td>Fade mode for the small mesh cull boundary: <strong>None</strong> (instant pop). <br><strong>Crossfade</strong> (stateless dither). <br><strong>Animated Crossfade</strong> (time-based fade). Crossfade costs some performance by doubling the draw calls for non-LOD prototypes.</td>
+</tr>
+<tr>
+<td><strong>Default Small Mesh Fade Width</strong></td>
+<td>float (0–1)</td>
+<td>0.5</td>
+<td>Fade transition width for the small mesh cull zone. Only used with stateless <strong>Crossfade</strong> mode. 0 = hard cull.</td>
 </tr>
 </tbody>
 </table>
