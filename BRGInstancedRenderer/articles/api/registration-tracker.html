@@ -625,18 +625,20 @@ int protoIndex = tracker.RegisterRenderSignature(sig);
 </tr>
 <tr>
 <td>No entry, and <strong>Allow Fallback Runtime Bounds Fitting</strong> is on</td>
-<td>Measured at registration. Non-readable meshes use the box radius until an async readback lands.</td>
+<td>Measured at registration. Non-readable meshes are measured by async readback and use the box radius until it lands.</td>
 </tr>
 <tr>
 <td>No entry, and that option is off</td>
 <td>Falls back to the bounding-box corner radius.</td>
 </tr>
 <tr>
-<td>Prefit arrives after the mesh was already fitted</td>
-<td>The runtime fit is replaced with the prefit.</td>
+<td>A prefit shows up while an async measurement is still in flight</td>
+<td>The readback is discarded and the prefit is applied immediately.</td>
 </tr>
 </tbody>
 </table>
+<p>A completed fit is never overwritten — once a mesh's bounds have landed, a later prefit for the same mesh is ignored.</p>
+<p>The in-flight case comes up when one mesh is shared by several prototypes: the first to register has no prefit and starts a readback, and a later one does have a prefit. Rather than wait for a measurement it no longer needs, the pending readback is marked superseded and the prefit takes effect right away.</p>
 <p>See <a href="../configuration/culling.html">Allow Fallback Runtime Bounds Fitting</a> for the config toggle.</p>
 <h2 id="render-signature-registration">Render Signature Registration</h2>
 <p>All registrations are tracked and automatically unregistered on <code>Shutdown()</code>.</p>
