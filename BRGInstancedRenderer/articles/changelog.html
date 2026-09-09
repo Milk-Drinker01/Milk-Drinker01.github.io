@@ -88,7 +88,25 @@
 <h1 id="changelog">Changelog</h1>
 
 <hr>
-<h2 id="152--2026-08-29">1.5.2 — 2026-08-29</h2>
+<h2 id="155--2026-09-08">1.5.5 — 2026-09-08</h2>
+<ul>
+<li>Matched scale of Unity's detail placement algorithm</li>
+<li>Fixed terrain details when using LOD models</li>
+</ul>
+<h2 id="154--2026-09-08">1.5.4 — 2026-09-08</h2>
+<ul>
+<li>Improved accuracy of replicating Unity's detail placement algorithm</li>
+<li>Improved debugging information for chunk culling</li>
+<li>Fixed incorrect initialization in HDRP on Unity 6.6</li>
+<li>Fixed multi-camera detail streaming setup when one camera renders to a render texture</li>
+<li>Fixed rare incorrect occlusion culling result</li>
+<li>Various other small bug fixes and optimizations</li>
+</ul>
+<h2 id="153--2026-09-01">1.5.3 — 2026-09-01</h2>
+<ul>
+<li>Fixed <code>PrefitImportBaker</code> to not use <code>OnPostprocessPrefab</code>, significantly optimizing the pass for projects with many prefabs</li>
+</ul>
+<h2 id="152--2026-08-31">1.5.2 — 2026-08-31</h2>
 <ul>
 <li>Optimized prototype registration</li>
 <li>Tight mesh bounds are now pre-computed for prefabs with BRG Prototype Extra Data</li>

@@ -92,7 +92,7 @@
 <p>Any prefab registered as a prototype (via <a href="brg-gameobject-group.html">BRG GameObject Group</a> or <a href="brg-terrain-registerer.html">Terrain Registerer</a>) will pick up these settings automatically.</p>
 <div class="TIP">
 <h5>Tip</h5>
-<p><strong>Add this component to your prototype prefabs even if you don't need any of the overrides.</strong> Its presence is what enables import-time baking of tight cull bounds — the sphere used for per-instance and occlusion culling gets fitted when the prefab is imported instead of measured during prototype registration, so registration is faster and the mesh doesn't need Read/Write enabled. The baked values go into the imported artifact, not your prefab file. See <a href="../api/registration-tracker.html#prefit-cull-bounds">Prefit Cull Bounds</a>.</p>
+<p><strong>Add this component to your prototype prefabs even if you don't need any of the overrides.</strong> Its presence is what enables baking of tight cull bounds — the sphere used for per-instance and occlusion culling gets fitted in the editor instead of measured during prototype registration, so registration is faster and the mesh doesn't need Read/Write enabled. The bounds are stored on this component and saved into the prefab. See <a href="../api/registration-tracker.html#prefit-cull-bounds">Prefit Cull Bounds</a>.</p>
 </div>
 <h2 id="prototype-group">Prototype Group</h2>
 <table>

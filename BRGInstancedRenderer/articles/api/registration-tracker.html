@@ -591,12 +591,49 @@ tracker.Initialize(); // calls InitializeCallback after connecting
 <p>Every registered mesh needs a cull sphere. By default BRG measures one at registration time, walking the mesh's vertices to fit a sphere tighter than the bounding-box corner. That costs time on the registering thread and requires the mesh to be readable.</p>
 <p><strong>Prefit bounds skip that work.</strong> If <code>PrototypeData.prefitCullBounds</code> holds a valid entry for an LOD, that sphere is used directly and no measurement happens.</p>
 <h3 id="where-they-come-from">Where they come from</h3>
-<p>For prefabs, they're baked automatically at import — <strong>as long as the prefab has a <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a> component on it.</strong> The importer skips prefabs without one, so those fall back to runtime measurement.</p>
+<p>For prefabs, they're baked automatically in the editor — <strong>as long as the prefab has a <a href="../components/brg-prototype-extra-data.html">BRG Prototype Extra Data</a> component on it.</strong> Prefabs without one are skipped and fall back to runtime measurement.</p>
 <div class="TIP">
 <h5>Tip</h5>
-<p>Add <strong>BRG Prototype Extra Data</strong> to your prototype prefabs even if you don't need any of its overrides. Its presence is what enables import-time cull bounds baking, which removes the measurement cost from prototype registration.</p>
+<p>Add <strong>BRG Prototype Extra Data</strong> to your prototype prefabs even if you don't need any of its overrides. Its presence is what enables cull bounds baking, which removes the measurement cost from prototype registration.</p>
 </div>
-<p>The baked values live in the imported artifact only — your prefab file on disk is never modified, so nothing extra reaches version control. Prefabs that produce more than one render signature are skipped, since per-LOD bounds can't be mapped back to a single component; those measure at runtime.</p>
+<p>A bake is queued when:</p>
+<ul>
+<li>A prototype prefab is imported (saved, reimported, or first added to the project).</li>
+<li>A prototype registers at runtime without usable baked bounds. This is edit-mode only, and retried at most once per prefab per domain reload.</li>
+</ul>
+<p>The measured bounds are written into the <code>BRG Prototype Extra Data</code> component and <strong>the prefab asset is saved</strong>, so the values are part of the prefab and should be committed. They're small — a centre, a radius, and a cylinder radius per LOD.</p>
+<p>Baking never happens during import itself. Prefabs are queued and the bake runs afterwards on a delayed callback, since asset writes aren't legal inside an import callback.</p>
+<h3 id="cases-that-skip-the-bake">Cases that skip the bake</h3>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prefab has no <code>BRGPrototypeExtraData</code></td>
+<td>Skipped entirely.</td>
+</tr>
+<tr>
+<td>Prefab produces more than one render signature</td>
+<td>Skipped — per-LOD bounds can't be mapped back to a single component. Measures at runtime instead.</td>
+</tr>
+<tr>
+<td>Prefab is currently open in Prefab Mode</td>
+<td>Deferred until the prefab stage closes, then baked.</td>
+</tr>
+<tr>
+<td>No LOD could be measured</td>
+<td>Nothing is written.</td>
+</tr>
+<tr>
+<td>Bounds already match what would be baked</td>
+<td>Nothing is written, so no redundant asset save.</td>
+</tr>
+</tbody>
+</table>
 <h3 id="supplying-them-yourself">Supplying them yourself</h3>
 <p>When building a <code>RenderSignature</code> by hand — procedural meshes, runtime-generated LODs, or your own asset pipeline — populate <code>asset.prefitCullBounds</code> with one entry per LOD:</p>
 <pre><code class="lang-csharp">var sig = tracker.ExtractRenderSignature(prefab);
