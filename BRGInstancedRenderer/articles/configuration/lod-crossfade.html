@@ -105,10 +105,10 @@
 <td>Number of shadow cascades (starting from cascade 1) that use dithered crossfade. Smooths the seam between cascades. Lower values improve performance but reduce shadow smoothness. Set to 0 to disable. Can be overridden per-prototype via <a href="../components/brg-prototype-extra-data-shadow.html">BRG Prototype Extra Data / Shadow Optimizations</a>.</td>
 </tr>
 <tr>
-<td><strong>Debug Disable Crossfade</strong></td>
+<td><strong>Enable Crossfade</strong></td>
 <td>bool</td>
-<td>false</td>
-<td>Disables all crossfade (stateless and animated), forcing instant LOD transitions.</td>
+<td>true</td>
+<td>LOD crossfade for all prototypes. Turning it off removes the crossfade draw calls, but LOD, density, and cull distance transitions pop instead of fading. Drive it at runtime from a graphics options menu with <code>BRGRenderer.Instance.CrossfadeEnabled</code>.</td>
 </tr>
 <tr>
 <td><strong>Animated Crossfade Mode</strong></td>
@@ -130,6 +130,15 @@
 </tr>
 </tbody>
 </table>
+<h2 id="disabling-crossfade-at-runtime">Disabling Crossfade at Runtime</h2>
+<p><strong>Enable Crossfade</strong> is the starting value for <code>BRGRenderer.Instance.CrossfadeEnabled</code>, which you can flip at runtime to build a crossfade graphics option:</p>
+<pre><code class="lang-csharp">BRGRenderer.Instance.CrossfadeEnabled = qualityLevel != QualityLevel.Low;
+</code></pre>
+<p>Turning it off drops the extra crossfade draw calls entirely, which is the cheapest way to claw back CPU and GPU time on low-end settings. The cost is that LOD, density, and cull distance transitions pop instead of fading.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>Changing it rebuilds all batches and snaps every view's fade state, so set it on quality-setting changes rather than per frame.</p>
+</div>
 <p>For crossfade modes and behavior, see <a href="../features/lod-and-crossfade.html#crossfade">Crossfade</a>. For per-prototype shadow settings, see <a href="../components/brg-prototype-extra-data-shadow.html">BRG Prototype Extra Data / Shadow Optimizations</a>.</p>
 
 </article>

@@ -154,13 +154,46 @@
 <li><strong>Camera</strong> / <strong>Shadow</strong> — Draw command counts for camera and shadow passes</li>
 <li><strong>Camera Buckets</strong> / <strong>Shadow Buckets</strong> — Bucket slot counts</li>
 </ul>
-<h3 id="compute-rendered-triangles">Compute Rendered Triangles</h3>
-<p>Toggle that enables per-frame triangle counting. When enabled, shows:</p>
-<ul>
-<li><strong>Camera Triangles</strong> — Triangles rendered for the main camera pass</li>
-<li><strong>Shadow Triangles</strong> — Triangles rendered for shadow passes</li>
-<li><strong>Total Triangles</strong> — Combined total</li>
-</ul>
+<h3 id="instance-and-culling-stats">Instance and Culling Stats</h3>
+<p><strong>Compute Per-View Stats</strong> enables per-frame counting of what each view actually drew. It costs a GPU readback per view, so leave it off unless you're profiling.</p>
+<p>When enabled, you get one box per active camera, with the shadow views that camera drove nested inside it. A shadow view whose camera no longer has stats of its own is listed on its own as <code>(shadow via &lt;camera&gt;)</code>.</p>
+<p>Each view shows:</p>
+<table>
+<thead>
+<tr>
+<th>Line</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>inst</strong></td>
+<td>Instances drawn out of all registered, and how many were culled</td>
+</tr>
+<tr>
+<td><strong>chunks</strong></td>
+<td>Chunks drawn out of all allocated, split into <code>cpu-culled</code> and <code>gpu-culled</code></td>
+</tr>
+<tr>
+<td><strong>tris, verts</strong></td>
+<td>Triangle and vertex counts for that view</td>
+</tr>
+<tr>
+<td><strong>draw cmds</strong></td>
+<td>Commands emitted, how many were non-empty, and how many were removed by per-view prototype draw command filtering</td>
+</tr>
+<tr>
+<td><strong>cascades</strong></td>
+<td>Shadow views only — instance count per cascade</td>
+</tr>
+</tbody>
+</table>
+<p>The chunk line separates the two culling stages. <code>cpu-culled</code> chunks were rejected on the CPU and never reached the GPU; <code>gpu-culled</code> chunks passed the CPU stage and were then rejected by GPU frustum and occlusion culling. A shadow view that had nothing to render at all reports <code>view early-out (0 emitted)</code> instead of draw command counts.</p>
+<p>Totals across every view are shown at the bottom as <strong>Total Instances</strong>, <strong>Total Triangles</strong>, and <strong>Total Vertices</strong>, each split into camera and shadow.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>Warnings appear here if <strong>Visualize Culling In Scene View</strong> is enabled or the Frame Debugger is open — both change which culling runs, so the counts won't reflect a normal frame.</p>
+</div>
 <h3 id="chunk-system">Chunk System</h3>
 <ul>
 <li><strong>Instances</strong> — Total registered instances</li>
@@ -175,6 +208,37 @@
 </ul>
 </li>
 </ul>
+<h4 id="show-chunk-cull-info">Show Chunk Cull Info</h4>
+<p>Toggle that opens a per-chunk breakdown of why each chunk was or wasn't drawn. Pick a view from the <strong>View</strong> dropdown — camera views are listed as <code>&lt;camera&gt;, split &lt;n&gt;</code>, shadow views as <code>&lt;light&gt; (shadow), via &lt;camera&gt;</code>.</p>
+<p>The table lists every active chunk with the result of each culling stage:</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Chunk ID</strong></td>
+<td>The chunk's id</td>
+</tr>
+<tr>
+<td><strong>CPU</strong></td>
+<td>CPU chunk culling. A chunk rejected here never runs GPU chunk culling.</td>
+</tr>
+<tr>
+<td><strong>GPU</strong></td>
+<td>GPU chunk culling.</td>
+</tr>
+<tr>
+<td><strong>Overall</strong></td>
+<td>Fails if either stage rejected the chunk.</td>
+</tr>
+</tbody>
+</table>
+<p>Each cell reads <strong>Passed</strong>, <strong>Failed</strong>, <strong>Not tested</strong> (CPU culling already rejected it), <strong>Skipped</strong> (the stage was bypassed, e.g. by a debug toggle), or <strong>Waiting</strong>.</p>
+<p>Results come from a GPU readback, so the panel shows how long ago the capture was taken and reports when a readback is still pending or failed. Use this when a chunk disappears and you need to know which stage dropped it.</p>
 <h3 id="occlusion">Occlusion</h3>
 <p>Shown when BRG occlusion culling is active:</p>
 <ul>
@@ -219,7 +283,7 @@
 <h3 id="debug-warnings">Debug Warnings</h3>
 <p>When any debug flags are active on the <a href="../configuration/debug.html">Config</a>, warning banners appear:</p>
 <ul>
-<li>&quot;DEBUG: Chunk culling BYPASSED&quot;</li>
+<li>&quot;DEBUG: CPU chunk culling DISABLED&quot;</li>
 <li>&quot;DEBUG: Culling DISABLED (reusing stale results)&quot;</li>
 <li>&quot;DEBUG: Rendering DISABLED (culling still runs)&quot;</li>
 </ul>

@@ -88,6 +88,27 @@
 <h1 id="changelog">Changelog</h1>
 
 <hr>
+<h2 id="160">1.6.0</h2>
+<ul>
+<li>Added Lossy Shadow Occlusion Culling — culls more shadows than normal shadow occlusion culling, but can incorrectly cull some shadows that would normally show on screen</li>
+<li>Added a &quot;Disable Crossfade&quot; runtime graphics toggle</li>
+<li>Added <code>BRGRenderer.Instance.LodBias</code>, an LOD bias multiplier that affects only BRGIR instances</li>
+<li>VR: Added support for Application SpaceWarp</li>
+<li>URP occlusion culling retest no longer requires a forced depth prepass</li>
+<li>HDRP HZB Retest pass no longer requires installing a patch or embedding the package</li>
+<li>Fixed broken rendering when loading RenderDoc in the editor</li>
+</ul>
+<h2 id="157--2026-09-19">1.5.7 — 2026-09-19</h2>
+<ul>
+<li>Fixed Terrain Detail spawner rounding error when the Burst compiler is force disabled (thanks @Saradomin)</li>
+<li>Fixed other small bugs</li>
+</ul>
+<h2 id="156--2026-09-15">1.5.6 — 2026-09-15</h2>
+<ul>
+<li>Fixed Terrain Detail prototype refresh</li>
+<li>Fixed incorrect detail density caused by uncleared buffer memory (thanks @Saradomin)</li>
+<li>Fixed several small cleanup memory leaks (thanks @EVG)</li>
+</ul>
 <h2 id="155--2026-09-08">1.5.5 — 2026-09-08</h2>
 <ul>
 <li>Matched scale of Unity's detail placement algorithm</li>

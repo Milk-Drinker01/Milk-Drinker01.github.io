@@ -110,14 +110,14 @@
 <td><strong>LOD Bias Multiplier</strong></td>
 <td>float (0.01–10)</td>
 <td>1.0</td>
-<td>A multiplier applied on top of Unity's global <code>QualitySettings.lodBias</code>.</td>
+<td>A multiplier applied on top of Unity's global <code>QualitySettings.lodBias</code>, for this camera only. For a bias across every camera that affects only BRGIR instances, use <a href="../api/core-methods.html#lodbias"><code>BRGRenderer.Instance.LodBias</code></a>.</td>
 </tr>
 </tbody>
 </table>
 <h2 id="how-it-works">How It Works</h2>
 <p>The final LOD bias used for a camera is:</p>
 <blockquote>
-<p><strong>Final LOD Bias = QualitySettings.lodBias x LOD Bias Multiplier x <a href="brg-prototype-group.html#setlodbias">group LOD bias</a></strong></p>
+<p><strong>Final LOD Bias = QualitySettings.lodBias x <a href="../api/core-methods.html#lodbias">BRGRenderer.LodBias</a> x LOD Bias Multiplier x <a href="brg-prototype-group.html#setlodbias">group LOD bias</a></strong></p>
 </blockquote>
 <ul>
 <li>A multiplier of <strong>1.0</strong> uses the global Quality Settings value as-is (default behavior).</li>

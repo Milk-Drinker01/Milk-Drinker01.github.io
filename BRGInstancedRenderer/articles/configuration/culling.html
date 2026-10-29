@@ -126,7 +126,7 @@
 <td><strong>Shadow Caster Occlusion</strong></td>
 <td>bool</td>
 <td>true</td>
-<td>Culls shadow casters whose entire swept shadow volume is hidden behind the previous frame's depth. <strong>Directional lights only</strong>, and requires <strong>Use GPU Occlusion Culling</strong>. Lossless — never drops a visible shadow. Worst-case artifact: a shadow can reappear one frame late after a fast disocclusion.</td>
+<td>Culls shadow casters whose entire swept shadow volume is hidden behind the previous frame's depth. <strong>Directional lights only</strong>, and requires <strong>Use GPU Occlusion Culling</strong>. Lossless — never drops a visible shadow, since the whole volume must be hidden. Worst-case artifact: a shadow can reappear one frame late after a fast disocclusion, which the retest pass does not remove. A per-group lossy extension is available via <strong>Use Lossy Shadow Occlusion Culling</strong> on <a href="../components/brg-prototype-group.html">BRG Prototype Group</a>.</td>
 </tr>
 <tr>
 <td><strong>HZB Shadow Segments</strong></td>
@@ -138,7 +138,7 @@
 <td><strong>Use HZB Retest Pass</strong></td>
 <td>bool</td>
 <td>false</td>
-<td>Adds a second HZB pass that re-tests occluded instances against the current frame's depth prepass, recovering falsely occluded instances. Requires <strong>Use GPU Occlusion Culling</strong>. HDRP requires applying the included depth prepass patch.</td>
+<td>Adds a second HZB pass that re-tests occluded instances against the current frame's depth prepass, recovering falsely occluded instances. Requires <strong>Use GPU Occlusion Culling</strong>. Supported on URP and HDRP with no setup.</td>
 </tr>
 <tr>
 <td><strong>HZB Pixel Expansion</strong></td>
@@ -209,15 +209,16 @@
 <li><strong>Previous-frame depth causes false culling at low FPS.</strong> Because the depth texture comes from the previous frame, fast-moving objects at low framerates can leave behind ghost artifacts where instances behind them are incorrectly culled for one frame.</li>
 </ol>
 <p>There are two ways to address the false culling problem:</p>
-<p><strong>HZB Retest Pass</strong> — Forces all instances to render in the depth prepass (and forces a depth prepass to exist), so the system can re-test occluded instances against the <em>current</em> frame's depth. This is similar to what Unity's GPU Resident Drawer does.</p>
+<p><strong>HZB Retest Pass</strong> — Re-tests occluded instances against the <em>current</em> frame's depth, then draws the ones that turn out to be visible in a recovery pass. This is similar to what Unity's GPU Resident Drawer does.</p>
 <ul>
 <li>Eliminates false culling entirely</li>
-<li>Culling runs twice — once before the depth prepass, and a second time after to calculate the actual occluded instances- All instances must be rendered in the prepass, even those behind obstacles</li>
-<li>Forces a depth prepass, which adds some rendering cost</li>
+<li>Culling runs twice — once up front, and again after the depth is available, to work out which instances were wrongly rejected</li>
+<li>Only the newly visible instances are drawn in the recovery pass, not every instance</li>
+<li>Hooks into the pipeline's existing depth prepass on both URP and HDRP. No prepass is forced, and no package setup is needed.</li>
 </ul>
 <p><strong>HZB Pixel Expansion</strong> — Widens the occlusion bounds by a fixed number of pixels to account for camera movement between frames.</p>
 <ul>
-<li>Much cheaper than the retest pass — no forced depth prepass and no second culling pass</li>
+<li>Cheaper than the retest pass — no second culling pass and no recovery draws</li>
 <li>Less accurate — fast moving objects or cameras may still cause some false culling</li>
 </ul>
 

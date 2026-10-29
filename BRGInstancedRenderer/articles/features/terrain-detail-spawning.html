@@ -95,7 +95,9 @@
 <h4 id="async-terrain-initialization">Async Terrain Initialization</h4>
 <p>Reading a terrain's heightmap and holes textures normally blocks the main thread twice per terrain during initialization. With <strong>Allow Async Detail Loading</strong> enabled (the default), those reads go through an async GPU readback instead, removing both stalls — which matters most when terrains stream in at runtime. The trade-off is that details for a newly initialized terrain don't begin streaming until the readback completes a few frames later. See <a href="../configuration/terrain.html">Terrain Config</a>.</p>
 <h4 id="compatibility">Compatibility</h4>
-<p>The custom algorithm reproduces the same placement concepts as Unity's built-in system — density maps, per-layer settings, and terrain patch boundaries are all respected. Instance transforms do not match Unity's output exactly on a per-instance basis, but the overall look and coverage is equivalent.</p>
+<p>The custom algorithm is a direct reimplementation of Unity's placement, not an approximation of it. It reproduces the same per-cell seeding, the same density dithering and coverage stepping, the same Perlin-based width and height scaling, the same hole rejection, and the same ground alignment — so detail layers land where Unity would put them, at the size Unity would give them.</p>
+<p>It also follows the settings Unity's own placement responds to, including the <strong>Use Legacy Detail Distribution</strong> quality setting and each layer's noise seed, noise spread, min/max width and height, position jitter, and align-to-ground.</p>
+<p>If you need a guaranteed byte-for-byte match, enable <strong>Use Unity Transforms</strong> on the <a href="../components/brg-terrain-registerer.html">BRG Terrain Registerer</a>. It calls Unity's own <code>ComputeDetailInstanceTransforms</code> instead, which is slower and allocates garbage, but removes any question of divergence.</p>
 <blockquote>
 <p>For terrain setup, see <a href="../getting-started/terrain.html">Getting Started: Terrain</a> and <a href="../components/brg-terrain-registerer.html">BRG Terrain Registerer</a>.</p>
 </blockquote>

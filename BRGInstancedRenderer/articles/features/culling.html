@@ -104,11 +104,22 @@
 </li>
 </ol>
 <p>The HZB depth pyramid is constructed each frame using a compute shader based on AMD FidelityFX Single Pass Downsampler (SPD) for the fastest possible performance, and pixel expansion compensates for camera movement between frames. Controlled by <strong>Use GPU Occlusion Culling</strong> on the <a href="../getting-started/brg-instanced-renderer-config.html">Config</a>, which is on by default.</p>
-<p>An optional <strong>HZB Retest Pass</strong> adds a second phase: after the current frame's depth prepass, instances that were occluded in the first pass are re-tested against the fresh depth buffer. This recovers instances that were falsely occluded due to camera movement, reducing temporal artifacts. Enable via <strong>Use HZB Retest Pass</strong> on the <a href="../getting-started/brg-instanced-renderer-config.html">Config</a>.</p>
-<div class="NOTE">
-<h5>Note</h5>
-<p>In HDRP, the retest pass requires patching the HDRP package to inject a depth prepass event. An editor script is included to apply and revert this patch automatically via <strong>Tools &gt; BRG Instanced Renderer &gt; HDRP &gt; Apply Depth Prepass Patch</strong>. URP supports the retest pass without any patching.</p>
+<p>An optional <strong>HZB Retest Pass</strong> adds a second phase: once the current frame's depth is available, instances that were occluded in the first pass are re-tested against the fresh depth buffer, and the ones that turn out to be visible are drawn in a recovery pass. This recovers instances that were falsely occluded due to camera movement, reducing temporal artifacts. Shadow casters are recovered along with camera-visible instances, so a falsely occluded caster doesn't lose its shadow for the frame. Enable via <strong>Use HZB Retest Pass</strong> on the <a href="../getting-started/brg-instanced-renderer-config.html">Config</a>.</p>
+<p>URP supports the retest pass directly. In HDRP, the depth prepass hook needed to drive it is added automatically when your scripts compile — there is nothing to install, and the HDRP package is left untouched. <strong>Tools &gt; BRG Instanced Renderer &gt; HDRP &gt; Check Status</strong> reports whether the hook is available, and <strong>Recompile Depth Prepass Hook</strong> forces a clean recompile if it isn't.</p>
+<div class="IMPORTANT">
+<h5>Important</h5>
+<p><strong>Upgrading from before 1.6?</strong> Earlier versions required embedding the HDRP package and applying a manual depth prepass patch through <strong>Tools &gt; BRG Instanced Renderer &gt; HDRP &gt; Apply Depth Prepass Patch</strong>. That step is gone, and the menu item no longer exists.</p>
+<p>If your project still has the old patch, BRG Instanced Renderer detects it and logs an error asking you to un-embed HDRP. Do this to revert it:</p>
+<ol>
+<li>Close Unity.</li>
+<li>Move <code>Packages/com.unity.render-pipelines.high-definition</code> out of the project to keep a backup.</li>
+<li>Leave HDRP's version entry in <code>Packages/manifest.json</code> and reopen Unity. Package Manager restores the original package and recompiles.</li>
+<li>Un-embedding also removes any other assets' HDRP patches — reapply those afterwards, re-embedding HDRP if those assets require it.</li>
+</ol>
 </div>
+<h4 id="sharing-unitys-depth-pyramid">Sharing Unity's Depth Pyramid</h4>
+<p>When Unity's <strong>GPU Resident Drawer</strong> is active with instance occlusion culling enabled, BRG Instanced Renderer reuses the occluder depth pyramid the GPU Resident Drawer already built for that camera instead of building a second one. This happens automatically — there is no setting — and it removes the HZB build cost entirely for that frame.</p>
+<p>The pyramid is only shared when it's an exact match for what BRG Instanced Renderer needs: a game camera, a reversed-Z depth buffer, no MSAA, and matching dimensions. URP additionally excludes dynamic scaling and XR; HDRP requires that the depth prepass actually supplies the occluders, which means either a forward lit shader mode, <strong>Depth Prepass With Deferred Rendering</strong> enabled in Frame Settings, or <strong>Use Depth Prepass For Occluders</strong> enabled in the HDRP asset's GPU Resident Drawer settings. When any condition isn't met, the HZB is built normally and nothing else changes.</p>
 <p><img src="../../images/Occlusion-Culling.png" alt="Occlusion Culling"></p>
 <h4 id="distance-culling">Distance Culling</h4>
 <p>Instances beyond a configurable distance are not rendered. Set per-group via <a href="../components/brg-gameobject-group.html">BRG GameObject Group</a> or per-terrain via <a href="../components/brg-terrain-registerer.html">BRG Terrain Registerer</a>.</p>
@@ -127,15 +138,16 @@
 <li>Tested against the owning camera's previous-frame HZB.</li>
 <li>Enable via <strong>Shadow Caster Occlusion</strong> on the <a href="../configuration/culling.html">Config</a>. On by default.</li>
 <li><strong>HZB Shadow Segments</strong> controls how finely a long shadow volume is split for testing — more segments cull more, at one extra depth sample each.</li>
-<li>Worst-case artifact: a shadow can reappear one frame late after a fast disocclusion (e.g. when a camera whips around a corner). At normal framerates this is imperceptible.</li>
+<li>Worst-case artifact: a shadow can reappear one frame late after a fast disocclusion (e.g. when a camera whips around a corner). At normal framerates this is imperceptible, and enabling the retest pass does not remove it.</li>
 </ul>
 <h5 id="lossy-shadow-culling-per-group">Lossy Shadow Culling (per group)</h5>
-<p>For prototypes that cast <strong>short</strong> shadows — grass, small props, debris — two cheaper but lossy modes are available per <a href="../components/brg-prototype-group.html">BRG Prototype Group</a>. Both trade some shadow correctness for a much larger cut in shadow culling and rasterization work.</p>
+<p>For prototypes that cast <strong>short</strong> shadows — grass, small props, debris — three cheaper but lossy modes are available per <a href="../components/brg-prototype-group.html">BRG Prototype Group</a>. Each trades some shadow correctness for a much larger cut in shadow culling and rasterization work.</p>
 <ul>
-<li><strong>Improper Shadow Frustum Culling</strong> — drops casters once their bounds leave the camera frustum (plus a configurable padding). Off-screen geometry stops casting into view, most noticeable at low sun angles and under fast camera rotation.</li>
+<li><strong>Lossy Shadow Frustum Culling</strong> — drops casters once their bounds leave the camera frustum (plus a configurable padding). Off-screen geometry stops casting into view, most noticeable at low sun angles and under fast camera rotation.</li>
+<li><strong>Lossy Shadow Occlusion Culling</strong> — extends the lossless test above by also checking the caster's own bounds against the depth pyramid, instead of only its swept shadow volume. A caster hidden behind an occluder stops casting even when its shadow would still land somewhere visible. A bounds size multiplier inflates the tested bounds to trade culling for fewer false culls. Requires <strong>Shadow Caster Occlusion</strong>.</li>
 <li><strong>Shadow Caster Distance Culling</strong> — stops casters contributing shadows past a distance from the camera. Can follow the pipeline's own shadow distance automatically, or use an explicit per-group value.</li>
 </ul>
-<p>Because both can remove shadows you would otherwise see, apply them to groups where the shadow contribution is small — not to large hero geometry.</p>
+<p>Because each can remove shadows you would otherwise see, apply them to groups where the shadow contribution is small — not to large hero geometry.</p>
 <blockquote>
 <p>For culling settings, see <a href="../getting-started/brg-instanced-renderer-config.html">BRG Instanced Renderer Config</a> and <a href="../components/brg-prototype-extra-data-density.html">BRG Prototype Extra Data / Density</a>.</p>
 </blockquote>

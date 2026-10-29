@@ -99,8 +99,6 @@
 <p>Skips the GPU culling pass entirely and reuses the previous frame's visibility results. This isolates the cost of culling in the profiler — if performance improves significantly with culling disabled, the culling pass may need optimization (fewer, larger chunks).</p>
 <h3 id="debug-disable-rendering">Debug Disable Rendering</h3>
 <p>Runs the GPU culling pipeline as normal but skips the actual draw command submission. Use this to isolate rendering cost from culling cost in the profiler.</p>
-<h3 id="debug-disable-crossfade">Debug Disable Crossfade</h3>
-<p>Forces all LOD transitions to be instant, bypassing animated crossfade. Useful for verifying whether a visual artifact is related to the crossfade system.</p>
 <h3 id="debug-visualize-culling-in-scene-view">Debug Visualize Culling In Scene View</h3>
 <p>Freezes the culling frustum to the Game camera's view. You can then orbit freely in the Scene View to see exactly which instances are being culled and which are visible. Instances outside the Game camera's frustum will not be rendered, making it easy to verify frustum culling behavior.</p>
 <h2 id="profiler-markers">Profiler Markers</h2>

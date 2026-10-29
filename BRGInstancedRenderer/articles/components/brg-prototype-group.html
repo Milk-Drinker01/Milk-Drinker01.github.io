@@ -107,6 +107,8 @@
     // authored (serialized on the asset)
     public bool  useImproperShadowFrustumCulling;  // default false
     public float improperShadowFrustumPadding;     // default 10
+    public bool  useLossyShadowOcclusionCulling;   // default false
+    public float lossyShadowOcclusionCullingBoundsSizeMultiplier;  // default 1
     public bool  useShadowCasterDistanceCulling;   // default false
     public bool  useSceneShadowDistance;           // default true
     public float maxShadowDistance;                // default 80
@@ -115,6 +117,7 @@
     public void SetDensity(float value);
     public void SetShadowsEnabled(bool enabled);
     public void SetImproperShadowFrustumCulling(bool enabled, float? padding = null);
+    public void SetLossyShadowOcclusionCulling(bool enabled, float? boundsSizeMultiplier = null);
     public void SetShadowCasterDistanceCulling(bool enabled);
     public void SetMaxShadowDistance(float distance, bool useScene = false);
 }
@@ -130,7 +133,7 @@
 </ul>
 <p>Composes multiplicatively with the existing LOD bias chain:</p>
 <blockquote>
-<p><strong>Effective LOD Bias = QualitySettings.lodBias × BRGCameraSettings.lodBiasMultiplier × group.lodBias</strong></p>
+<p><strong>Effective LOD Bias = QualitySettings.lodBias × <a href="../api/core-methods.html#lodbias">BRGRenderer.LodBias</a> × BRGCameraSettings.lodBiasMultiplier × group.lodBias</strong></p>
 </blockquote>
 <p>Applies to camera LOD selection, shadow LOD selection, and animated-crossfade LOD selection consistently.</p>
 <pre><code class="lang-csharp">// hold finer LODs at distance for hero foliage
@@ -172,7 +175,7 @@ grassGroup.SetShadowsEnabled(true);
 </div>
 <h2 id="shadow-culling">Shadow Culling</h2>
 <p>Beyond fully disabling shadows, a group can cull shadow casters that are unlikely to contribute anything visible. These are <strong>lossy</strong> optimizations — they trade some shadow correctness for a significant cut in shadow culling and rasterization work, and are best suited to prototypes that cast <strong>short</strong> shadows (grass, small props, debris).</p>
-<p>For lossless shadow culling that never drops a visible shadow, see <strong>Shadow Caster Occlusion</strong> on the <a href="../configuration/culling.html">Culling Config</a> instead.</p>
+<p><strong>Shadow Caster Occlusion</strong> on the <a href="../configuration/culling.html">Culling Config</a> is the lossless counterpart — it only drops a caster when the entire swept shadow volume is hidden, so a visible shadow is never lost. <strong>Use Lossy Shadow Occlusion Culling</strong> below builds on it, trading that guarantee for more culling.</p>
 <p>Unlike LOD bias and density, these settings are <strong>authored on the asset</strong> and persist between sessions. Edit them in the inspector, or drive them at runtime with the setters below.</p>
 <h3 id="inspector-properties">Inspector Properties</h3>
 <table>
@@ -186,16 +189,28 @@ grassGroup.SetShadowsEnabled(true);
 </thead>
 <tbody>
 <tr>
-<td><strong>Use Improper Shadow Frustum Culling</strong></td>
+<td><strong>Lossy Shadow Frustum Culling</strong></td>
 <td>bool</td>
 <td>false</td>
-<td>Drop shadow casters in this group once their bounds leave the camera frustum. <strong>Lossy</strong> — geometry outside the view stops casting shadows into it, most visible at low sun angles and when the camera rotates quickly.</td>
+<td>Drop shadow casters in this group once their bounds leave the camera frustum. <strong>Lossy</strong> — geometry outside the view stops casting shadows into it, most visible at low sun angles and when the camera rotates quickly. Large prototypes with long shadows visibly lose them.</td>
 </tr>
 <tr>
-<td><strong>Improper Shadow Frustum Padding</strong></td>
+<td><strong>Padding</strong></td>
 <td>float (≥ 0)</td>
 <td>10m</td>
-<td>Metres each camera frustum plane is pushed outward before the test, so casters just off-screen still cast. Raise this if shadows pop in at the screen edge.</td>
+<td>Metres each camera frustum plane is pushed outward before the test, so casters just off-screen still cast. Raise this if shadows pop in at the screen edge. Only used when the above is on.</td>
+</tr>
+<tr>
+<td><strong>Use Lossy Shadow Occlusion Culling</strong></td>
+<td>bool</td>
+<td>false</td>
+<td>Also test the caster's own bounds against the depth pyramid during directional shadow occlusion, not just its swept shadow volume. Culls more instances, but a caster hidden behind something stops casting even when its shadow would still land in view. Requires <strong>Shadow Caster Occlusion</strong> on the <a href="../configuration/culling.html">Culling Config</a>.</td>
+</tr>
+<tr>
+<td><strong>Lossy Shadow Occlusion Culling Bounds Size Multiplier</strong></td>
+<td>float (≥ 1)</td>
+<td>1</td>
+<td>Inflates the caster bounds used by that test. Larger values cull less but produce fewer false culls. Only used when the above is on.</td>
 </tr>
 <tr>
 <td><strong>Use Shadow Caster Distance Culling</strong></td>
@@ -226,6 +241,16 @@ grassGroup.SetImproperShadowFrustumCulling(true);
 
 // enable and widen the padding to 25m
 grassGroup.SetImproperShadowFrustumCulling(true, 25f);
+</code></pre>
+<h3 id="setlossyshadowocclusionculling">SetLossyShadowOcclusionCulling</h3>
+<pre><code class="lang-csharp">public void SetLossyShadowOcclusionCulling(bool enabled, float? boundsSizeMultiplier = null)
+</code></pre>
+<p>Enable or disable caster-bounds testing in directional shadow occlusion for the group. Like the frustum setter, <code>boundsSizeMultiplier</code> is only written when supplied, so toggling off and back on keeps the authored value. Clamped to <code>&gt;= 1</code>. Applies live.</p>
+<pre><code class="lang-csharp">// cull shadows from occluded grass casters
+grassGroup.SetLossyShadowOcclusionCulling(true);
+
+// same, but with roomier bounds to reduce false culls
+grassGroup.SetLossyShadowOcclusionCulling(true, 1.5f);
 </code></pre>
 <h3 id="setshadowcasterdistanceculling">SetShadowCasterDistanceCulling</h3>
 <pre><code class="lang-csharp">public void SetShadowCasterDistanceCulling(bool enabled)

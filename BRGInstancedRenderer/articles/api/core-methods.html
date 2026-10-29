@@ -91,8 +91,31 @@
 <p>Public methods on the <code>BRGRenderer</code> singleton for runtime control.</p>
 <p>Access the singleton via <code>BRGRenderer.Instance</code>.</p>
 <blockquote>
-<p>For runtime LOD bias and density scaling per prototype group, see <a href="../components/brg-prototype-group.html">BRG Prototype Group</a>. The old singleton-level <code>SetGlobalDensity</code> has been replaced by <code>BRGPrototypeGroup.SetDensity()</code>.</p>
+<p>For LOD bias and density scaling per prototype group, see <a href="../components/brg-prototype-group.html">BRG Prototype Group</a>. The old singleton-level <code>SetGlobalDensity</code> has been replaced by <code>BRGPrototypeGroup.SetDensity()</code>.</p>
 </blockquote>
+<h2 id="lodbias">LodBias</h2>
+<pre><code class="lang-csharp">public float LodBias { get; set; }
+</code></pre>
+<p>LOD bias for every BRG Instanced Renderer instance. Default is <code>1f</code>. Clamped to <code>&gt;= 0.01</code>.</p>
+<p>Unlike <code>QualitySettings.lodBias</code>, this affects <strong>only</strong> BRGIR instances — regular <code>MeshRenderer</code> LOD Groups in the scene are untouched. That makes it the right knob for a quality option that should trade instanced-vegetation detail without changing LOD behaviour for the rest of the scene.</p>
+<ul>
+<li><code>&gt; 1</code> holds finer LODs to greater distances (higher quality, more cost).</li>
+<li><code>&lt; 1</code> drops to coarser LODs sooner (lower quality, cheaper).</li>
+</ul>
+<pre><code class="lang-csharp">// keep more detail on high quality
+BRGRenderer.Instance.LodBias = 1.5f;
+
+// pull LOD transitions in on low quality
+BRGRenderer.Instance.LodBias = 0.6f;
+</code></pre>
+<p>It multiplies into the bias chain alongside the per-camera and per-group values:</p>
+<blockquote>
+<p><strong>Effective LOD Bias = QualitySettings.lodBias x BRGRenderer.LodBias x <a href="../components/brg-camera-settings.html">BRGCameraSettings.lodBiasMultiplier</a> x <a href="../components/brg-prototype-group.html#setlodbias">group.lodBias</a></strong></p>
+</blockquote>
+<div class="NOTE">
+<h5>Note</h5>
+<p>This is read per view each frame, so it's cheap to change at any time — no batch rebuild. It is not serialized, so it resets to <code>1</code> every session; re-apply it from your settings code.</p>
+</div>
 <h2 id="crossfadetimescale">CrossfadeTimeScale</h2>
 <pre><code class="lang-csharp">public float CrossfadeTimeScale { get; set; }
 </code></pre>

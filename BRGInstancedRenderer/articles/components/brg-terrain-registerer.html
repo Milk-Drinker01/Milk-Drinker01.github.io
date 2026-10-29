@@ -218,7 +218,7 @@
 <td><strong>Use Unity Transforms</strong></td>
 <td>bool</td>
 <td>false</td>
-<td>Use Unity's <code>ComputeDetailInstanceTransforms</code> API instead of the custom extraction algorithm. Slower and allocates GC, but produces a 1:1 match with Unity's built-in detail rendering.</td>
+<td>Use Unity's <code>ComputeDetailInstanceTransforms</code> API instead of the custom extraction algorithm. Slower and allocates GC. The custom algorithm already reimplements Unity's placement, so this is only worth enabling if you suspect a divergence. See <a href="../features/terrain-detail-spawning.html">Terrain Detail Spawning</a>.</td>
 </tr>
 </tbody>
 </table>
